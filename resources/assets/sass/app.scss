@@ -1,7 +1,7 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 @import "node_modules/font-awesome/scss/font-awesome";
 @import "node_modules/hover.css/scss/hover";
-@import "node_modules/animate.scss/vendor/assets/stylesheets/animate";
+@import "public/scss/animate.scss/animate.scss";
 
 body {
 	background: #ebebeb;
@@ -74,9 +74,8 @@ body {
 	display: none;
 }
 
-.list-group-item .fa {
+.list-group .fa {
 	font-size: 1.2em;
-	margin-left: 10px;
 }
 
 .list-group-item .fa:hover {
@@ -95,6 +94,7 @@ body {
 .avatar img {
 	border-radius:50%;
 	max-width: 48px;
+	@include bounceIn();
 }
 
 .contact-row .name {
@@ -225,6 +225,37 @@ th.active .arrow.dsc {
 .page-header h1 {
 	margin-top: -5px;
 	margin-bottom: 0px;
+}
+
+.panel {
+	background: #fefefe;
+	padding: 10px;
+}
+
+.site-action {
+	position: relative;
+}
+
+.site-action-btn {
+	@include bounceIn();
+	position: fixed;
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    margin: 0;
+    font-size: 36px;
+    text-align: center;
+    border-radius: 100%;
+    -webkit-box-shadow: 0 10px 10px 0 rgba(60,60,60,.1);
+    box-shadow: 0 10px 10px 0 rgba(60,60,60,.1);
+    z-index: 1290;
+    bottom: 55px;
+    right: 32px;
+}
+
+.list-group .fa,
+.dropdown .btn {
+	margin-right: 10px;
 }
 
 [v-cloak] .v-cloak--block {

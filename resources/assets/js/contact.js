@@ -14,10 +14,18 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAt
 
 import { focusModel } from 'vue-focus'
 
+
+
 new Vue({
 
   name: 'Contact',
+  
   directives: { focusModel: focusModel },
+
+  components: {
+    ContactForm: require('./components/ContactForm.vue') 
+  },
+
   el: '#app-contacts',
 
   data: {
@@ -121,6 +129,10 @@ new Vue({
       resource.get({}).then(function(response){
         this.labels = response.data
       }.bind(this))
+    },
+
+    showCreateContact: function () {
+
     }
   }
 

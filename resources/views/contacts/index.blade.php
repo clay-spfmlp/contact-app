@@ -2,7 +2,7 @@
 
 @section('content')
 
-  <div id="app-contacts" v-cloak class="page" transition="fadeIn">
+  <div id="app-contacts" v-cloak class="page animate zoomInUp">
 
     <div class="page-aside col-md-3">
       <div class="page-aside-inner">
@@ -19,14 +19,14 @@
           <div class="list-group editable">
             <div v-for="label in labels" v-bind:class="'list-group-item item-' + $index" v-cloak--hidden>
               <div class="list-content">
-                <span v-show="!label.editing" class="pull-right badge">@{{ label.contacts | count }}</span>
-                <span v-show="!label.editing" class="list-text">@{{ label.name }}</span>
-                <div v-show="!label.editing" class="item-actions pull-right">
+                <span v-show="!label.editing" class="pull-right badge" v-cloak--hidden>@{{ label.contacts | count }}</span>
+                <span v-show="!label.editing" class="list-text" v-cloak--hidden>@{{ label.name }}</span>
+                <div v-show="!label.editing" class="item-actions pull-right" v-cloak--hidden>
                   <a v-on:click.stop.prevent="editLabel($index)" class="btn-icon"><i class="fa fa-edit" aria-hidden="true"></i></a>
                   <a v-on:click.stop.prevent="removeConfirm($index)" class="btn-icon trash"><i class="fa fa-trash" aria-hidden="true"></i></a>
                 </div>
               </div>
-              <span v-show="label.remove">
+              <span v-show="label.remove" v-cloak--hidden>
                 <div class="confirm">
                   <div class="col-md-11 col-xs-10">
                       <p>Are you sure?</p>
@@ -39,9 +39,9 @@
                   </div>
                 </div>
               </span>
-              <div v-show="label.editing" class="list-editable">
+              <div v-show="label.editing" class="list-editable" v-cloak--hidden>
                 <div class="form-group">
-                  <input onFocus="this.select()" v-focus-model="label.editing" v-model="labels[$index].name" type="text" class="form-control form-material" name="name" v-on:keyup.enter="updateLabel($index)">
+                  <input onFocus="this.select()" v-focus-model="label.editing" v-model="labels[$index].name" type="text" class="form-control form-material" name="name" v-on:keyup.enter="updateLabel($index)" v-cloak--hidden>
                   <i class="bar"></i>
                   <div class="edit-options pull-right">
                     <!-- <span v-on:click="updateLabel($index)" v-show="!label.updating" class="btn-icon"><i class="fa fa-check-circle" aria-hidden="true"></i></span> -->
@@ -83,35 +83,30 @@
           </div>
           <div class="clearfix"></div>
         </div>
-        Contents
-      </section>  
-
-      
-
+      </section>
 
       <!-- Contacts Content -->
-      <div class="page-content page-content-table">
+      <div class="page-content page-content-table panel">
 
         <!-- Actions -->
         <div class="page-content-actions">
           <div class="pull-right">
-            <!-- <div class="dropdown pull-right">
-              <button type="button" class="btn btn-pure dropdown-toggle" data-toggle="dropdown"
+            <div class="dropdown pull-right">
+              <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
               aria-expanded="false">
-                More
+                <i class="fa fa-chevron-circle-down"></i>
                 <span class="icon wb-chevron-down-mini" aria-hidden="true"></span>
-              </button>
+              </a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="javascript:void(0)">More</a></li>
-                <li><a href="javascript:void(0)">More</a></li>
+                <li><a href="javascript:void(0)">Empty All</a></li>
+                <li><a href="javascript:void(0)">Export</a></li>
               </ul>
-            </div> -->
-            <button type="button" class="btn btn-outline btn-default btn-md empty-btn">Empty All</button>
+            </div>
           </div>
           <div class="btn-group">
             <div class="dropdown pull-left">
-              <button class="btn btn-icon btn-pure btn-default dropdown-toggle" data-toggle="dropdown"
-              aria-expanded="false" type="button"><i class="fa fa-folder" aria-hidden="true"></i></button>
+              <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+              aria-expanded="false" type="button"><i class="fa fa-folder" aria-hidden="true"></i></a>
               <ul class="dropdown-menu" role="menu">
                 <li v-for="label in labels"><a href="javascript:void(0)">@{{ label.name }}</a></li>
                 <li class="divider"></li>
@@ -120,8 +115,8 @@
               </ul>
             </div>
             <div class="dropdown pull-left">
-              <button class="btn btn-icon btn-pure btn-default dropdown-toggle" data-toggle="dropdown"
-              aria-expanded="false" type="button"><i class="fa fa-tag" aria-hidden="true"></i></button>
+              <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+              aria-expanded="false" type="button"><i class="fa fa-tag" aria-hidden="true"></i></a>
               <ul class="dropdown-menu" role="menu">
                 <li v-for="label in labels"><a href="javascript:void(0)">@{{ label.name }}</a></li>
               </ul>
@@ -179,22 +174,22 @@
 
   <!-- Site Action -->
   <div class="site-action">
-    <button type="button" class="site-action-toggle btn-raised btn btn-success btn-floating">
-      <i class="fa fa-plus animation-scale-up" aria-hidden="true"></i>
-      <i class="fa fa-close animation-scale-up" aria-hidden="true"></i>
+    <button v-on:click="showCreateContact" type="button" class="site-action-btn btn btn-success btn-floating">
+      <i class="fa fa-user-plus" aria-hidden="true"></i>
     </button>
-    <div class="site-action-buttons">
+    <!-- <div class="site-action-buttons">
       <button type="button" data-action="trash" class="btn-raised btn btn-success btn-floating animation-slide-bottom">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
       <button type="button" data-action="folder" class="btn-raised btn btn-success btn-floating animation-slide-bottom">
         <i class="fa fa-folder" aria-hidden="true"></i>
       </button>
-    </div>
+    </div> -->
   </div>
   <!-- End Site Action -->
 
   <!-- Add Mail Form -->
+  <contact-form></contact-form>
   <div class="modal fade" id="addUserForm" aria-hidden="true" aria-labelledby="addUserForm" role="dialog" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
