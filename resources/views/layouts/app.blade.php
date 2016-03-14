@@ -14,7 +14,9 @@
 
     <!-- Styles -->
 
-    <link href="css/app.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet"><!-- 
+    <link href="css/animate.min.css" rel="stylesheet"> -->
+    @yield('css')
 
     <style>
         body {

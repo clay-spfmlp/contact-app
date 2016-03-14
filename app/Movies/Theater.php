@@ -69,6 +69,7 @@ class Theater
 
 		        } else {
 		        	$result[$i]['nomovies'] = true;
+		        	$m = '';
 		        }
 		        $details->movies = $m;
 		        $result[$i] = $details;

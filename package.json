@@ -9,15 +9,13 @@
     "vueify-insert-css": "^1.0.0"
   },
   "dependencies": {
+    "jquery": "^2.2.1",
     "bootstrap": "^3.3.6",
-    "bootstrap-confirmation": "0.0.2",
     "bootstrap-sass": "^3.3.6",
-    "bootstrap-tooltip": "^3.1.1",
     "font-awesome": "^4.5.0",
     "hover.css": "^2.0.2",
-    "jquery": "^2.2.1",
     "laravel-elixir": "^4.0.0",
-    "vue": "^1.0.12",
+    "vue": "^1.0.14",
     "vue-animate-css": "^1.0.0",
     "vue-focus": "^0.1.1",
     "vue-resource": "^0.7.0"

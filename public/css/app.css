@@ -5,6 +5,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+@import url(https://fonts.googleapis.com/css?family=Roboto);
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -13658,8 +13659,47 @@ button.close {
     -webkit-transform-origin: center bottom;
     transform-origin: center bottom; } }
 
+.page {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  -webkit-animation-duration: 1.6s;
+  animation-duration: 1.6s;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden; }
+
 body {
-  background: #ebebeb; }
+  background: #ebebeb;
+  padding-top: 50px; }
+
+[v-cloak] .v-cloak--block {
+  display: block; }
+
+[v-cloak] .v-cloak--inline {
+  display: inline; }
+
+[v-cloak] .v-cloak--inlineBlock {
+  display: inline-block; }
+
+[v-cloak] .v-cloak--hidden {
+  display: none; }
+
+[v-cloak] .v-cloak--invisible {
+  visibility: hidden; }
+
+.v-cloak--block,
+.v-cloak--inline,
+.v-cloak--inlineBlock {
+  display: none; }
 
 .movie {
   background: #fff;
@@ -13728,23 +13768,7 @@ body {
 
 .avatar img {
   border-radius: 50%;
-  max-width: 48px;
-  -webkit-animation-name: bounceIn;
-  animation-name: bounceIn;
-  -webkit-animation-iteration-count: 1;
-  animation-iteration-count: 1;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-delay: 0s;
-  animation-delay: 0s;
-  -webkit-animation-timing-function: ease;
-  animation-timing-function: ease;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  -o-backface-visibility: hidden;
-  backface-visibility: hidden; }
+  max-width: 48px; }
 
 .contact-row .name {
   margin-top: 12px;
@@ -13861,22 +13885,6 @@ th.active .arrow.dsc {
   position: relative; }
 
 .site-action-btn {
-  -webkit-animation-name: bounceIn;
-  animation-name: bounceIn;
-  -webkit-animation-iteration-count: 1;
-  animation-iteration-count: 1;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-delay: 0s;
-  animation-delay: 0s;
-  -webkit-animation-timing-function: ease;
-  animation-timing-function: ease;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  -o-backface-visibility: hidden;
-  backface-visibility: hidden;
   position: fixed;
   width: 56px;
   height: 56px;
@@ -13894,176 +13902,195 @@ th.active .arrow.dsc {
 .dropdown .btn {
   margin-right: 10px; }
 
-[v-cloak] .v-cloak--block {
-  display: block; }
+.col-md-0 {
+  width: 0px;
+  margin-left: 0; }
 
-[v-cloak] .v-cloak--inline {
-  display: inline; }
+.page-aside {
+  transition: width 0.3s ease, margin 0.3s ease; }
 
-[v-cloak] .v-cloak--inlineBlock {
-  display: inline-block; }
+article {
+  font-family: 'Roboto', sans-serif;
+  padding: 5em 10em 2em; }
 
-[v-cloak] .v-cloak--hidden {
-  display: none; }
-
-[v-cloak] .v-cloak--invisible {
-  visibility: hidden; }
-
-.v-cloak--block,
-.v-cloak--inline,
-.v-cloak--inlineBlock {
-  display: none; }
-
-.form-group .form-material textarea {
-  resize: none; }
-
-.form-group .form-material select {
-  width: 100%;
-  font-size: 1rem;
-  height: 1.6rem;
-  padding: 0.125rem 0.125rem 0.0625rem;
-  background: none;
-  border: none;
-  line-height: 1.6;
-  box-shadow: none; }
-
-.form-group .form-material .control-label {
+.compress-aside {
   position: absolute;
-  top: 0.25rem;
-  pointer-events: none;
-  padding-left: 0.125rem;
-  z-index: 1;
-  color: #b3b3b3;
-  transition: all 0.38s ease; }
+  top: -15px;
+  right: 20px; }
 
-.form-group .form-material .bar {
-  position: relative;
-  border-bottom: 0.0625rem solid #999;
-  display: block; }
-  .form-group .form-material .bar::before {
-    content: '';
-    height: 0.125rem;
-    width: 0;
-    left: 50%;
-    bottom: -0.0625rem;
-    position: absolute;
-    background: #337ab7;
-    transition: left 0.38s ease, width 0.38s ease;
-    z-index: 2; }
+.fade-enter {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  -webkit-animation-duration: 1.2s;
+  animation-duration: 1.2s;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden; }
 
-.form-group .form-material input,
-.form-group .form-material textarea {
-  display: block;
-  background: none;
-  padding: 0.125rem 0.125rem 0.0625rem;
-  border-width: 0;
-  border-color: transparent;
-  line-height: 1.9;
+.fade-leave {
+  -webkit-animation-name: fadeOut;
+  animation-name: fadeOut;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  -webkit-animation-duration: 1.2s;
+  animation-duration: 1.2s;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden; }
+
+.slideInLeft-enter {
+  -webkit-animation-name: slideInRight;
+  animation-name: slideInRight;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  -webkit-animation-duration: 1.2s;
+  animation-duration: 1.2s;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden; }
+
+.slideInLeft-leave {
+  -webkit-animation-name: slideOutRight;
+  animation-name: slideOutRight;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  -webkit-animation-duration: 1.2s;
+  animation-duration: 1.2s;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden; }
+
+#addContactForm {
+  z-index: 100;
+  margin: 3px 0 30px auto;
+  background: #fff;
+  position: absolute;
+  width: 50%;
+  padding: 10px;
+  right: 0;
+  top: 53px;
+  border-radius: 5px 0 0 5px;
+  box-shadow: 0px 0px 4px #444;
+  height: 80%; }
+
+/*!
+ * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+/* Toggle Styles */
+#wrapper {
+  padding-left: 0;
+  transition: all 0.5s ease; }
+
+#wrapper.toggled {
+  padding-left: 250px; }
+
+#sidebar-wrapper {
+  z-index: 1000;
+  position: fixed;
+  left: 250px;
+  width: 0;
+  height: 100%;
+  margin-left: -250px;
+  overflow-y: auto;
+  transition: all 0.5s ease; }
+
+#wrapper.toggled #sidebar-wrapper {
+  width: 250px; }
+
+#page-content-wrapper {
   width: 100%;
-  color: transparent;
-  transition: all 0.38s ease;
-  box-shadow: none; }
+  position: absolute;
+  padding: 15px; }
 
-.form-group .form-material input[type="file"] {
-  line-height: 1; }
-  .form-group .form-material input[type="file"] ~ .bar {
-    display: none; }
+#wrapper.toggled #page-content-wrapper {
+  position: absolute;
+  margin-right: -250px; }
 
-.form-group .form-material select,
-.form-group .form-material input:focus,
-.form-group .form-material input:valid,
-.form-group .form-material input.form-file,
-.form-group .form-material input.has-value,
-.form-group .form-material textarea:focus,
-.form-group .form-material textarea:valid,
-.form-group .form-material textarea.form-file,
-.form-group .form-material textarea.has-value {
-  color: #333; }
-  .form-group .form-material select ~ .control-label,
-  .form-group .form-material input:focus ~ .control-label,
-  .form-group .form-material input:valid ~ .control-label,
-  .form-group .form-material input.form-file ~ .control-label,
-  .form-group .form-material input.has-value ~ .control-label,
-  .form-group .form-material textarea:focus ~ .control-label,
-  .form-group .form-material textarea:valid ~ .control-label,
-  .form-group .form-material textarea.form-file ~ .control-label,
-  .form-group .form-material textarea.has-value ~ .control-label {
-    font-size: 0.8rem;
-    color: gray;
-    top: -1rem;
-    left: 0; }
+/* Sidebar Styles */
+.sidebar-nav {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none; }
 
-.form-group .form-material select:focus,
-.form-group .form-material input:focus,
-.form-group .form-material textarea:focus {
-  outline: none; }
-  .form-group .form-material select:focus ~ .control-label,
-  .form-group .form-material input:focus ~ .control-label,
-  .form-group .form-material textarea:focus ~ .control-label {
-    color: #337ab7; }
-  .form-group .form-material select:focus ~ .bar::before,
-  .form-group .form-material input:focus ~ .bar::before,
-  .form-group .form-material textarea:focus ~ .bar::before {
-    width: 100%;
-    left: 0; }
+.sidebar-nav li {
+  text-indent: 20px;
+  line-height: 40px; }
 
-.has-error .legend.legend,
-.has-error.form-group .control-label.control-label {
-  color: #d9534f; }
+.sidebar-nav li a {
+  display: block;
+  text-decoration: none;
+  color: #999999; }
 
-.has-error.form-group .form-help,
-.has-error.form-group .helper, .has-error.checkbox .form-help,
-.has-error.checkbox .helper, .has-error.radio .form-help,
-.has-error.radio .helper, .has-error.form-radio .form-help,
-.has-error.form-radio .helper {
-  color: #d9534f; }
+.sidebar-nav li a:hover {
+  text-decoration: none;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2); }
 
-.has-error .bar::before {
-  background: #d9534f;
-  left: 0;
-  width: 100%; }
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+  text-decoration: none; }
 
-.button {
-  position: relative;
-  background: currentColor;
-  border: 1px solid currentColor;
-  font-size: 1.1rem;
-  color: #4f93ce;
-  margin: 3rem 0;
-  padding: 0.75rem 3rem;
-  cursor: pointer;
-  transition: background-color 0.38s ease, color 0.38s ease, box-shadow 0.38s ease;
-  overflow: hidden;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12); }
-  .button span {
-    color: #fff;
+.sidebar-nav > .sidebar-brand {
+  height: 65px;
+  font-size: 18px;
+  line-height: 60px; }
+
+.sidebar-nav > .sidebar-brand a {
+  color: #999999; }
+
+.sidebar-nav > .sidebar-brand a:hover {
+  color: #fff;
+  background: none; }
+
+@media (min-width: 768px) {
+  #wrapper {
+    padding-left: 250px; }
+  #wrapper.toggled {
+    padding-left: 0; }
+  #sidebar-wrapper {
+    width: 250px; }
+  #wrapper.toggled #sidebar-wrapper {
+    width: 0; }
+  #page-content-wrapper {
+    padding: 20px;
+    position: relative; }
+  #wrapper.toggled #page-content-wrapper {
     position: relative;
-    z-index: 1; }
-  .button::before {
-    content: '';
-    position: absolute;
-    background: #071017;
-    border: 50vh solid #1d4567;
-    width: 30vh;
-    height: 30vh;
-    border-radius: 50%;
-    display: block;
-    top: 50%;
-    left: 50%;
-    z-index: 0;
-    opacity: 1;
-    -webkit-transform: translate(-50%, -50%) scale(0);
-    transform: translate(-50%, -50%) scale(0); }
-  .button:hover {
-    color: #337ab7;
-    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2); }
-  .button:active::before, .button:focus::before {
-    transition: -webkit-transform 1.52s ease, opacity 0.38s ease 0.494s;
-    transition: transform 1.52s ease, opacity 0.38s ease 0.494s;
-    -webkit-transform: translate(-50%, -50%) scale(1);
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0; }
-  .button:focus {
-    outline: none; }
+    margin-right: 0; } }
 
 /*# sourceMappingURL=app.css.map */

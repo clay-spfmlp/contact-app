@@ -23874,7 +23874,6 @@ var Vue = require('vue');
 window.$ = window.jQuery = require('jquery');
 var bootstrap = require('bootstrap/dist/js/bootstrap');
 var VueResource = require('vue-resource');
-//require('vue-animate-css')
 
 Vue.use(VueResource);
 
@@ -23907,7 +23906,13 @@ new Vue({
     sortKey: '',
     columns: ['name', 'phone', 'email'],
     sortOrders: { 'name': 1, 'phone': 1, 'email': 1 },
-    oldInput: ''
+    oldInput: '',
+    sideBar: true,
+    newContact: false,
+    name: '',
+    phone: '',
+    email: '',
+    birthday: ''
   },
 
   created: function created() {
@@ -23997,9 +24002,7 @@ new Vue({
       resource.get({}).then(function (response) {
         this.labels = response.data;
       }.bind(this));
-    },
-
-    showCreateContact: function showCreateContact() {}
+    }
   }
 
 });
