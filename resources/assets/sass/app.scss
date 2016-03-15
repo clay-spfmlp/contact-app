@@ -12,27 +12,6 @@ body {
 	padding-top: 50px;
 }
 
-[v-cloak] .v-cloak--block {
-  display: block;
-}
-[v-cloak] .v-cloak--inline {
-  display: inline;
-}
-[v-cloak] .v-cloak--inlineBlock {
-  display: inline-block;
-}
-[v-cloak] .v-cloak--hidden {
-  display: none;
-}
-[v-cloak] .v-cloak--invisible {
-  visibility: hidden;
-}
-.v-cloak--block,
-.v-cloak--inline,
-.v-cloak--inlineBlock {
-  display: none;
-}
-
 .movie {
 	background: #fff;
     border-radius: 5px;
@@ -308,7 +287,7 @@ article {
 }
 
 .fade-transition {
-	
+
 }
 
 .fade-enter {
@@ -368,7 +347,8 @@ article {
 #sidebar-wrapper {
     z-index: 1000;
     position: fixed;
-    left: 250px;
+    left: 260px;
+    top: 70px;
     width: 0;
     height: 100%;
     margin-left: -250px;
@@ -470,4 +450,15 @@ article {
     }
 }
 
+.page-content-table {
+	border: 1px solid #ddd;
+}
 
+.table-body {
+	max-height: 450px;
+	overflow-y: auto;
+}
+
+.table > thead > tr > th {
+	border-bottom: 0px;
+}

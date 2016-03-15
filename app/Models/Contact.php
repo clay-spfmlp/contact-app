@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {
 
+	protected $fillable = [
+		'name',
+		'email',
+		'phone',
+		'birthday',
+	];
+
 	protected $appends = array('gravatar');
 
 	public function getGravatarAttribute()
@@ -20,6 +27,14 @@ class Contact extends Model
     public function labels()
     {
         return $this->belongsToMany('App\Models\Label');
+    }
+
+    /**
+     * The user that belong to the contact.
+     */
+    public function user()
+    {
+        return $this->belongsToMany('App\Models\User');
     }
 
 }

@@ -70,7 +70,12 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        $contact = $this->contact->create($request->all());
+
+    	$contact = $this->contact->create($request->all());
+
+        $contact->user()->attach($request->get('user_id'));
+        $contact = $this->contact->find($contact->id);
+        return $contact;
     }
 
     /**

@@ -23909,10 +23909,13 @@ new Vue({
     oldInput: '',
     sideBar: true,
     newContact: false,
-    name: '',
-    phone: '',
-    email: '',
-    birthday: ''
+    Contact: {
+      name: '',
+      phone: '',
+      email: '',
+      birthday: ''
+    }
+
   },
 
   created: function created() {
@@ -23930,7 +23933,6 @@ new Vue({
     createLabel: function createLabel(label) {
       this.$http.post('label', { name: label, user_id: this.user.id, _method: 'POST' }).then(function (response) {
         this.labels.push(response.data);
-        console.log(response.data);
         this.newLabel = false;
         this.label = '';
       }.bind(this));
@@ -24002,6 +24004,28 @@ new Vue({
       resource.get({}).then(function (response) {
         this.labels = response.data;
       }.bind(this));
+    },
+
+    createContact: function createContact() {
+      this.$http.post('contact', {
+        user_id: this.user.id,
+        name: this.Contact.name,
+        phone: this.Contact.phone,
+        email: this.Contact.email,
+        birthday: this.Contact.birthday,
+        _method: 'POST'
+      }).then(function (response) {
+        this.contacts.push(response.data);
+        this.closeNewContact();
+      }.bind(this));
+    },
+
+    closeNewContact: function closeNewContact() {
+      this.newContact = false;
+      this.Contact.name = '';
+      this.Contact.phone = '';
+      this.Contact.email = '';
+      this.Contact.birthday = '';
     }
   }
 

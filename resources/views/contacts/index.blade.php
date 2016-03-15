@@ -2,7 +2,8 @@
 
 @section('content')
 
-  <div id="app-contacts" v-cloak class="page">
+  <div id="app-contacts" class="page">
+
     <div id="wrapper">
 
       <div id="sidebar-wrapper">
@@ -10,23 +11,23 @@
           <div class="sidebar-section">
 
             <div class="list-group list-group-full">
-              <a class="list-group-item" href="/contacts">
+              <a class="list-group-item" v-on:click.stop.prevent="searchQuery = ''">
                 <i class="fa fa-inbox" aria-hidden="true"></i>All Contacts
-                <span class="badge pull-right">@{{ contacts | count }}</span>
+                <span class="badge pull-right" v-cloak >@{{ contacts | count }}</span>
               </a>
             </div>
             
             <div class="list-group list-group-full editable">
-              <div v-for="label in labels" v-bind:class="'list-group-item item-' + $index" v-cloak--hidden>
+              <div v-for="label in labels" v-bind:class="'list-group-item item-' + $index" >
                 <div class="list-content">
-                  <span v-show="!label.editing" class="pull-right badge" v-cloak--hidden>@{{ label.contacts | count }}</span>
-                  <span v-show="!label.editing" class="list-text" v-cloak--hidden>@{{ label.name }}</span>
-                  <div v-show="!label.editing" class="item-actions pull-right" v-cloak--hidden>
+                  <span v-show="!label.editing" class="pull-right badge" v-cloak >@{{ label.contacts | count }}</span>
+                  <span v-show="!label.editing" class="list-text" v-cloak >@{{ label.name }}</span>
+                  <div v-show="!label.editing" class="item-actions pull-right" >
                     <a v-on:click.stop.prevent="editLabel($index)" class="btn-icon"><i class="fa fa-edit" aria-hidden="true"></i></a>
                     <a v-on:click.stop.prevent="removeConfirm($index)" class="btn-icon trash"><i class="fa fa-trash" aria-hidden="true"></i></a>
                   </div>
                 </div>
-                <span v-show="label.remove" v-cloak--hidden>
+                <span v-show="label.remove" >
                   <div class="confirm">
                     <div class="col-md-11 col-xs-10">
                         <p>Are you sure?</p>
@@ -50,15 +51,16 @@
                   </div>
                 </div>
               </div>
-              <div v-show="newLabel" class="list-group-item" v-cloak--hidden>
+              <div v-show="newLabel" class="list-group-item" >
                 <input v-focus-model="newLabel" v-model="label" class="form-control" name="name" v-on:keyup.enter="createLabel(label)">
               </div>
-              <a v-show="!newLabel" class="list-group-item" v-on:click.stop.prevent="newLabel = true" v-cloak--hidden>
+              <a v-show="!newLabel" class="list-group-item" v-on:click.stop.prevent="newLabel = true" >
                 <span >
                   <i class="fa fa-plus" aria-hidden="true"></i> Add New Label
                 </span>
               </a>
             </div>
+
           </div>
         </div>
       </div>
@@ -75,7 +77,7 @@
             <div class="pull-right">
               <div class="input-search">
                 <i class="fa fa-search" aria-hidden="true" v-on:click="search = true"></i>
-                <input v-model="searchQuery" v-focus-model="search" type="text" class="form-control" name="" placeholder="Search..." v-cloak--hidden>
+                <input v-model="searchQuery" v-focus-model="search" type="text" class="form-control" name="" placeholder="Search..." >
                 <i v-show="searchQuery" class="fa fa-times-circle" aria-hidden="true" v-on:click="searchQuery = ''"></i>
               </div>
             </div>
@@ -133,7 +135,7 @@
                     <label for="select_all"></label>
                   </span>
                 </th>
-                <th v-for="column in columns" v-on:click="sortBy(column)" :class="{active: sortKey == column}" v-cloak--hidden>
+                <th v-for="column in columns" v-on:click="sortBy(column)" :class="{active: sortKey == column}" >
                   @{{ column | capitalize}}
                   <span class="arrow"
                     :class="sortOrders[column] > 0 ? 'asc' : 'dsc'">
@@ -141,29 +143,31 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for="contact in contacts | filterBy searchQuery | orderBy sortKey sortOrders[sortKey]" class="contact-row" v-cloak--hidden>
-                <td class="responsive-hide">
-                  <span class="checkbox-custom checkbox-primary checkbox-lg">
-                    <input type="checkbox" class="contacts-checkbox selectable-item" id="contacts_@{{ contact.id }}"
-                    />
-                    <label for="contacts_@{{ contact.id }}"></label>
-                  </span>
-                </td>
-                <td>
-                  <a class="avatar pull-left" href="javascript:void(0)">
-                    <img class="img-responsive" :src="'http://www.gravatar.com/avatar/' + contact.gravatar"
-                    alt="...">
-                  </a>
-                  <div class="name pull-left">@{{ contact.name }}</div>
-                </td>
-                <td>@{{ contact.phone }}</td>
-                <td>@{{ contact.email }}</td>
-              </tr>
-
-            </tbody>
           </table>
 
+          <div class="table-body">
+            <table class="table" transition="fade">
+              <tbody>
+                <tr v-for="contact in contacts | filterBy searchQuery | orderBy sortKey sortOrders[sortKey]" class="contact-row" >
+                  <td class="responsive-hide">
+                    <span class="checkbox-custom checkbox-primary checkbox-lg">
+                      <input type="checkbox" class="contacts-checkbox selectable-item" id="contacts_@{{ contact.id }}" >
+                      <label for="contacts_@{{ contact.id }}"></label>
+                    </span>
+                  </td>
+                  <td>
+                    <a class="avatar pull-left" href="javascript:void(0)">
+                      <img class="img-responsive" :src="'http://www.gravatar.com/avatar/' + contact.gravatar"
+                      alt="...">
+                    </a>
+                    <div class="name pull-left">@{{ contact.name }}</div>
+                  </td>
+                  <td>@{{ contact.phone }}</td>
+                  <td>@{{ contact.email }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <ul data-plugin="paginator" data-total="50" data-skin="pagination-gap"></ul>
         </div>
       </div>
@@ -186,38 +190,37 @@
     <!-- End Site Action -->
 
     <!-- Add Contoct Form -->
-    <div v-show="newContact" transition="slideInLeft" class="new-contact-form" id="addContactForm" aria-hidden="true" aria-labelledby="addUserForm" role="dialog" tabindex="-1">
-      <div class="dialog">
-        <div class="content">
-          <div class="header">
-            <button v-on:click.stop.prevent="newContact = false" type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
-            <h4 class="title">Create New Contact</h4>
-          </div>
-          <div class="body">
-            <form>
-              <div class="form-group">
-                <input v-model="name" type="text" class="form-control" name="name" placeholder="Name" />
+    <div v-show="newContact" v-cloak transition="slideInLeft" class="new-contact-form" id="addContactForm" aria-hidden="true" aria-labelledby="addUserForm" role="dialog" tabindex="-1">
+      <form>
+        <div class="dialog">
+          <div class="content">
+            <div class="header">
+              <button v-on:click.stop.prevent="closeNewContact()" type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+              <h4 class="title">Create New Contact</h4>
+            </div>
+            <div class="body">
+                <div class="form-group">
+                  <input v-model="Contact.name" type="text" class="form-control" name="name" placeholder="Name" required>
+                </div>
+                <div class="form-group">
+                  <input v-model="Contact.phone" type="text" class="form-control" name="phone" placeholder="Phone" >
+                </div>
+                <div class="form-group">
+                  <input v-model="Contact.email" type="email" class="form-control" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                  <input v-model="Contact.birthday" type="date" class="form-control" name="birthday" placeholder="Birthday">
+                </div>
+            </div>
+            <div class="footer">
+              <div class="pull-right">
+                <button v-on:click.stop.prevent="createContact()" class="btn btn-primary" type="submit">Send</button>
+                <a class="btn btn-sm btn-white" v-on:click.stop.prevent="closeNewContact()">Cancel</a>
               </div>
-              <div class="form-group">
-                <input v-model="phone" type="text" class="form-control" name="phone" placeholder="Phone" />
-              </div>
-              <div class="form-group">
-                <input v-model="email" type="text" class="form-control" name="email" placeholder="Email" />
-              </div>
-              <div class="form-group">
-                <input v-model="birthday" type="text" class="form-control" name="birthday" placeholder="Birthday"
-                />
-              </div>
-            </form>
-          </div>
-          <div class="footer">
-            <div class="pull-right">
-              <button class="btn btn-primary" type="submit">Send</button>
-              <a class="btn btn-sm btn-white" v-on:click.stop.prevent="newContact = false">Cancel</a>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
     <!-- End Add Contact Form -->
 
