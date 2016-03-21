@@ -25,6 +25,5 @@ $factory->define(App\Models\Contact::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'email' => $faker->email,
         'phone' => $faker->phoneNumber,
-        'birthday' => date($format = 'Y-m-d', $max = '-10 years')
     ];
 });

@@ -23909,6 +23909,7 @@ new Vue({
     oldInput: '',
     sideBar: true,
     newContact: false,
+    checkedContacts: [],
     Contact: {
       name: '',
       phone: '',
@@ -24026,6 +24027,10 @@ new Vue({
       this.Contact.phone = '';
       this.Contact.email = '';
       this.Contact.birthday = '';
+    },
+
+    deleteContacts: function deleteContacts() {
+      alert(this.checkedContacts);
     }
   }
 

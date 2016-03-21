@@ -92,13 +92,14 @@
           <div class="page-content-actions">
             <div class="pull-right">
               <div class="dropdown pull-right">
-                <a type="button" class="btn btn-default">
+                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                   <i class="fa fa-chevron-circle-down"></i>
                   <span class="icon wb-chevron-down-mini" aria-hidden="true"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="javascript:void(0)">Empty All</a></li>
                   <li><a href="javascript:void(0)">Export</a></li>
+                  <li><a v-on:click.prevent="deleteContacts"><i class="fa fa-trash"></i>Trash</a></li>
                 </ul>
               </div>
             </div>
@@ -130,8 +131,7 @@
               <tr class="sortable">
                 <th scope="col">
                   <span class="checkbox-custom checkbox-primary checkbox-lg contacts-select-all">
-                    <input type="checkbox" class="contacts-checkbox selectable-all" id="select_all"
-                    />
+                    <input type="checkbox" class="contacts-checkbox selectable-all" id="select_all">
                     <label for="select_all"></label>
                   </span>
                 </th>
@@ -151,14 +151,13 @@
                 <tr v-for="contact in contacts | filterBy searchQuery | orderBy sortKey sortOrders[sortKey]" class="contact-row" >
                   <td class="responsive-hide">
                     <span class="checkbox-custom checkbox-primary checkbox-lg">
-                      <input type="checkbox" class="contacts-checkbox selectable-item" id="contacts_@{{ contact.id }}" >
+                      <input type="checkbox" v-model="checkedContacts" class="contacts-checkbox selectable-item" id="contacts_@{{ contact.id }}" value="@{{ contact.id }}">
                       <label for="contacts_@{{ contact.id }}"></label>
                     </span>
                   </td>
                   <td>
                     <a class="avatar pull-left" href="javascript:void(0)">
-                      <img class="img-responsive" :src="'http://www.gravatar.com/avatar/' + contact.gravatar"
-                      alt="...">
+                      <img class="img-responsive" :src="'http://www.gravatar.com/avatar/' + contact.gravatar" alt="...">
                     </a>
                     <div class="name pull-left">@{{ contact.name }}</div>
                   </td>
