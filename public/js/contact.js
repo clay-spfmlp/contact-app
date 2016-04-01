@@ -23868,7 +23868,167 @@ if (module.hot) {(function () {  module.hot.accept()
 },{"vue":30,"vue-hot-reload-api":5}],32:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+				value: true
+});
+
 var _vueFocus = require('vue-focus');
+
+exports.default = {
+
+				name: 'EditableList',
+
+				directives: { focusModel: _vueFocus.focusModel },
+
+				props: {
+								content: {},
+								model: ''
+				},
+
+				data: function data() {
+								return {
+												label: '',
+												newLabel: false,
+												oldInput: ''
+								};
+				},
+
+				methods: {
+
+								create: function create(label) {
+												this.$http.post(this.model, { name: label, user_id: this.$parent.user.id, _method: 'POST' }).then(function (response) {
+																this.content.push(response.data);
+																this.newLabel = false;
+																this.label = '';
+												}.bind(this));
+								},
+
+								edit: function edit(i) {
+												var labels = this.content;
+												this.setOldInput(labels[i].name);
+												console.log(labels[i].name);
+												labels.forEach(function (label) {
+																label.editing = false;
+																labels[i].editing = true;
+												});
+
+												labels.forEach(function (label) {
+																label.remove = false;
+												});
+								},
+
+								cancel: function cancel(i) {
+												console.log('test');
+												this.content[i].name = this.oldInput;
+												this.oldInput = '';
+												this.content[i].editing = false;
+								},
+
+								removeConfirm: function removeConfirm(i) {
+												var labels = this.content;
+												labels.forEach(function (label) {
+																label.remove = false;
+																labels[i].remove = true;
+												});
+								},
+
+								remove: function remove(i) {
+												var label = this.content[i];
+												label.updating = true;
+												this.$http.post(this.model + '/' + label.id, { name: label.name, _method: 'DELETE' }).then(function (response) {
+																label.updating = false;
+																this.content.splice(i, 1);
+												}.bind(this));
+								},
+
+								update: function update(i) {
+												var label = this.content[i];
+												label.updating = true;
+												this.$http.post(this.model + '/' + label.id, { name: label.name, _method: 'PATCH' }).then(function (response) {
+																label.updating = false;
+																label.editing = false;
+												}.bind(this));
+								},
+
+								setOldInput: function setOldInput(old) {
+												this.oldInput = old;
+								}
+				}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"list-group list-group-full editable\">\n\t<div v-for=\"label in content\" v-bind:class=\"'list-group-item item-' + $index\" v-cloak=\"\">\n\t\t<div v-show=\"!label.editing\" class=\"list-content\">\n\t\t\t<span class=\"list-text\" v-cloak=\"\">{{ label.name }}</span>\n\t\t\t<span class=\"pull-right badge\" v-cloak=\"\">{{ label.contacts | count }}</span>\n\t\t\t<div class=\"item-actions pull-right\" v-cloak=\"\">\n\t\t\t\t<a @click.stop.prevent=\"edit($index)\" class=\"btn-icon\">\n\t\t\t\t\t<i class=\"fa fa-edit\" aria-hidden=\"true\"></i>\n\t\t\t\t</a>\n\t\t\t\t<a @click.stop.prevent=\"removeConfirm($index)\" class=\"btn-icon trash\">\n\t\t\t\t\t<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>\n\t\t\t\t</a>\n\t\t\t</div>\n\t\t</div>\n\t\t\n\t\t<div v-show=\"label.remove\" v-cloak=\"\" class=\"confirm\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<p>Are you sure?</p>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6 removeOptions\">\n\t\t\t\t<div class=\"pull-right\">\n\t\t\t\t\t<button @click=\"remove($index)\" class=\"btn btn-sm btn-primary\">YES</button>\n\t\t\t\t\t<button @click=\"label.remove = false\" class=\"btn btn-sm btn-danger\">NO</button>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t\n\t\t<div v-show=\"label.editing\" class=\"list-editable\">\n\t\t\t<div class=\"form-group material-input\">\n\t\t\t\t<input onfocus=\"this.select()\" v-focus-model=\"label.editing\" v-model=\"content[$index].name\" type=\"text\" class=\"form-control\" name=\"name\" @keyup.enter=\"update($index)\">\n\t\t\t\t<div class=\"edit-options pull-right\">\n\t\t\t\t\t<span @click=\"cancel($index)\" v-show=\"!label.updating\" class=\"btn-icon\">\n\t\t\t\t\t\t<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span v-show=\"label.updating\" class=\"btn-icon\">\n\t\t\t\t\t\t<i class=\"fa fa-spinner fa-pulse\" aria-hidden=\"true\"></i>\n\t\t\t\t\t</span>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div v-show=\"newLabel\" class=\"list-group-item\" v-cloak=\"\">\n\t\t<input v-focus-model=\"newLabel\" v-model=\"label\" class=\"form-control\" name=\"name\" @keyup.enter=\"create(label)\">\n\t</div>\n\t<a v-show=\"!newLabel\" class=\"list-group-item\" @click.stop.prevent=\"newLabel = true\" v-cloak=\"\">\n\t\t<span>\n\t\t\t<i class=\"fa fa-plus\" aria-hidden=\"true\"></i> Add New Label\n\t\t</span>\n\t</a>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "/Users/michaelbustamante/Sites/contact-app/resources/assets/js/components/EditableList.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":30,"vue-focus":4,"vue-hot-reload-api":5}],33:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+
+    name: 'SortableTable',
+
+    props: {
+        data: {},
+        columns: [],
+        filterKey: ''
+    },
+
+    data: function data() {
+        var sortOrders = {};
+        this.columns.forEach(function (key) {
+            sortOrders[key] = 1;
+        });
+        return {
+            sortKey: '',
+            sortOrders: sortOrders,
+            checkedContacts: []
+        };
+    },
+
+    methods: {
+        sortBy: function sortBy(key) {
+            this.sortKey = key;
+            this.sortOrders[key] = this.sortOrders[key] * -1;
+        },
+
+        ifInArray: function ifInArray(id, array) {
+            var key;
+            for (key in array) {
+                if (array[key] == id) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<table class=\"table\">\n    <thead>\n      \t<tr v-cloak=\"\" class=\"sortable\">\n        \t<th scope=\"col\">\n          \t\t<span class=\"checkbox-custom checkbox-primary checkbox-lg contacts-select-all\">\n            \t\t<input type=\"checkbox\" class=\"contacts-checkbox selectable-all\" id=\"select_all\">\n            \t\t<label for=\"select_all\"></label>\n          \t\t</span>\n        \t</th>\n        \t<th v-for=\"column in columns\" v-on:click=\"sortBy(column)\" :class=\"{active: sortKey == column}\">\n          \t\t{{ column | capitalize}}\n          \t\t<span class=\"arrow\" :class=\"sortOrders[column] > 0 ? 'asc' : 'dsc'\"></span>\n        \t</th>\n      \t</tr>\n    </thead>\n</table>\n\n<div class=\"table-body\">\n\t<table class=\"table\">\n\t  \t<tbody>\n\t    \t<tr v-cloak=\"\" v-for=\"contact in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]\" v-bind:class=\"ifInArray(contact.id, checkedContacts) ? 'checked' : ''\" class=\"contact-row\">\n\t      \t\t<td class=\"responsive-hide\">\n\t        \t\t<span class=\"checkbox-custom checkbox-primary checkbox-lg\">\n\t          \t\t\t<input type=\"checkbox\" v-model=\"checkedContacts\" class=\"contacts-checkbox selectable-item\" id=\"contacts_{{ contact.id }}\" value=\"{{ contact.id }}\">\n\t          \t\t\t<label for=\"contacts_@{{ contact.id }}\"></label>\n\t        \t\t</span>\n\t      \t\t</td>\n\t      \t\t<td>\n\t        \t\t<a class=\"avatar pull-left\" href=\"javascript:void(0)\">\n\t          \t\t\t<img class=\"img-responsive\" :src=\"'http://www.gravatar.com/avatar/' + contact.gravatar\" alt=\"...\">\n\t        \t\t</a>\n\t        \t\t<div class=\"name pull-left\"><a v-on:click.stop.prevent=\"setContact(contact)\">{{ contact.name }}</a></div>\n\t      \t\t</td>\n\t      \t\t<td>{{ contact.phone }}</td>\n\t      \t\t<td>{{ contact.email }}</td>\n\t    \t</tr>\n\t  \t</tbody>\n\t</table>\n</div>\n         \n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "/Users/michaelbustamante/Sites/contact-app/resources/assets/js/components/SortableTable.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":30,"vue-hot-reload-api":5}],34:[function(require,module,exports){
+'use strict';
 
 var Vue = require('vue');
 window.$ = window.jQuery = require('jquery');
@@ -23883,14 +24043,16 @@ Vue.filter('count', function (list) {
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value');
 
+Vue.config.debug = true;
+
 new Vue({
 
   name: 'Contact',
 
-  directives: { focusModel: _vueFocus.focusModel },
-
   components: {
-    ContactForm: require('./components/ContactForm.vue')
+    ContactForm: require('./components/ContactForm.vue'),
+    EditableList: require('./components/EditableList.vue'),
+    SortableTable: require('./components/SortableTable.vue')
   },
 
   el: '#app-contacts',
@@ -23899,18 +24061,20 @@ new Vue({
     user: Auth.user,
     contacts: {},
     labels: {},
-    label: '',
-    newLabel: false,
     searchQuery: '',
     search: false,
-    sortKey: '',
     columns: ['name', 'phone', 'email'],
     sortOrders: { 'name': 1, 'phone': 1, 'email': 1 },
-    oldInput: '',
     sideBar: true,
     newContact: false,
-    checkedContacts: [],
+    editContact: false,
     Contact: {
+      name: '',
+      phone: '',
+      email: '',
+      birthday: ''
+    },
+    Edit: {
       name: '',
       phone: '',
       email: '',
@@ -23926,71 +24090,23 @@ new Vue({
 
   methods: {
 
+    openNewContact: function openNewContact() {
+      this.closeEditContact();
+      this.newContact = true;
+    },
+
+    setContact: function setContact(contact) {
+      this.closeNewContact();
+      this.editContact = true;
+      this.Edit.name = contact.name;
+      this.Edit.phone = contact.phone;
+      this.Edit.email = contact.email;
+      this.Edit.birthday = contact.birthday;
+    },
+
     sortBy: function sortBy(key) {
       this.sortKey = key;
       this.sortOrders[key] = this.sortOrders[key] * -1;
-    },
-
-    createLabel: function createLabel(label) {
-      this.$http.post('label', { name: label, user_id: this.user.id, _method: 'POST' }).then(function (response) {
-        this.labels.push(response.data);
-        this.newLabel = false;
-        this.label = '';
-      }.bind(this));
-    },
-
-    editLabel: function editLabel(i) {
-      var labels = this.labels;
-      this.setOldInput(labels[i].name);
-      labels.forEach(function (label) {
-        label.editing = false;
-        labels[i].editing = true;
-      });
-
-      labels.forEach(function (label) {
-        label.remove = false;
-      });
-    },
-
-    closeLabel: function closeLabel(i) {
-      console.log(this.labels[i].name);
-      this.labels[i].name = this.oldInput;
-      this.oldInput = '';
-      this.labels[i].editing = false;
-    },
-
-    removeConfirm: function removeConfirm(i) {
-      var labels = this.labels;
-      labels.forEach(function (label) {
-        label.remove = false;
-        labels[i].remove = true;
-      });
-    },
-
-    removeLabel: function removeLabel(i) {
-
-      var label = this.labels[i];
-      label.updating = true;
-      this.$http.post('label/' + label.id, { name: label.name, _method: 'DELETE' }).then(function (response) {
-        //console.log('test')
-        label.updating = false;
-        this.labels.splice(i, 1);
-      }.bind(this));
-    },
-
-    updateLabel: function updateLabel(i) {
-      var label = this.labels[i];
-      label.updating = true;
-      //var resource = this.$resource('label/'+label.id)
-      this.$http.post('label/' + label.id, { name: label.name, _method: 'PATCH' }).then(function (response) {
-        //console.log('test')
-        label.updating = false;
-        label.editing = false;
-      }.bind(this));
-    },
-
-    setOldInput: function setOldInput(old) {
-      this.oldInput = old;
     },
 
     getContacts: function getContacts() {
@@ -24008,6 +24124,7 @@ new Vue({
     },
 
     createContact: function createContact() {
+
       this.$http.post('contact', {
         user_id: this.user.id,
         name: this.Contact.name,
@@ -24021,12 +24138,25 @@ new Vue({
       }.bind(this));
     },
 
+    updateContact: function updateContact() {
+      this.closeNewContact();
+      console.log('update contact');
+    },
+
     closeNewContact: function closeNewContact() {
       this.newContact = false;
       this.Contact.name = '';
       this.Contact.phone = '';
       this.Contact.email = '';
       this.Contact.birthday = '';
+    },
+
+    closeEditContact: function closeEditContact() {
+      this.editContact = false;
+      this.Edit.name = '';
+      this.Edit.phone = '';
+      this.Edit.email = '';
+      this.Edit.birthday = '';
     },
 
     deleteContacts: function deleteContacts() {
@@ -24036,6 +24166,6 @@ new Vue({
 
 });
 
-},{"./components/ContactForm.vue":31,"bootstrap/dist/js/bootstrap":1,"jquery":2,"vue":30,"vue-focus":4,"vue-resource":19}]},{},[32]);
+},{"./components/ContactForm.vue":31,"./components/EditableList.vue":32,"./components/SortableTable.vue":33,"bootstrap/dist/js/bootstrap":1,"jquery":2,"vue":30,"vue-resource":19}]},{},[34]);
 
 //# sourceMappingURL=contact.js.map

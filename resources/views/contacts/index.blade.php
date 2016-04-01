@@ -11,55 +11,13 @@
           <div class="sidebar-section">
 
             <div class="list-group list-group-full">
-              <a class="list-group-item" v-on:click.stop.prevent="searchQuery = ''">
+              <a v-cloak class="list-group-item" v-on:click.stop.prevent="searchQuery = ''">
                 <i class="fa fa-inbox" aria-hidden="true"></i>All Contacts
                 <span class="badge pull-right" v-cloak >@{{ contacts | count }}</span>
               </a>
             </div>
+            <editable-list :content="labels" model="label"></editable-list>
             
-            <div class="list-group list-group-full editable">
-              <div v-for="label in labels" v-bind:class="'list-group-item item-' + $index" >
-                <div class="list-content">
-                  <span v-show="!label.editing" class="pull-right badge" v-cloak >@{{ label.contacts | count }}</span>
-                  <span v-show="!label.editing" class="list-text" v-cloak >@{{ label.name }}</span>
-                  <div v-show="!label.editing" class="item-actions pull-right" >
-                    <a v-on:click.stop.prevent="editLabel($index)" class="btn-icon"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                    <a v-on:click.stop.prevent="removeConfirm($index)" class="btn-icon trash"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                  </div>
-                </div>
-                <span v-show="label.remove" >
-                  <div class="confirm">
-                    <div class="col-md-11 col-xs-10">
-                        <p>Are you sure?</p>
-                    </div>
-                    <div class="removeOptions">
-                      <div class="pull-right">
-                          <button v-on:click="removeLabel($index)" class="btn btn-sm btn-primary">YES</button>
-                          <button v-on:click="label.remove = false" class="btn btn-sm btn-danger">NO</button>
-                      </div>
-                    </div>
-                  </div>
-                </span>
-                <div v-show="label.editing" class="list-editable">
-                  <div class="form-group material-input">
-                    <input onFocus="this.select()" v-focus-model="label.editing" v-model="labels[$index].name" type="text" class="form-control" name="name" v-on:keyup.enter="updateLabel($index)">
-                    <div class="edit-options pull-right">
-                      <!-- <span v-on:click="updateLabel($index)" v-show="!label.updating" class="btn-icon"><i class="fa fa-check-circle" aria-hidden="true"></i></span> -->
-                      <span v-on:click="closeLabel($index)" v-show="!label.updating" class="btn-icon"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
-                      <span v-show="label.updating" class="btn-icon"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div v-show="newLabel" class="list-group-item" >
-                <input v-focus-model="newLabel" v-model="label" class="form-control" name="name" v-on:keyup.enter="createLabel(label)">
-              </div>
-              <a v-show="!newLabel" class="list-group-item" v-on:click.stop.prevent="newLabel = true" >
-                <span >
-                  <i class="fa fa-plus" aria-hidden="true"></i> Add New Label
-                </span>
-              </a>
-            </div>
 
           </div>
         </div>
@@ -126,9 +84,15 @@
 
 
           <!-- Contacts -->
-          <table class="table">
+          <sortable-table
+            :data="contacts"
+            :columns="columns"
+            :filter-key="searchQuery">
+            </sortable-table>
+
+          <!-- <table class="table">
             <thead>
-              <tr class="sortable">
+              <tr v-cloak class="sortable">
                 <th scope="col">
                   <span class="checkbox-custom checkbox-primary checkbox-lg contacts-select-all">
                     <input type="checkbox" class="contacts-checkbox selectable-all" id="select_all">
@@ -148,7 +112,7 @@
           <div class="table-body">
             <table class="table" transition="fade">
               <tbody>
-                <tr v-for="contact in contacts | filterBy searchQuery | orderBy sortKey sortOrders[sortKey]" class="contact-row" >
+                <tr v-cloak v-for="contact in contacts | filterBy searchQuery | orderBy sortKey sortOrders[sortKey]" v-bind:class="ifInArray(contact.id, checkedContacts) ? 'checked' : ''" class="contact-row" >
                   <td class="responsive-hide">
                     <span class="checkbox-custom checkbox-primary checkbox-lg">
                       <input type="checkbox" v-model="checkedContacts" class="contacts-checkbox selectable-item" id="contacts_@{{ contact.id }}" value="@{{ contact.id }}">
@@ -159,14 +123,15 @@
                     <a class="avatar pull-left" href="javascript:void(0)">
                       <img class="img-responsive" :src="'http://www.gravatar.com/avatar/' + contact.gravatar" alt="...">
                     </a>
-                    <div class="name pull-left">@{{ contact.name }}</div>
+                    <div class="name pull-left"><a v-on:click.stop.prevent="setContact(contact)" >@{{ contact.name }}</a></div>
                   </td>
                   <td>@{{ contact.phone }}</td>
                   <td>@{{ contact.email }}</td>
                 </tr>
               </tbody>
             </table>
-          </div>
+          </div> -->
+
           <ul data-plugin="paginator" data-total="50" data-skin="pagination-gap"></ul>
         </div>
       </div>
@@ -174,7 +139,7 @@
 
     <!-- Site Action -->
     <div class="site-action">
-      <button v-on:click.stop.prevent="newContact = true" v-show="!newContact" transition="fade" type="button" class="site-action-btn btn btn-success btn-floating">
+      <button v-on:click.stop.prevent="openNewContact()" v-show="!newContact" transition="fade" type="button" class="site-action-btn btn btn-success btn-floating">
         <i class="fa fa-user-plus" aria-hidden="true"></i>
       </button>
       <!-- <div class="site-action-buttons">
@@ -222,6 +187,41 @@
       </form>
     </div>
     <!-- End Add Contact Form -->
+
+    <!-- Edit Contoct Form -->
+    <div v-show="editContact" v-cloak transition="slideInLeft" class="new-contact-form" id="addContactForm" aria-hidden="true" aria-labelledby="addUserForm" role="dialog" tabindex="-1">
+      <form>
+        <div class="dialog">
+          <div class="content">
+            <div class="header">
+              <button v-on:click.stop.prevent="closeEditContact()" type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+              <h4 class="title">Edit Contact</h4>
+            </div>
+            <div class="body">
+                <div class="form-group">
+                  <input v-model="Edit.name" type="text" class="form-control" name="name" placeholder="Name" required>
+                </div>
+                <div class="form-group">
+                  <input v-model="Edit.phone" type="text" class="form-control" name="phone" placeholder="Phone" >
+                </div>
+                <div class="form-group">
+                  <input v-model="Edit.email" type="email" class="form-control" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                  <input v-model="Edit.birthday" type="date" class="form-control" name="birthday" placeholder="Birthday">
+                </div>
+            </div>
+            <div class="footer">
+              <div class="pull-right">
+                <button v-on:click.stop.prevent="updateContact()" class="btn btn-primary" type="submit">Edit</button>
+                <a class="btn btn-sm btn-white" v-on:click.stop.prevent="closeEditContact()">Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- End Edit Contact Form -->
 
   </div>
 

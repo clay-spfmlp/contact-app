@@ -13,10 +13,10 @@
 			</div>
 		</div>
 		<hr>
-		<div v-if="loadingTheathers" class="loading-theathers text-center">
+		<div v-if="loadingTheathers" v-cloak class="loading-theathers text-center">
 			<i class="fa fa-spinner fa-pulse"></i>
 		</div>
-		<div v-for="theater in theaters" v-show="!loadingTheathers" class="theater col-md-8 col-md-offset-2">
+		<div v-for="theater in theaters" v-show="!loadingTheathers" class="theater col-md-8 col-md-offset-2" v-cloak>
 			<div class="theater-name row">
 				<h3 class="col-md-12">@{{ theater.name }}</h3>
 				<div class="theater-address col-md-12">@{{ theater.address }}</div>

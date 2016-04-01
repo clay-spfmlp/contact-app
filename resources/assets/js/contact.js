@@ -11,16 +11,16 @@ Vue.filter('count', function (list) {
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value')
 
-import { focusModel } from 'vue-focus'
+Vue.config.debug = true
 
 new Vue({
 
   name: 'Contact',
 
-  directives: { focusModel: focusModel },
-
   components: {
-    ContactForm: require('./components/ContactForm.vue') 
+    ContactForm: require('./components/ContactForm.vue'),
+    EditableList: require('./components/EditableList.vue'),
+    SortableTable: require('./components/SortableTable.vue')
   },
 
   el: '#app-contacts',
@@ -29,18 +29,20 @@ new Vue({
     user: Auth.user,
     contacts: {},
     labels: {},
-    label: '',
-    newLabel: false,
     searchQuery: '',
     search: false,
-    sortKey: '',
     columns: ['name', 'phone', 'email'],
     sortOrders: {'name':1, 'phone':1, 'email':1},
-    oldInput: '',
     sideBar: true,
     newContact: false,
-    checkedContacts: [],
+    editContact: false,
     Contact: {
+      name: '',
+      phone: '',
+      email: '',
+      birthday: '', 
+    },
+    Edit: {
       name: '',
       phone: '',
       email: '',
@@ -56,71 +58,23 @@ new Vue({
 
   methods: {
 
+    openNewContact: function () {
+      this.closeEditContact()
+      this.newContact = true
+    },
+
+    setContact: function (contact) {
+      this.closeNewContact()
+      this.editContact = true
+      this.Edit.name = contact.name
+      this.Edit.phone = contact.phone
+      this.Edit.email = contact.email
+      this.Edit.birthday = contact.birthday
+    },
+
     sortBy: function (key) {
       this.sortKey = key
       this.sortOrders[key] = this.sortOrders[key] * -1
-    },
-
-    createLabel: function (label) {
-      this.$http.post('label', {name:label, user_id: this.user.id, _method:'POST'}).then(function(response){
-        this.labels.push(response.data)
-        this.newLabel = false
-        this.label = ''
-      }.bind(this))
-    },
-
-    editLabel: function (i) {
-      var labels = this.labels
-      this.setOldInput(labels[i].name)
-      labels.forEach(function(label){
-        label.editing = false
-        labels[i].editing = true
-      })
-
-      labels.forEach(function(label){
-        label.remove = false
-      })
-    },
-
-    closeLabel: function (i) {
-      console.log(this.labels[i].name)
-      this.labels[i].name = this.oldInput
-      this.oldInput = ''
-      this.labels[i].editing = false;
-    },
-
-    removeConfirm: function (i) {
-      var labels = this.labels
-      labels.forEach(function(label){
-        label.remove = false
-        labels[i].remove = true
-      })
-    },
-
-    removeLabel: function (i) {
-
-      var label = this.labels[i]
-      label.updating = true
-      this.$http.post('label/'+label.id, {name:label.name, _method:'DELETE'}).then(function(response){
-        //console.log('test')
-        label.updating = false
-        this.labels.splice(i, 1)
-      }.bind(this))
-    },
-
-    updateLabel: function (i) {
-      var label = this.labels[i]
-      label.updating = true
-      //var resource = this.$resource('label/'+label.id)
-      this.$http.post('label/'+label.id, {name:label.name, _method:'PATCH'}).then(function(response){
-        //console.log('test')
-        label.updating = false
-        label.editing = false
-      }.bind(this))
-    },
-
-    setOldInput: function (old) {
-      this.oldInput = old
     },
 
     getContacts: function () {
@@ -138,6 +92,7 @@ new Vue({
     },
 
     createContact: function () {
+      
       this.$http.post('contact', { 
         user_id: this.user.id,
         name:this.Contact.name,
@@ -151,12 +106,25 @@ new Vue({
       }.bind(this))
     },
 
+    updateContact: function () {
+      this.closeNewContact()
+      console.log('update contact')
+    },
+
     closeNewContact: function () {
       this.newContact = false
       this.Contact.name =  ''
       this.Contact.phone = ''
       this.Contact.email = ''
       this.Contact.birthday = ''
+    },
+
+    closeEditContact: function () {
+      this.editContact = false
+      this.Edit.name =  ''
+      this.Edit.phone = ''
+      this.Edit.email = ''
+      this.Edit.birthday = ''
     },
 
     deleteContacts: function () {

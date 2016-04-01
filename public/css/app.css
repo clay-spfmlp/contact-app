@@ -13659,6 +13659,9 @@ button.close {
     -webkit-transform-origin: center bottom;
     transform-origin: center bottom; } }
 
+*[v-cloak] {
+  display: none; }
+
 .page {
   -webkit-animation-name: fadeIn;
   animation-name: fadeIn;
@@ -13679,7 +13682,7 @@ button.close {
 
 body {
   background: #ebebeb;
-  padding-top: 50px; }
+  padding-top: 75px; }
 
 .movie {
   background: #fff;
@@ -13748,7 +13751,7 @@ body {
 
 .avatar img {
   border-radius: 50%;
-  max-width: 48px; }
+  max-width: 42px; }
 
 .contact-row .name {
   margin-top: 12px;
@@ -13773,13 +13776,13 @@ body {
   margin-bottom: 0px; }
 
 .confirm {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   position: absolute;
   background: #fff;
-  border: 1px solid #ddd;
   z-index: 999;
   padding: 5px 10px;
-  width: 100%; }
+  width: 100%;
+  top: 0;
+  left: 0; }
 
 .confirm .btn {
   font-size: 0.7em;
@@ -13803,6 +13806,10 @@ th.active .arrow.asc {
 
 th.active .arrow.dsc {
   border-top: 6px solid #eee; }
+
+.table-body {
+  max-height: 420px;
+  overflow-y: auto; }
 
 .arrow {
   display: inline-block;
@@ -13980,8 +13987,11 @@ article {
   right: 0;
   top: 53px;
   border-radius: 5px 0 0 5px;
-  box-shadow: 0px 0px 4px #444;
-  height: 80%; }
+  box-shadow: 0px 0px 4px #444; }
+
+.name a {
+  cursor: pointer;
+  color: #000; }
 
 /*!
  * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
@@ -14000,7 +14010,7 @@ article {
   z-index: 1000;
   position: fixed;
   left: 260px;
-  top: 70px;
+  top: 75px;
   width: 0;
   height: 100%;
   margin-left: -250px;
@@ -14013,7 +14023,7 @@ article {
 #page-content-wrapper {
   width: 100%;
   position: absolute;
-  padding: 15px; }
+  padding: 0 15px 15px; }
 
 #wrapper.toggled #page-content-wrapper {
   position: absolute;
@@ -14068,7 +14078,7 @@ article {
   #wrapper.toggled #sidebar-wrapper {
     width: 0; }
   #page-content-wrapper {
-    padding: 20px;
+    padding: 0 20px 20px;
     position: relative; }
   #wrapper.toggled #page-content-wrapper {
     position: relative;
@@ -14077,11 +14087,10 @@ article {
 .page-content-table {
   border: 1px solid #ddd; }
 
-.table-body {
-  max-height: 450px;
-  overflow-y: auto; }
-
 .table > thead > tr > th {
   border-bottom: 0px; }
+
+.checked {
+  background: #eee; }
 
 /*# sourceMappingURL=app.css.map */

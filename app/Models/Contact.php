@@ -14,11 +14,16 @@ class Contact extends Model
 		'birthday',
 	];
 
-	protected $appends = array('gravatar');
+	protected $appends = array('gravatar', 'checked');
 
 	public function getGravatarAttribute()
     {
         return $this->gravatar = md5(strtolower(trim($this->email)));
+    }
+
+    public function getCheckedAttribute()
+    {
+        return $this->checked = false;
     }
 
     /**
