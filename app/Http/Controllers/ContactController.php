@@ -72,10 +72,9 @@ class ContactController extends Controller
     {
 
     	$contact = $this->contact->create($request->all());
-
         $contact->user()->attach($request->get('user_id'));
-        $contact = $this->contact->find($contact->id);
-        return $contact;
+        
+        return $this->contact->find($contact->id);
     }
 
     /**
@@ -115,6 +114,8 @@ class ContactController extends Controller
     {
         $contact = $this->contact->find($id);
         $contact->update($request->all());
+
+        return $contact;
     }
 
     /**

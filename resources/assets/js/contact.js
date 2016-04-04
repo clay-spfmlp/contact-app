@@ -13,6 +13,8 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAt
 
 Vue.config.debug = true
 
+import { focusModel } from 'vue-focus'
+
 new Vue({
 
   name: 'Contact',
@@ -23,32 +25,22 @@ new Vue({
     SortableTable: require('./components/SortableTable.vue')
   },
 
+  directives: { focusModel: focusModel },
+
   el: '#app-contacts',
 
   data: {
     user: Auth.user,
-    contacts: {},
-    labels: {},
+    contacts: [],
+    labels: [],
     searchQuery: '',
     search: false,
-    columns: ['name', 'phone', 'email'],
+    columns: ['name', 'email', 'phone'],
     sortOrders: {'name':1, 'phone':1, 'email':1},
     sideBar: true,
+
     newContact: false,
     editContact: false,
-    Contact: {
-      name: '',
-      phone: '',
-      email: '',
-      birthday: '', 
-    },
-    Edit: {
-      name: '',
-      phone: '',
-      email: '',
-      birthday: '', 
-    }
-
   },
 
   created: function () {
@@ -59,22 +51,9 @@ new Vue({
   methods: {
 
     openNewContact: function () {
-      this.closeEditContact()
+      this.editContact = false
       this.newContact = true
-    },
-
-    setContact: function (contact) {
-      this.closeNewContact()
-      this.editContact = true
-      this.Edit.name = contact.name
-      this.Edit.phone = contact.phone
-      this.Edit.email = contact.email
-      this.Edit.birthday = contact.birthday
-    },
-
-    sortBy: function (key) {
-      this.sortKey = key
-      this.sortOrders[key] = this.sortOrders[key] * -1
+      this.$broadcast('clear-contact')
     },
 
     getContacts: function () {
@@ -91,44 +70,25 @@ new Vue({
       }.bind(this))
     },
 
-    createContact: function () {
-      
-      this.$http.post('contact', { 
-        user_id: this.user.id,
-        name:this.Contact.name,
-        phone:this.Contact.phone,
-        email:this.Contact.email,
-        birthday:this.Contact.birthday,
-        _method:'POST'
-      }).then(function(response){
-        this.contacts.push(response.data)
-        this.closeNewContact()
-      }.bind(this))
-    },
-
-    updateContact: function () {
-      this.closeNewContact()
-      console.log('update contact')
-    },
-
-    closeNewContact: function () {
-      this.newContact = false
-      this.Contact.name =  ''
-      this.Contact.phone = ''
-      this.Contact.email = ''
-      this.Contact.birthday = ''
-    },
-
-    closeEditContact: function () {
-      this.editContact = false
-      this.Edit.name =  ''
-      this.Edit.phone = ''
-      this.Edit.email = ''
-      this.Edit.birthday = ''
-    },
-
     deleteContacts: function () {
       alert(this.checkedContacts)
+    }
+  },
+
+  events: {
+
+    'edit-contact': function (contact, index) {
+        this.newContact = false
+        this.editContact = true
+        this.$broadcast('set-edit-contact', contact, index)
+    },
+
+    'clear-checked-contacts': function () {
+      this.$broadcast('reset-checked-contacts')
+    },
+
+    'set-check-contact': function (id) {
+      this.$broadcast('check-contact', id)
     }
   }
 

@@ -43,7 +43,7 @@ class ContactTableSeeder extends Seeder
             'label_id' => 1,
         ]);
 
-	    factory(Contact::class, 10)->create()->each(function($contact) {
+	    factory(Contact::class, 20)->create()->each(function($contact) {
 	        DB::table('contact_user')->insert([
             	'contact_id' => $contact->id,
             	'user_id' => 1,

@@ -63,6 +63,7 @@
             </div>
             <div class="btn-group">
               <div class="dropdown pull-left">
+
                 <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                 aria-expanded="false" type="button"><i class="fa fa-folder" aria-hidden="true"></i></a>
                 <ul class="dropdown-menu" role="menu">
@@ -85,52 +86,11 @@
 
           <!-- Contacts -->
           <sortable-table
-            :data="contacts"
+            :data.sync="contacts"
             :columns="columns"
             :filter-key="searchQuery">
             </sortable-table>
 
-          <!-- <table class="table">
-            <thead>
-              <tr v-cloak class="sortable">
-                <th scope="col">
-                  <span class="checkbox-custom checkbox-primary checkbox-lg contacts-select-all">
-                    <input type="checkbox" class="contacts-checkbox selectable-all" id="select_all">
-                    <label for="select_all"></label>
-                  </span>
-                </th>
-                <th v-for="column in columns" v-on:click="sortBy(column)" :class="{active: sortKey == column}" >
-                  @{{ column | capitalize}}
-                  <span class="arrow"
-                    :class="sortOrders[column] > 0 ? 'asc' : 'dsc'">
-                  </span>
-                </th>
-              </tr>
-            </thead>
-          </table>
-
-          <div class="table-body">
-            <table class="table" transition="fade">
-              <tbody>
-                <tr v-cloak v-for="contact in contacts | filterBy searchQuery | orderBy sortKey sortOrders[sortKey]" v-bind:class="ifInArray(contact.id, checkedContacts) ? 'checked' : ''" class="contact-row" >
-                  <td class="responsive-hide">
-                    <span class="checkbox-custom checkbox-primary checkbox-lg">
-                      <input type="checkbox" v-model="checkedContacts" class="contacts-checkbox selectable-item" id="contacts_@{{ contact.id }}" value="@{{ contact.id }}">
-                      <label for="contacts_@{{ contact.id }}"></label>
-                    </span>
-                  </td>
-                  <td>
-                    <a class="avatar pull-left" href="javascript:void(0)">
-                      <img class="img-responsive" :src="'http://www.gravatar.com/avatar/' + contact.gravatar" alt="...">
-                    </a>
-                    <div class="name pull-left"><a v-on:click.stop.prevent="setContact(contact)" >@{{ contact.name }}</a></div>
-                  </td>
-                  <td>@{{ contact.phone }}</td>
-                  <td>@{{ contact.email }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div> -->
 
           <ul data-plugin="paginator" data-total="50" data-skin="pagination-gap"></ul>
         </div>
@@ -139,7 +99,7 @@
 
     <!-- Site Action -->
     <div class="site-action">
-      <button v-on:click.stop.prevent="openNewContact()" v-show="!newContact" transition="fade" type="button" class="site-action-btn btn btn-success btn-floating">
+      <button v-on:click="openNewContact()" v-show="!newContact" transition="fade" type="button" class="site-action-btn btn btn-success btn-floating">
         <i class="fa fa-user-plus" aria-hidden="true"></i>
       </button>
       <!-- <div class="site-action-buttons">
@@ -154,74 +114,16 @@
     <!-- End Site Action -->
 
     <!-- Add Contoct Form -->
-    <div v-show="newContact" v-cloak transition="slideInLeft" class="new-contact-form" id="addContactForm" aria-hidden="true" aria-labelledby="addUserForm" role="dialog" tabindex="-1">
-      <form>
-        <div class="dialog">
-          <div class="content">
-            <div class="header">
-              <button v-on:click.stop.prevent="closeNewContact()" type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
-              <h4 class="title">Create New Contact</h4>
-            </div>
-            <div class="body">
-                <div class="form-group">
-                  <input v-model="Contact.name" type="text" class="form-control" name="name" placeholder="Name" required>
-                </div>
-                <div class="form-group">
-                  <input v-model="Contact.phone" type="text" class="form-control" name="phone" placeholder="Phone" >
-                </div>
-                <div class="form-group">
-                  <input v-model="Contact.email" type="email" class="form-control" name="email" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                  <input v-model="Contact.birthday" type="date" class="form-control" name="birthday" placeholder="Birthday">
-                </div>
-            </div>
-            <div class="footer">
-              <div class="pull-right">
-                <button v-on:click.stop.prevent="createContact()" class="btn btn-primary" type="submit">Send</button>
-                <a class="btn btn-sm btn-white" v-on:click.stop.prevent="closeNewContact()">Cancel</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
+
+    <contact-form state="new" :show.sync="newContact" :labels.sync="labels" v-show="newContact"></contact-form>
+            
+
     <!-- End Add Contact Form -->
 
     <!-- Edit Contoct Form -->
-    <div v-show="editContact" v-cloak transition="slideInLeft" class="new-contact-form" id="addContactForm" aria-hidden="true" aria-labelledby="addUserForm" role="dialog" tabindex="-1">
-      <form>
-        <div class="dialog">
-          <div class="content">
-            <div class="header">
-              <button v-on:click.stop.prevent="closeEditContact()" type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
-              <h4 class="title">Edit Contact</h4>
-            </div>
-            <div class="body">
-                <div class="form-group">
-                  <input v-model="Edit.name" type="text" class="form-control" name="name" placeholder="Name" required>
-                </div>
-                <div class="form-group">
-                  <input v-model="Edit.phone" type="text" class="form-control" name="phone" placeholder="Phone" >
-                </div>
-                <div class="form-group">
-                  <input v-model="Edit.email" type="email" class="form-control" name="email" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                  <input v-model="Edit.birthday" type="date" class="form-control" name="birthday" placeholder="Birthday">
-                </div>
-            </div>
-            <div class="footer">
-              <div class="pull-right">
-                <button v-on:click.stop.prevent="updateContact()" class="btn btn-primary" type="submit">Edit</button>
-                <a class="btn btn-sm btn-white" v-on:click.stop.prevent="closeEditContact()">Cancel</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-    <!-- End Edit Contact Form -->
+
+    <contact-form state="edit" :show.sync="editContact" :labels.sync="labels" :contacts.sync="contacts" v-show="editContact"></contact-form>
+
 
   </div>
 

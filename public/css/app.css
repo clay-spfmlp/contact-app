@@ -13681,8 +13681,9 @@ button.close {
   backface-visibility: hidden; }
 
 body {
-  background: #ebebeb;
-  padding-top: 75px; }
+  background: #ddd;
+  padding-top: 75px;
+  font-family: sans-serif; }
 
 .movie {
   background: #fff;
@@ -13977,8 +13978,8 @@ article {
   -o-backface-visibility: hidden;
   backface-visibility: hidden; }
 
-#addContactForm {
-  z-index: 100;
+.contact-form {
+  z-index: 1300;
   margin: 3px 0 30px auto;
   background: #fff;
   position: absolute;
@@ -13992,6 +13993,9 @@ article {
 .name a {
   cursor: pointer;
   color: #000; }
+
+.light {
+  opacity: 0.5; }
 
 /*!
  * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
@@ -14092,5 +14096,52 @@ article {
 
 .checked {
   background: #eee; }
+
+.edit-options .btn-icon .fa {
+  z-index: 99;
+  position: relative; }
+
+/* .squaredOne */
+.squaredOne {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  margin: 20px auto;
+  background: #fcfff4;
+  background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5); }
+
+.squaredOne label {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  cursor: pointer;
+  background: linear-gradient(top, #222 0%, #45484d 100%);
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px white; }
+
+.squaredOne label:after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background: #3366ff;
+  background: linear-gradient(top, #3366ff 0%, #0033cc 100%);
+  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+  opacity: 0; }
+
+.squaredOne label:hover::after {
+  opacity: 0.3; }
+
+.squaredOne input[type=checkbox] {
+  visibility: hidden; }
+
+.squaredOne input[type=checkbox]:checked + label:after {
+  opacity: 1; }
+
+/* end .squaredOne */
 
 /*# sourceMappingURL=app.css.map */

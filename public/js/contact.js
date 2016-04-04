@@ -23843,29 +23843,167 @@ if (devtools) {
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"_process":3}],31:[function(require,module,exports){
+var inserted = exports.cache = {}
+
+exports.insert = function (css) {
+  if (inserted[css]) return
+  inserted[css] = true
+
+  var elem = document.createElement('style')
+  elem.setAttribute('type', 'text/css')
+
+  if ('textContent' in elem) {
+    elem.textContent = css
+  } else {
+    elem.styleSheet.cssText = css
+  }
+
+  document.getElementsByTagName('head')[0].appendChild(elem)
+  return elem
+}
+
+},{}],32:[function(require,module,exports){
+var __vueify_style__ = require("vueify-insert-css").insert("\n\n.busy-spinner {\n\tposition: absolute;\n    top: 5px;\n    width: 100%;\n    text-align: center;\n}\n\n.dialog {\n\tposition: relative;\n}\n\n.light {\n\topacity: 0.5;\n}\n\n.contact-form .fa-spinner {\n\tfont-size: 18em;\n\tcolor: #3366ff;\n}\n\n.labels {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-flex-wrap: wrap;\n\t    -ms-flex-wrap: wrap;\n\t        flex-wrap: wrap;\n}\n\n.labels label {\n\t-webkit-box-flex: 1;\n\t-webkit-flex: 1;\n\t    -ms-flex: 1;\n\t        flex: 1;\n\t-webkit-flex-basis: 25%;\n\t    -ms-flex-preferred-size: 25%;\n\t        flex-basis: 25%;\n}\n\n@media screen and (max-width: 480) {\n\t.labels label {\n\t\t-webkit-flex-basis: 100%;\n\t\t    -ms-flex-preferred-size: 100%;\n\t\t        flex-basis: 100%;\n\t}\n}\n\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+				value: true
 });
 exports.default = {
 
-	name: 'ContactForm'
+				name: 'ContactForm',
 
+				props: {
+								state: {
+												type: String,
+												required: true
+								},
+								contacts: {
+												type: Array,
+												required: false,
+												twoWay: true
+								},
+								show: {
+												type: Boolean,
+												required: true,
+												twoWay: true
+								},
+								labels: {
+												type: Array,
+												required: false,
+												twoWay: true
+								}
+				},
+
+				data: function data() {
+								return {
+												sending: false,
+
+												Contact: {
+																index: '',
+																id: '',
+																name: '',
+																phone: '',
+																email: '',
+																birthday: '',
+																labels: []
+												}
+								};
+				},
+
+				methods: {
+								create: function create() {
+												this.sending = true;
+												this.$http.post('contact', {
+																user_id: this.$parent.user.id,
+																name: this.Contact.name,
+																phone: this.Contact.phone,
+																email: this.Contact.email,
+																birthday: this.Contact.birthday,
+																_method: 'POST'
+												}).then(function (response) {
+																this.$parent.contacts.push(response.data);
+																this.close();
+												}.bind(this));
+								},
+
+								close: function close() {
+												this.$dispatch('clear-checked-contacts');
+												this.show = false;
+												this.clear();
+								},
+
+								edit: function edit() {
+												this.sending = true;
+												this.$http.post('contact/' + this.Contact.id, {
+																name: this.Contact.name,
+																phone: this.Contact.phone,
+																email: this.Contact.email,
+																birthday: this.Contact.birthday,
+																_method: 'PATCH'
+												}).then(function (response) {
+																this.$parent.contacts[this.Contact.index].name = response.data.name;
+																this.$parent.contacts[this.Contact.index].phone = response.data.phone;
+																this.$parent.contacts[this.Contact.index].email = response.data.email;
+																this.$parent.contacts[this.Contact.index].birthday = response.data.birthday;
+																this.close();
+																this.$dispatch('check-contact', this.Contact.id);
+												}.bind(this));
+								},
+
+								clear: function clear() {
+												this.Contact.index = '';
+												this.Contact.id = '';
+												this.Contact.name = '';
+												this.Contact.phone = '';
+												this.Contact.email = '';
+												this.Contact.birthday = '';
+												this.Contact.labels = [];
+												this.sending = false;
+								}
+				},
+
+				events: {
+
+								'set-edit-contact': function setEditContact(contact, index) {
+												if (this.state == 'edit') {
+																this.Contact.index = index;
+																this.Contact.id = contact.id;
+																this.Contact.name = contact.name;
+																this.Contact.phone = contact.phone;
+																this.Contact.email = contact.email;
+																this.Contact.birthday = contact.birthday;
+																this.Contact.labels = [];
+																var i;
+																for (i in contact.labels) {
+																				this.Contact.labels.push(contact.labels[i].id.toString());
+																}
+												}
+								},
+
+								'clear-contact': function clearContact() {
+												this.clear();
+								}
+				}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-cloak=\"\" transition=\"slideInLeft\" class=\"contact-form\" aria-hidden=\"true\" aria-labelledby=\"addContactForm\" role=\"dialog\" tabindex=\"-1\">\n\t<form>\n\t\t<div class=\"dialog\">\n\t\t\t<div class=\"content\" :class=\"sending ? 'light' : ''\">\n\t\t\t\t<div class=\"header\">\n\t\t\t\t\t<button @click=\"close\" class=\"close\">×</button>\n\t\t\t\t\t<h4 class=\"title\">{{ state == 'new' ? 'Create New Contact' : 'Edit Contact' }}</h4>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"body\">\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<input v-model=\"Contact.name\" type=\"text\" class=\"form-control\" placeholder=\"Name\" required=\"\">\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<input v-model=\"Contact.email\" type=\"email\" class=\"form-control\" placeholder=\"Email\" required=\"\">\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<input v-model=\"Contact.phone\" type=\"text\" class=\"form-control\" placeholder=\"Phone\">\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<input v-model=\"Contact.birthday\" type=\"date\" class=\"form-control\" placeholder=\"Birthday\">\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"labels\">\n\t\t\t\t\t\t<label v-for=\"label in labels\"><input id=\"label_{{label.id}}\" v-model=\"Contact.labels\" value=\"{{label.id}}\" type=\"checkbox\">{{label.name}}</label>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"footer\">\n\t\t\t\t\t<div class=\"pull-right\">\n\t\t\t\t\t\t<button v-on:click.stop.prevent=\"state == 'new' ? create() : edit() \" class=\"btn btn-primary\" type=\"submit\">Send</button>\n\t\t\t\t\t\t<a class=\"btn btn-sm btn-white\" @click=\"close()\">Cancel</a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div v-show=\"sending\" class=\"busy-spinner\">\n\t\t\t\t<span><i class=\"fa fa-spinner fa-pulse\"></i></span>\n\t\t\t</div>\n\t\t</div>\n\t</form>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   var id = "/Users/michaelbustamante/Sites/contact-app/resources/assets/js/components/ContactForm.vue"
+  module.hot.dispose(function () {
+    require("vueify-insert-css").cache["\n\n.busy-spinner {\n\tposition: absolute;\n    top: 5px;\n    width: 100%;\n    text-align: center;\n}\n\n.dialog {\n\tposition: relative;\n}\n\n.light {\n\topacity: 0.5;\n}\n\n.contact-form .fa-spinner {\n\tfont-size: 18em;\n\tcolor: #3366ff;\n}\n\n.labels {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-flex-wrap: wrap;\n\t    -ms-flex-wrap: wrap;\n\t        flex-wrap: wrap;\n}\n\n.labels label {\n\t-webkit-box-flex: 1;\n\t-webkit-flex: 1;\n\t    -ms-flex: 1;\n\t        flex: 1;\n\t-webkit-flex-basis: 25%;\n\t    -ms-flex-preferred-size: 25%;\n\t        flex-basis: 25%;\n}\n\n@media screen and (max-width: 480) {\n\t.labels label {\n\t\t-webkit-flex-basis: 100%;\n\t\t    -ms-flex-preferred-size: 100%;\n\t\t        flex-basis: 100%;\n\t}\n}\n\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":30,"vue-hot-reload-api":5}],32:[function(require,module,exports){
+},{"vue":30,"vue-hot-reload-api":5,"vueify-insert-css":31}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23887,28 +24025,27 @@ exports.default = {
 
 				data: function data() {
 								return {
-												label: '',
-												newLabel: false,
+												item: '',
+												newItem: false,
 												oldInput: ''
 								};
 				},
 
 				methods: {
 
-								create: function create(label) {
-												this.$http.post(this.model, { name: label, user_id: this.$parent.user.id, _method: 'POST' }).then(function (response) {
+								create: function create(item) {
+												this.$http.post(this.model, { name: item, user_id: this.$parent.user.id, _method: 'POST' }).then(function (response) {
 																this.content.push(response.data);
-																this.newLabel = false;
-																this.label = '';
+																this.newItem = false;
+																this.item = '';
 												}.bind(this));
 								},
 
 								edit: function edit(i) {
 												var labels = this.content;
 												this.setOldInput(labels[i].name);
-												console.log(labels[i].name);
 												labels.forEach(function (label) {
-																label.editing = false;
+																labels.editing = false;
 																labels[i].editing = true;
 												});
 
@@ -23918,7 +24055,6 @@ exports.default = {
 								},
 
 								cancel: function cancel(i) {
-												console.log('test');
 												this.content[i].name = this.oldInput;
 												this.oldInput = '';
 												this.content[i].editing = false;
@@ -23956,7 +24092,7 @@ exports.default = {
 				}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"list-group list-group-full editable\">\n\t<div v-for=\"label in content\" v-bind:class=\"'list-group-item item-' + $index\" v-cloak=\"\">\n\t\t<div v-show=\"!label.editing\" class=\"list-content\">\n\t\t\t<span class=\"list-text\" v-cloak=\"\">{{ label.name }}</span>\n\t\t\t<span class=\"pull-right badge\" v-cloak=\"\">{{ label.contacts | count }}</span>\n\t\t\t<div class=\"item-actions pull-right\" v-cloak=\"\">\n\t\t\t\t<a @click.stop.prevent=\"edit($index)\" class=\"btn-icon\">\n\t\t\t\t\t<i class=\"fa fa-edit\" aria-hidden=\"true\"></i>\n\t\t\t\t</a>\n\t\t\t\t<a @click.stop.prevent=\"removeConfirm($index)\" class=\"btn-icon trash\">\n\t\t\t\t\t<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>\n\t\t\t\t</a>\n\t\t\t</div>\n\t\t</div>\n\t\t\n\t\t<div v-show=\"label.remove\" v-cloak=\"\" class=\"confirm\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<p>Are you sure?</p>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6 removeOptions\">\n\t\t\t\t<div class=\"pull-right\">\n\t\t\t\t\t<button @click=\"remove($index)\" class=\"btn btn-sm btn-primary\">YES</button>\n\t\t\t\t\t<button @click=\"label.remove = false\" class=\"btn btn-sm btn-danger\">NO</button>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t\n\t\t<div v-show=\"label.editing\" class=\"list-editable\">\n\t\t\t<div class=\"form-group material-input\">\n\t\t\t\t<input onfocus=\"this.select()\" v-focus-model=\"label.editing\" v-model=\"content[$index].name\" type=\"text\" class=\"form-control\" name=\"name\" @keyup.enter=\"update($index)\">\n\t\t\t\t<div class=\"edit-options pull-right\">\n\t\t\t\t\t<span @click=\"cancel($index)\" v-show=\"!label.updating\" class=\"btn-icon\">\n\t\t\t\t\t\t<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span v-show=\"label.updating\" class=\"btn-icon\">\n\t\t\t\t\t\t<i class=\"fa fa-spinner fa-pulse\" aria-hidden=\"true\"></i>\n\t\t\t\t\t</span>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div v-show=\"newLabel\" class=\"list-group-item\" v-cloak=\"\">\n\t\t<input v-focus-model=\"newLabel\" v-model=\"label\" class=\"form-control\" name=\"name\" @keyup.enter=\"create(label)\">\n\t</div>\n\t<a v-show=\"!newLabel\" class=\"list-group-item\" @click.stop.prevent=\"newLabel = true\" v-cloak=\"\">\n\t\t<span>\n\t\t\t<i class=\"fa fa-plus\" aria-hidden=\"true\"></i> Add New Label\n\t\t</span>\n\t</a>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"list-group list-group-full editable\">\n\t<div v-for=\"item in content\" :class=\"'list-group-item item-' + $index\">\n\t\t<div v-show=\"!item.editing\" class=\"list-content\">\n\t\t\t<span class=\"list-text\">{{ item.name }}</span>\n\t\t\t<span class=\"pull-right badge\">{{ item.contacts | count }}</span>\n\t\t\t<div class=\"item-actions pull-right\">\n\t\t\t\t<a @click.stop.prevent=\"edit($index)\" class=\"btn-icon\">\n\t\t\t\t\t<i class=\"fa fa-edit\" aria-hidden=\"true\"></i>\n\t\t\t\t</a>\n\t\t\t\t<a @click.stop.prevent=\"removeConfirm($index)\" class=\"btn-icon trash\">\n\t\t\t\t\t<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>\n\t\t\t\t</a>\n\t\t\t</div>\n\t\t</div>\n\t\t\n\t\t<div v-show=\"item.remove\" class=\"confirm\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<p>Are you sure?</p>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6 removeOptions\">\n\t\t\t\t<div class=\"pull-right\">\n\t\t\t\t\t<button @click=\"remove($index)\" class=\"btn btn-sm btn-primary\">YES</button>\n\t\t\t\t\t<button @click=\"item.remove = false\" class=\"btn btn-sm btn-danger\">NO</button>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t\n\t\t<div v-show=\"item.editing\" class=\"list-editable\">\n\t\t\t<div class=\"form-group material-input\">\n\t\t\t\t<input onfocus=\"this.select()\" v-focus-model=\"item.editing\" v-model=\"content[$index].name\" type=\"text\" class=\"form-control\" name=\"name\" @keyup.enter=\"update($index)\">\n\t\t\t\t<div class=\"edit-options pull-right\">\n\t\t\t\t\t<span @click=\"cancel($index)\" v-show=\"!item.updating\" class=\"btn-icon\">\n\t\t\t\t\t\t<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span v-show=\"item.updating\" class=\"btn-icon\">\n\t\t\t\t\t\t<i class=\"fa fa-spinner fa-pulse\" aria-hidden=\"true\"></i>\n\t\t\t\t\t</span>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div v-show=\"newItem\" class=\"list-group-item\">\n\t\t<input v-focus-model=\"newItem\" v-model=\"item\" class=\"form-control\" name=\"name\" @keyup.enter=\"create(item)\">\n\t</div>\n\t<a class=\"list-group-item\" @click.stop.prevent=\"newItem = true\">\n\t\t<span>\n\t\t\t<i class=\"fa fa-plus\" aria-hidden=\"true\"></i> Add New Label\n\t\t</span>\n\t</a>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -23968,67 +24104,103 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":30,"vue-focus":4,"vue-hot-reload-api":5}],33:[function(require,module,exports){
+},{"vue":30,"vue-focus":4,"vue-hot-reload-api":5}],34:[function(require,module,exports){
+var __vueify_style__ = require("vueify-insert-css").insert("\n.table-no-margin {\n\tmargin: 0;\n}\n\n.table .checkbox-col {\n\twidth: 60px;\n\tpadding: 0;\n}\n\n/* .squaredOne */\n.squaredOne {\n  width: 28px;\n  height: 28px;\n  position: relative;\n  margin: 20px auto;\n  background: #fcfff4;\n  background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);\n  background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);\n  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);\n}\n.squaredOne label {\n  width: 20px;\n  height: 20px;\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  cursor: pointer;\n  background: -webkit-linear-gradient(top, #222 0%, #45484d 100%);\n  background: linear-gradient(top, #222 0%, #45484d 100%);\n  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px white;\n}\n.squaredOne label:after {\n  content: '';\n  width: 16px;\n  height: 16px;\n  position: absolute;\n  top: 2px;\n  left: 2px;\n  background: #3366ff;\n  background: -webkit-linear-gradient(top, #3366ff 0%, #0033cc 100%);\n  background: linear-gradient(top, #3366ff 0%, #0033cc 100%);\n  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);\n  opacity: 0;\n}\n.squaredOne label:hover::after {\n  opacity: 0.3;\n}\n.squaredOne input[type=checkbox] {\n  visibility: hidden;\n}\n.squaredOne input[type=checkbox]:checked + label:after {\n  opacity: 1;\n}\n\n/* end .squaredOne */\n\n\n\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+		value: true
 });
 exports.default = {
 
-    name: 'SortableTable',
+		name: 'SortableTable',
 
-    props: {
-        data: {},
-        columns: [],
-        filterKey: ''
-    },
+		props: {
+				data: {
+						type: Array,
+						required: true,
+						twoWay: true
+				},
+				columns: [],
+				filterKey: ''
+		},
 
-    data: function data() {
-        var sortOrders = {};
-        this.columns.forEach(function (key) {
-            sortOrders[key] = 1;
-        });
-        return {
-            sortKey: '',
-            sortOrders: sortOrders,
-            checkedContacts: []
-        };
-    },
+		data: function data() {
+				var sortOrders = {};
+				this.columns.forEach(function (key) {
+						sortOrders[key] = 1;
+				});
+				return {
+						sortKey: '',
+						sortOrders: sortOrders,
+						checkedContacts: [],
+						all: false
+				};
+		},
 
-    methods: {
-        sortBy: function sortBy(key) {
-            this.sortKey = key;
-            this.sortOrders[key] = this.sortOrders[key] * -1;
-        },
+		methods: {
+				sortBy: function sortBy(key) {
+						this.sortKey = key;
+						this.sortOrders[key] = this.sortOrders[key] * -1;
+				},
 
-        ifInArray: function ifInArray(id, array) {
-            var key;
-            for (key in array) {
-                if (array[key] == id) {
-                    return true;
-                }
-            }
+				selectAll: function selectAll() {
+						var index = '';
+						this.checkedContacts = [];
+						for (index in this.data) {
+								if (this.all === false) {
+										this.checkedContacts.push(this.data[index].id.toString());
+								}
+						}
+				},
 
-            return false;
-        }
-    }
+				ifInArray: function ifInArray(id, array) {
+						var key;
+						for (key in array) {
+								if (array[key] == id) {
+										return true;
+								}
+						}
+
+						return false;
+				},
+				editContact: function editContact(contact, index) {
+						this.$dispatch('edit-contact', contact, index);
+						this.checkedContacts = [];
+						this.checkedContacts.push(contact.id.toString());
+				}
+		},
+		events: {
+				'reset-checked-contacts': function resetCheckedContacts() {
+						this.checkedContacts = [];
+				},
+
+				'check-contact': function checkContact(id) {
+						this.checkedContacts.push(id.toString());
+				}
+		}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<table class=\"table\">\n    <thead>\n      \t<tr v-cloak=\"\" class=\"sortable\">\n        \t<th scope=\"col\">\n          \t\t<span class=\"checkbox-custom checkbox-primary checkbox-lg contacts-select-all\">\n            \t\t<input type=\"checkbox\" class=\"contacts-checkbox selectable-all\" id=\"select_all\">\n            \t\t<label for=\"select_all\"></label>\n          \t\t</span>\n        \t</th>\n        \t<th v-for=\"column in columns\" v-on:click=\"sortBy(column)\" :class=\"{active: sortKey == column}\">\n          \t\t{{ column | capitalize}}\n          \t\t<span class=\"arrow\" :class=\"sortOrders[column] > 0 ? 'asc' : 'dsc'\"></span>\n        \t</th>\n      \t</tr>\n    </thead>\n</table>\n\n<div class=\"table-body\">\n\t<table class=\"table\">\n\t  \t<tbody>\n\t    \t<tr v-cloak=\"\" v-for=\"contact in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]\" v-bind:class=\"ifInArray(contact.id, checkedContacts) ? 'checked' : ''\" class=\"contact-row\">\n\t      \t\t<td class=\"responsive-hide\">\n\t        \t\t<span class=\"checkbox-custom checkbox-primary checkbox-lg\">\n\t          \t\t\t<input type=\"checkbox\" v-model=\"checkedContacts\" class=\"contacts-checkbox selectable-item\" id=\"contacts_{{ contact.id }}\" value=\"{{ contact.id }}\">\n\t          \t\t\t<label for=\"contacts_@{{ contact.id }}\"></label>\n\t        \t\t</span>\n\t      \t\t</td>\n\t      \t\t<td>\n\t        \t\t<a class=\"avatar pull-left\" href=\"javascript:void(0)\">\n\t          \t\t\t<img class=\"img-responsive\" :src=\"'http://www.gravatar.com/avatar/' + contact.gravatar\" alt=\"...\">\n\t        \t\t</a>\n\t        \t\t<div class=\"name pull-left\"><a v-on:click.stop.prevent=\"setContact(contact)\">{{ contact.name }}</a></div>\n\t      \t\t</td>\n\t      \t\t<td>{{ contact.phone }}</td>\n\t      \t\t<td>{{ contact.email }}</td>\n\t    \t</tr>\n\t  \t</tbody>\n\t</table>\n</div>\n         \n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n\t<table class=\"table table-no-margin\">\n\t    <thead>\n\t      \t<tr class=\"sortable\">\n\t        \t<th class=\"checkbox-col\">\n\t          \t\t<section>\n\t\t\t\t\t    <div class=\"squaredOne\">\n\t\t\t\t\t      <input type=\"checkbox\" v-model=\"all\" id=\"all\" name=\"check\" v-on:click=\"selectAll()\">\n\t\t\t\t\t      <label for=\"all\"></label>\n\t\t\t\t\t    </div>\n\t\t\t\t\t</section>\n\t        \t</th>\n\t        \t<th v-for=\"column in columns\" v-on:click=\"sortBy(column)\" :class=\"{active: sortKey == column}\">\n\t          \t\t{{ column | capitalize}}\n\t          \t\t<span class=\"arrow\" :class=\"sortOrders[column] > 0 ? 'asc' : 'dsc'\"></span>\n\t        \t</th>\n\t      \t</tr>\n\t    </thead>\n\t</table>\n\t<div class=\"table-body\">\n\t\t<table class=\"table\">\n\t\t  \t<tbody>\n\t\t    \t<tr v-for=\"contact in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]\" v-bind:class=\"ifInArray(contact.id, checkedContacts) ? 'checked' : ''\" class=\"contact-row\">\n\t\t      \t\t<td class=\"responsive-hide checkbox-col\">\n\t\t        \t\t<section>\n\t\t\t\t\t\t    <div class=\"squaredOne\">\n\t\t\t\t\t\t      <input v-model=\"checkedContacts\" type=\"checkbox\" value=\"{{ contact.id }}\" id=\"contacts_{{ contact.id }}\">\n\t\t\t\t\t\t      <label for=\"contacts_{{ contact.id }}\"></label>\n\t\t\t\t\t\t    </div>\n\t\t\t\t\t\t</section>\n\n\t\t      \t\t</td>\n\t\t      \t\t<td>\n\t\t        \t\t<a class=\"avatar pull-left\" href=\"javascript:void(0)\">\n\t\t          \t\t\t<img class=\"img-responsive\" :src=\"'http://www.gravatar.com/avatar/' + contact.gravatar\" alt=\"...\">\n\t\t        \t\t</a>\n\t\t        \t\t<div class=\"name pull-left\"><a v-on:click.stop.prevent=\"editContact(contact, $index)\">{{ contact.name }}</a></div>\n\t\t      \t\t</td>\n\t\t      \t\t<td>{{ contact.email }}</td>\n\t\t      \t\t<td>{{ contact.phone }}</td>\n\t\t    \t</tr>\n\t\t  \t</tbody>\n\t\t</table>\n\t</div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   var id = "/Users/michaelbustamante/Sites/contact-app/resources/assets/js/components/SortableTable.vue"
+  module.hot.dispose(function () {
+    require("vueify-insert-css").cache["\n.table-no-margin {\n\tmargin: 0;\n}\n\n.table .checkbox-col {\n\twidth: 60px;\n\tpadding: 0;\n}\n\n/* .squaredOne */\n.squaredOne {\n  width: 28px;\n  height: 28px;\n  position: relative;\n  margin: 20px auto;\n  background: #fcfff4;\n  background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);\n  background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);\n  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);\n}\n.squaredOne label {\n  width: 20px;\n  height: 20px;\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  cursor: pointer;\n  background: -webkit-linear-gradient(top, #222 0%, #45484d 100%);\n  background: linear-gradient(top, #222 0%, #45484d 100%);\n  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px white;\n}\n.squaredOne label:after {\n  content: '';\n  width: 16px;\n  height: 16px;\n  position: absolute;\n  top: 2px;\n  left: 2px;\n  background: #3366ff;\n  background: -webkit-linear-gradient(top, #3366ff 0%, #0033cc 100%);\n  background: linear-gradient(top, #3366ff 0%, #0033cc 100%);\n  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);\n  opacity: 0;\n}\n.squaredOne label:hover::after {\n  opacity: 0.3;\n}\n.squaredOne input[type=checkbox] {\n  visibility: hidden;\n}\n.squaredOne input[type=checkbox]:checked + label:after {\n  opacity: 1;\n}\n\n/* end .squaredOne */\n\n\n\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":30,"vue-hot-reload-api":5}],34:[function(require,module,exports){
+},{"vue":30,"vue-hot-reload-api":5,"vueify-insert-css":31}],35:[function(require,module,exports){
 'use strict';
+
+var _vueFocus = require('vue-focus');
 
 var Vue = require('vue');
 window.$ = window.jQuery = require('jquery');
@@ -24055,32 +24227,22 @@ new Vue({
     SortableTable: require('./components/SortableTable.vue')
   },
 
+  directives: { focusModel: _vueFocus.focusModel },
+
   el: '#app-contacts',
 
   data: {
     user: Auth.user,
-    contacts: {},
-    labels: {},
+    contacts: [],
+    labels: [],
     searchQuery: '',
     search: false,
-    columns: ['name', 'phone', 'email'],
+    columns: ['name', 'email', 'phone'],
     sortOrders: { 'name': 1, 'phone': 1, 'email': 1 },
     sideBar: true,
-    newContact: false,
-    editContact: false,
-    Contact: {
-      name: '',
-      phone: '',
-      email: '',
-      birthday: ''
-    },
-    Edit: {
-      name: '',
-      phone: '',
-      email: '',
-      birthday: ''
-    }
 
+    newContact: false,
+    editContact: false
   },
 
   created: function created() {
@@ -24091,22 +24253,9 @@ new Vue({
   methods: {
 
     openNewContact: function openNewContact() {
-      this.closeEditContact();
+      this.editContact = false;
       this.newContact = true;
-    },
-
-    setContact: function setContact(contact) {
-      this.closeNewContact();
-      this.editContact = true;
-      this.Edit.name = contact.name;
-      this.Edit.phone = contact.phone;
-      this.Edit.email = contact.email;
-      this.Edit.birthday = contact.birthday;
-    },
-
-    sortBy: function sortBy(key) {
-      this.sortKey = key;
-      this.sortOrders[key] = this.sortOrders[key] * -1;
+      this.$broadcast('clear-contact');
     },
 
     getContacts: function getContacts() {
@@ -24123,49 +24272,30 @@ new Vue({
       }.bind(this));
     },
 
-    createContact: function createContact() {
-
-      this.$http.post('contact', {
-        user_id: this.user.id,
-        name: this.Contact.name,
-        phone: this.Contact.phone,
-        email: this.Contact.email,
-        birthday: this.Contact.birthday,
-        _method: 'POST'
-      }).then(function (response) {
-        this.contacts.push(response.data);
-        this.closeNewContact();
-      }.bind(this));
-    },
-
-    updateContact: function updateContact() {
-      this.closeNewContact();
-      console.log('update contact');
-    },
-
-    closeNewContact: function closeNewContact() {
-      this.newContact = false;
-      this.Contact.name = '';
-      this.Contact.phone = '';
-      this.Contact.email = '';
-      this.Contact.birthday = '';
-    },
-
-    closeEditContact: function closeEditContact() {
-      this.editContact = false;
-      this.Edit.name = '';
-      this.Edit.phone = '';
-      this.Edit.email = '';
-      this.Edit.birthday = '';
-    },
-
     deleteContacts: function deleteContacts() {
       alert(this.checkedContacts);
+    }
+  },
+
+  events: {
+
+    'edit-contact': function editContact(contact, index) {
+      this.newContact = false;
+      this.editContact = true;
+      this.$broadcast('set-edit-contact', contact, index);
+    },
+
+    'clear-checked-contacts': function clearCheckedContacts() {
+      this.$broadcast('reset-checked-contacts');
+    },
+
+    'set-check-contact': function setCheckContact(id) {
+      this.$broadcast('check-contact', id);
     }
   }
 
 });
 
-},{"./components/ContactForm.vue":31,"./components/EditableList.vue":32,"./components/SortableTable.vue":33,"bootstrap/dist/js/bootstrap":1,"jquery":2,"vue":30,"vue-resource":19}]},{},[34]);
+},{"./components/ContactForm.vue":32,"./components/EditableList.vue":33,"./components/SortableTable.vue":34,"bootstrap/dist/js/bootstrap":1,"jquery":2,"vue":30,"vue-focus":4,"vue-resource":19}]},{},[35]);
 
 //# sourceMappingURL=contact.js.map

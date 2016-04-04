@@ -1,10 +1,10 @@
 <template>
 	<div class="list-group list-group-full editable">
-		<div v-for="label in content" v-bind:class="'list-group-item item-' + $index" v-cloak>
-			<div v-show="!label.editing" class="list-content">
-				<span class="list-text" v-cloak>{{ label.name }}</span>
-				<span class="pull-right badge" v-cloak>{{ label.contacts | count }}</span>
-				<div class="item-actions pull-right" v-cloak>
+		<div v-for="item in content" :class="'list-group-item item-' + $index">
+			<div v-show="!item.editing" class="list-content">
+				<span class="list-text">{{ item.name }}</span>
+				<span class="pull-right badge">{{ item.contacts | count }}</span>
+				<div class="item-actions pull-right">
 					<a @click.stop.prevent="edit($index)" class="btn-icon">
 						<i class="fa fa-edit" aria-hidden="true"></i>
 					</a>
@@ -14,41 +14,41 @@
 				</div>
 			</div>
 			
-			<div v-show="label.remove" v-cloak class="confirm">
+			<div v-show="item.remove" class="confirm">
 				<div class="col-md-6">
 					<p>Are you sure?</p>
 				</div>
 				<div class="col-md-6 removeOptions">
 					<div class="pull-right">
 						<button @click="remove($index)" class="btn btn-sm btn-primary">YES</button>
-						<button @click="label.remove = false" class="btn btn-sm btn-danger">NO</button>
+						<button @click="item.remove = false" class="btn btn-sm btn-danger">NO</button>
 					</div>
 				</div>
 			</div>
 			
-			<div v-show="label.editing" class="list-editable">
+			<div v-show="item.editing" class="list-editable">
 				<div class="form-group material-input">
-					<input onFocus="this.select()" 
-						   v-focus-model="label.editing" 
+					<input onfocus="this.select()" 
+						   v-focus-model="item.editing" 
 						   v-model="content[$index].name" type="text" 
 						   class="form-control" name="name" 
 						   @keyup.enter="update($index)">
 					<div class="edit-options pull-right">
-						<span @click="cancel($index)" v-show="!label.updating" class="btn-icon">
+						<span @click="cancel($index)" v-show="!item.updating" class="btn-icon">
 							<i class="fa fa-times-circle" aria-hidden="true"></i>
 						</span>
-						<span v-show="label.updating" class="btn-icon">
+						<span v-show="item.updating" class="btn-icon">
 							<i class="fa fa-spinner fa-pulse" aria-hidden="true"></i>
 						</span>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div v-show="newLabel" class="list-group-item" v-cloak>
-			<input v-focus-model="newLabel" v-model="label" 
-				   class="form-control" name="name" @keyup.enter="create(label)">
+		<div v-show="newItem" class="list-group-item">
+			<input v-focus-model="newItem" v-model="item" 
+				   class="form-control" name="name" @keyup.enter="create(item)">
 		</div>
-		<a v-show="!newLabel" class="list-group-item" @click.stop.prevent="newLabel = true" v-cloak>
+		<a class="list-group-item" @click.stop.prevent="newItem = true">
 			<span>
 				<i class="fa fa-plus" aria-hidden="true"></i> Add New Label
 			</span>
@@ -73,29 +73,28 @@
 
         data: function(){
             return {
-            	label: '',
-                newLabel: false,
+            	item: '',
+                newItem: false,
                 oldInput: '',
             }
         },
 
         methods: {
 
-		    create: function (label) {
-		      this.$http.post(this.model, {name:label, user_id: this.$parent.user.id, _method:'POST'})
+		    create: function (item) {
+		      this.$http.post(this.model, {name:item, user_id: this.$parent.user.id, _method:'POST'})
 		      .then(function(response){
 		        this.content.push(response.data)
-		        this.newLabel = false
-		        this.label = ''
+		        this.newItem = false
+		        this.item = ''
 		      }.bind(this))
 		    },
 
 		    edit: function (i) {
 		      var labels = this.content
 		      this.setOldInput(labels[i].name)
-		      console.log(labels[i].name)
 		      labels.forEach(function(label){
-		        label.editing = false
+		        labels.editing = false
 		        labels[i].editing = true
 		      })
 
@@ -105,10 +104,9 @@
 		    },
 
 		    cancel: function (i) {
-		      console.log('test')
 		      this.content[i].name = this.oldInput
 		      this.oldInput = ''
-		      this.content[i].editing = false;
+		      this.content[i].editing = false
 		    },
 
 		    removeConfirm: function (i) {

@@ -3,6 +3,7 @@
 @import "node_modules/hover.css/scss/hover";
 @import "node_modules/animate.scss/animate.scss";
 
+
 *[v-cloak] {
 	display: none;
 }
@@ -12,8 +13,9 @@
 }
 
 body {
-	background: #ebebeb;
+	background: #ddd;
 	padding-top: 75px;
+	font-family: sans-serif;
 }
 
 .movie {
@@ -315,8 +317,8 @@ article {
 	@include slideOutRight($duration: 1.2s);
 }
 
-#addContactForm {
-	z-index: 100;
+.contact-form {
+	z-index: 1300;
 	margin: 3px 0 30px auto;
     background: #fff;
     position: absolute;
@@ -331,6 +333,10 @@ article {
 .name a {
 	cursor: pointer;
 	color: #000;
+}
+
+.light {
+	opacity: 0.5;
 }
 
 
@@ -472,3 +478,10 @@ article {
 .checked {
     background: #eee;
 } 
+
+.edit-options .btn-icon .fa{
+	z-index: 99;
+	position: relative;
+}
+
+@import "resources/assets/sass/squaredOne.scss";
