@@ -24210,6 +24210,8 @@ var VueResource = require('vue-resource');
 Vue.use(VueResource);
 
 Vue.filter('count', function (list) {
+  "use strict";
+
   return list.length;
 });
 
