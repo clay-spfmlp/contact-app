@@ -15,6 +15,7 @@ require('laravel-elixir-vueify');
 
 elixir(function(mix) {
     mix
+    .browserify('home.js')
     .browserify('movie-app.js')
     .browserify('contact.js')
     .sass('app.scss')

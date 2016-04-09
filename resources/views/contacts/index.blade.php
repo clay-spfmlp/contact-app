@@ -77,7 +77,7 @@
                 <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                 aria-expanded="false" type="button"><i class="fa fa-tag" aria-hidden="true"></i></a>
                 <ul class="dropdown-menu" role="menu">
-                  <li v-for="label in labels"><a href="javascript:void(0)">@{{ label.name }}</a></li>
+                  <li v-for="label in labels"><a v-on:click="addLabelToChecked(label.id)">@{{ label.name }}</a></li>
                 </ul>
               </div>
             </div>

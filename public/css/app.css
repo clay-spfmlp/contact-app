@@ -13681,9 +13681,9 @@ button.close {
   backface-visibility: hidden; }
 
 body {
+  font-family: 'Lato';
   background: #ddd;
-  padding-top: 75px;
-  font-family: sans-serif; }
+  padding-top: 75px; }
 
 .movie {
   background: #fff;
@@ -13723,6 +13723,9 @@ body {
 .hvr-bubble-bottom:focus:before,
 .hvr-bubble-bottom:hover:before {
   border-color: #204d74 transparent transparent transparent; }
+
+.fa-btn {
+  margin-right: 6px; }
 
 :focus {
   outline: none !important; }
@@ -14100,6 +14103,20 @@ article {
 .edit-options .btn-icon .fa {
   z-index: 99;
   position: relative; }
+
+.panel-login {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+
+.panel-login .panel {
+  min-width: 55%; }
 
 /* .squaredOne */
 .squaredOne {

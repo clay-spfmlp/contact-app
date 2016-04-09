@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Clay Malven</title>
 
     <!-- Fonts -->
 
@@ -14,19 +14,9 @@
 
     <!-- Styles -->
 
-    <link href="css/app.css" rel="stylesheet"><!-- 
-    <link href="css/animate.min.css" rel="stylesheet"> -->
+    <link href="css/app.css" rel="stylesheet">
     @yield('css')
 
-    <style>
-        body {
-            font-family: 'Lato';
-        }
-
-        .fa-btn {
-            margin-right: 6px;
-        }
-    </style>
 </head>
 <body id="app-layout">
     

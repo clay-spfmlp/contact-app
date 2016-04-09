@@ -12290,436 +12290,6 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}],4:[function(require,module,exports){
-(function (process){
-'use strict';
-
-var Vue = require('vue');
-var Vue__default = 'default' in Vue ? Vue['default'] : Vue;
-
-// @NOTE: We have to use Vue.nextTick because the element might not be
-//        present at the time model changes, but will be in the next batch.
-//        But because we use Vue.nextTick, the directive may already be unbound
-//        by the time the callback executes, so we have to make sure it was not.
-
-var focus = {
-  priority: 1000,
-
-  bind: function() {
-    var self = this;
-    this.bound = true;
-
-    this.focus = function() {
-      if (self.bound === true) {
-        self.el.focus();
-      }
-    };
-
-    this.blur = function() {
-      if (self.bound === true) {
-        self.el.blur();
-      }
-    };
-  },
-
-  update: function(value) {
-    if (value) {
-      Vue__default.nextTick(this.focus);
-    } else {
-      Vue__default.nextTick(this.blur);
-    }
-  },
-
-  unbind: function() {
-    this.bound = false;
-  },
-};
-
-var focusModel = {
-  twoWay: true,
-  priority: 1000,
-
-  bind: function() {
-    var self = this;
-    this.bound = true;
-
-    this.focus = function() {
-      if (self.bound === true) {
-        self.el.focus();
-      }
-    };
-
-    this.blur = function() {
-      if (self.bound === true) {
-        self.el.blur();
-      }
-    };
-
-    this.focusHandler = function() {
-      self.set(true);
-    };
-
-    this.blurHandler = function() {
-      self.set(false);
-    };
-
-    Vue.util.on(this.el, 'focus', this.focusHandler);
-    Vue.util.on(this.el, 'blur', this.blurHandler);
-  },
-
-  update: function(value) {
-    if (value === true) {
-      Vue__default.nextTick(this.focus);
-    } else if (value === false) {
-      Vue__default.nextTick(this.blur);
-    } else {
-      if (process.env.NODE_ENV !== 'production') {
-        Vue.util.warn(
-          this.name + '="' +
-          this.expression + '" expects a boolean value, ' +
-          'got ' + JSON.stringify(value)
-        );
-      }
-    }
-  },
-
-  unbind: function() {
-    Vue.util.off(this.el, 'focus', this.focusHandler);
-    Vue.util.off(this.el, 'blur', this.blurHandler);
-    this.bound = false;
-  },
-};
-
-var focusAuto = {
-  priority: 100,
-  bind: function() {
-    var self = this;
-    this.bound = true;
-
-    Vue__default.nextTick(function() {
-      if (self.bound === true) {
-        self.el.focus();
-      }
-    });
-  },
-  unbind: function(){
-    this.bound = false;
-  },
-};
-
-var mixin = {
-  directives: {
-    focus: focus,
-    focusModel: focusModel,
-    focusAuto: focusAuto,
-  },
-};
-
-exports.focus = focus;
-exports.focusModel = focusModel;
-exports.focusAuto = focusAuto;
-exports.mixin = mixin;
-}).call(this,require('_process'))
-},{"_process":3,"vue":30}],5:[function(require,module,exports){
-var Vue // late bind
-var map = Object.create(null)
-var shimmed = false
-var isBrowserify = false
-
-/**
- * Determine compatibility and apply patch.
- *
- * @param {Function} vue
- * @param {Boolean} browserify
- */
-
-exports.install = function (vue, browserify) {
-  if (shimmed) return
-  shimmed = true
-
-  Vue = vue
-  isBrowserify = browserify
-
-  exports.compatible = !!Vue.internalDirectives
-  if (!exports.compatible) {
-    console.warn(
-      '[HMR] vue-loader hot reload is only compatible with ' +
-      'Vue.js 1.0.0+.'
-    )
-    return
-  }
-
-  // patch view directive
-  patchView(Vue.internalDirectives.component)
-  console.log('[HMR] Vue component hot reload shim applied.')
-  // shim router-view if present
-  var routerView = Vue.elementDirective('router-view')
-  if (routerView) {
-    patchView(routerView)
-    console.log('[HMR] vue-router <router-view> hot reload shim applied.')
-  }
-}
-
-/**
- * Shim the view directive (component or router-view).
- *
- * @param {Object} View
- */
-
-function patchView (View) {
-  var unbuild = View.unbuild
-  View.unbuild = function (defer) {
-    if (!this.hotUpdating) {
-      var prevComponent = this.childVM && this.childVM.constructor
-      removeView(prevComponent, this)
-      // defer = true means we are transitioning to a new
-      // Component. Register this new component to the list.
-      if (defer) {
-        addView(this.Component, this)
-      }
-    }
-    // call original
-    return unbuild.call(this, defer)
-  }
-}
-
-/**
- * Add a component view to a Component's hot list
- *
- * @param {Function} Component
- * @param {Directive} view - view directive instance
- */
-
-function addView (Component, view) {
-  var id = Component && Component.options.hotID
-  if (id) {
-    if (!map[id]) {
-      map[id] = {
-        Component: Component,
-        views: [],
-        instances: []
-      }
-    }
-    map[id].views.push(view)
-  }
-}
-
-/**
- * Remove a component view from a Component's hot list
- *
- * @param {Function} Component
- * @param {Directive} view - view directive instance
- */
-
-function removeView (Component, view) {
-  var id = Component && Component.options.hotID
-  if (id) {
-    map[id].views.$remove(view)
-  }
-}
-
-/**
- * Create a record for a hot module, which keeps track of its construcotr,
- * instnaces and views (component directives or router-views).
- *
- * @param {String} id
- * @param {Object} options
- */
-
-exports.createRecord = function (id, options) {
-  if (typeof options === 'function') {
-    options = options.options
-  }
-  if (typeof options.el !== 'string' && typeof options.data !== 'object') {
-    makeOptionsHot(id, options)
-    map[id] = {
-      Component: null,
-      views: [],
-      instances: []
-    }
-  }
-}
-
-/**
- * Make a Component options object hot.
- *
- * @param {String} id
- * @param {Object} options
- */
-
-function makeOptionsHot (id, options) {
-  options.hotID = id
-  injectHook(options, 'created', function () {
-    var record = map[id]
-    if (!record.Component) {
-      record.Component = this.constructor
-    }
-    record.instances.push(this)
-  })
-  injectHook(options, 'beforeDestroy', function () {
-    map[id].instances.$remove(this)
-  })
-}
-
-/**
- * Inject a hook to a hot reloadable component so that
- * we can keep track of it.
- *
- * @param {Object} options
- * @param {String} name
- * @param {Function} hook
- */
-
-function injectHook (options, name, hook) {
-  var existing = options[name]
-  options[name] = existing
-    ? Array.isArray(existing)
-      ? existing.concat(hook)
-      : [existing, hook]
-    : [hook]
-}
-
-/**
- * Update a hot component.
- *
- * @param {String} id
- * @param {Object|null} newOptions
- * @param {String|null} newTemplate
- */
-
-exports.update = function (id, newOptions, newTemplate) {
-  var record = map[id]
-  // force full-reload if an instance of the component is active but is not
-  // managed by a view
-  if (!record || (record.instances.length && !record.views.length)) {
-    console.log('[HMR] Root or manually-mounted instance modified. Full reload may be required.')
-    if (!isBrowserify) {
-      window.location.reload()
-    } else {
-      // browserify-hmr somehow sends incomplete bundle if we reload here
-      return
-    }
-  }
-  if (!isBrowserify) {
-    // browserify-hmr already logs this
-    console.log('[HMR] Updating component: ' + format(id))
-  }
-  var Component = record.Component
-  // update constructor
-  if (newOptions) {
-    // in case the user exports a constructor
-    Component = record.Component = typeof newOptions === 'function'
-      ? newOptions
-      : Vue.extend(newOptions)
-    makeOptionsHot(id, Component.options)
-  }
-  if (newTemplate) {
-    Component.options.template = newTemplate
-  }
-  // handle recursive lookup
-  if (Component.options.name) {
-    Component.options.components[Component.options.name] = Component
-  }
-  // reset constructor cached linker
-  Component.linker = null
-  // reload all views
-  record.views.forEach(function (view) {
-    updateView(view, Component)
-  })
-  // flush devtools
-  if (window.__VUE_DEVTOOLS_GLOBAL_HOOK__) {
-    window.__VUE_DEVTOOLS_GLOBAL_HOOK__.emit('flush')
-  }
-}
-
-/**
- * Update a component view instance
- *
- * @param {Directive} view
- * @param {Function} Component
- */
-
-function updateView (view, Component) {
-  if (!view._bound) {
-    return
-  }
-  view.Component = Component
-  view.hotUpdating = true
-  // disable transitions
-  view.vm._isCompiled = false
-  // save state
-  var state = extractState(view.childVM)
-  // remount, make sure to disable keep-alive
-  var keepAlive = view.keepAlive
-  view.keepAlive = false
-  view.mountComponent()
-  view.keepAlive = keepAlive
-  // restore state
-  restoreState(view.childVM, state, true)
-  // re-eanble transitions
-  view.vm._isCompiled = true
-  view.hotUpdating = false
-}
-
-/**
- * Extract state from a Vue instance.
- *
- * @param {Vue} vm
- * @return {Object}
- */
-
-function extractState (vm) {
-  return {
-    cid: vm.constructor.cid,
-    data: vm.$data,
-    children: vm.$children.map(extractState)
-  }
-}
-
-/**
- * Restore state to a reloaded Vue instance.
- *
- * @param {Vue} vm
- * @param {Object} state
- */
-
-function restoreState (vm, state, isRoot) {
-  var oldAsyncConfig
-  if (isRoot) {
-    // set Vue into sync mode during state rehydration
-    oldAsyncConfig = Vue.config.async
-    Vue.config.async = false
-  }
-  // actual restore
-  if (isRoot || !vm._props) {
-    vm.$data = state.data
-  } else {
-    Object.keys(state.data).forEach(function (key) {
-      if (!vm._props[key]) {
-        // for non-root, only restore non-props fields
-        vm.$data[key] = state.data[key]
-      }
-    })
-  }
-  // verify child consistency
-  var hasSameChildren = vm.$children.every(function (c, i) {
-    return state.children[i] && state.children[i].cid === c.constructor.cid
-  })
-  if (hasSameChildren) {
-    // rehydrate children
-    vm.$children.forEach(function (c, i) {
-      restoreState(c, state.children[i])
-    })
-  }
-  if (isRoot) {
-    Vue.config.async = oldAsyncConfig
-  }
-}
-
-function format (id) {
-  return id.match(/[^\/]+\.vue$/)[0]
-}
-
-},{}],6:[function(require,module,exports){
 /**
  * Before Interceptor.
  */
@@ -12739,7 +12309,7 @@ module.exports = {
 
 };
 
-},{"../util":29}],7:[function(require,module,exports){
+},{"../util":27}],5:[function(require,module,exports){
 /**
  * Base client.
  */
@@ -12806,7 +12376,7 @@ function parseHeaders(str) {
     return headers;
 }
 
-},{"../../promise":22,"../../util":29,"./xhr":10}],8:[function(require,module,exports){
+},{"../../promise":20,"../../util":27,"./xhr":8}],6:[function(require,module,exports){
 /**
  * JSONP client.
  */
@@ -12856,7 +12426,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":22,"../../util":29}],9:[function(require,module,exports){
+},{"../../promise":20,"../../util":27}],7:[function(require,module,exports){
 /**
  * XDomain client (Internet Explorer).
  */
@@ -12895,7 +12465,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":22,"../../util":29}],10:[function(require,module,exports){
+},{"../../promise":20,"../../util":27}],8:[function(require,module,exports){
 /**
  * XMLHttp client.
  */
@@ -12947,7 +12517,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":22,"../../util":29}],11:[function(require,module,exports){
+},{"../../promise":20,"../../util":27}],9:[function(require,module,exports){
 /**
  * CORS Interceptor.
  */
@@ -12986,7 +12556,7 @@ function crossOrigin(request) {
     return (requestUrl.protocol !== originUrl.protocol || requestUrl.host !== originUrl.host);
 }
 
-},{"../util":29,"./client/xdr":9}],12:[function(require,module,exports){
+},{"../util":27,"./client/xdr":7}],10:[function(require,module,exports){
 /**
  * Header Interceptor.
  */
@@ -13014,7 +12584,7 @@ module.exports = {
 
 };
 
-},{"../util":29}],13:[function(require,module,exports){
+},{"../util":27}],11:[function(require,module,exports){
 /**
  * Service for sending network requests.
  */
@@ -13114,7 +12684,7 @@ Http.headers = {
 
 module.exports = _.http = Http;
 
-},{"../promise":22,"../util":29,"./before":6,"./client":7,"./cors":11,"./header":12,"./interceptor":14,"./jsonp":15,"./method":16,"./mime":17,"./timeout":18}],14:[function(require,module,exports){
+},{"../promise":20,"../util":27,"./before":4,"./client":5,"./cors":9,"./header":10,"./interceptor":12,"./jsonp":13,"./method":14,"./mime":15,"./timeout":16}],12:[function(require,module,exports){
 /**
  * Interceptor factory.
  */
@@ -13161,7 +12731,7 @@ function when(value, fulfilled, rejected) {
     return promise.then(fulfilled, rejected);
 }
 
-},{"../promise":22,"../util":29}],15:[function(require,module,exports){
+},{"../promise":20,"../util":27}],13:[function(require,module,exports){
 /**
  * JSONP Interceptor.
  */
@@ -13181,7 +12751,7 @@ module.exports = {
 
 };
 
-},{"./client/jsonp":8}],16:[function(require,module,exports){
+},{"./client/jsonp":6}],14:[function(require,module,exports){
 /**
  * HTTP method override Interceptor.
  */
@@ -13200,7 +12770,7 @@ module.exports = {
 
 };
 
-},{}],17:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
  * Mime Interceptor.
  */
@@ -13238,7 +12808,7 @@ module.exports = {
 
 };
 
-},{"../util":29}],18:[function(require,module,exports){
+},{"../util":27}],16:[function(require,module,exports){
 /**
  * Timeout Interceptor.
  */
@@ -13270,7 +12840,7 @@ module.exports = function () {
     };
 };
 
-},{}],19:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * Install plugin.
  */
@@ -13325,7 +12895,7 @@ if (window.Vue) {
 
 module.exports = install;
 
-},{"./http":13,"./promise":22,"./resource":23,"./url":24,"./util":29}],20:[function(require,module,exports){
+},{"./http":11,"./promise":20,"./resource":21,"./url":22,"./util":27}],18:[function(require,module,exports){
 /**
  * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
  */
@@ -13506,7 +13076,7 @@ p.catch = function (onRejected) {
 
 module.exports = Promise;
 
-},{"../util":29}],21:[function(require,module,exports){
+},{"../util":27}],19:[function(require,module,exports){
 /**
  * URL Template v2.0.6 (https://github.com/bramstein/url-template)
  */
@@ -13658,7 +13228,7 @@ exports.encodeReserved = function (str) {
     }).join('');
 };
 
-},{}],22:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /**
  * Promise adapter.
  */
@@ -13769,7 +13339,7 @@ p.always = function (callback) {
 
 module.exports = Promise;
 
-},{"./lib/promise":20,"./util":29}],23:[function(require,module,exports){
+},{"./lib/promise":18,"./util":27}],21:[function(require,module,exports){
 /**
  * Service for interacting with RESTful services.
  */
@@ -13881,7 +13451,7 @@ Resource.actions = {
 
 module.exports = _.resource = Resource;
 
-},{"./util":29}],24:[function(require,module,exports){
+},{"./util":27}],22:[function(require,module,exports){
 /**
  * Service for URL templating.
  */
@@ -14013,7 +13583,7 @@ function serialize(params, obj, scope) {
 
 module.exports = _.url = Url;
 
-},{"../util":29,"./legacy":25,"./query":26,"./root":27,"./template":28}],25:[function(require,module,exports){
+},{"../util":27,"./legacy":23,"./query":24,"./root":25,"./template":26}],23:[function(require,module,exports){
 /**
  * Legacy Transform.
  */
@@ -14061,7 +13631,7 @@ function encodeUriQuery(value, spaces) {
         replace(/%20/g, (spaces ? '%20' : '+'));
 }
 
-},{"../util":29}],26:[function(require,module,exports){
+},{"../util":27}],24:[function(require,module,exports){
 /**
  * Query Parameter Transform.
  */
@@ -14087,7 +13657,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":29}],27:[function(require,module,exports){
+},{"../util":27}],25:[function(require,module,exports){
 /**
  * Root Prefix Transform.
  */
@@ -14105,7 +13675,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":29}],28:[function(require,module,exports){
+},{"../util":27}],26:[function(require,module,exports){
 /**
  * URL Template (RFC 6570) Transform.
  */
@@ -14123,7 +13693,7 @@ module.exports = function (options) {
     return url;
 };
 
-},{"../lib/url-template":21}],29:[function(require,module,exports){
+},{"../lib/url-template":19}],27:[function(require,module,exports){
 /**
  * Utility functions.
  */
@@ -14247,7 +13817,7 @@ function merge(target, source, deep) {
     }
 }
 
-},{}],30:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.16
@@ -23842,365 +23412,8 @@ if (devtools) {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":3}],31:[function(require,module,exports){
-var inserted = exports.cache = {}
-
-exports.insert = function (css) {
-  if (inserted[css]) return
-  inserted[css] = true
-
-  var elem = document.createElement('style')
-  elem.setAttribute('type', 'text/css')
-
-  if ('textContent' in elem) {
-    elem.textContent = css
-  } else {
-    elem.styleSheet.cssText = css
-  }
-
-  document.getElementsByTagName('head')[0].appendChild(elem)
-  return elem
-}
-
-},{}],32:[function(require,module,exports){
-var __vueify_style__ = require("vueify-insert-css").insert("\n\n.busy-spinner {\n\tposition: absolute;\n    top: 5px;\n    width: 100%;\n    text-align: center;\n}\n\n.dialog {\n\tposition: relative;\n}\n\n.light {\n\topacity: 0.5;\n}\n\n.contact-form .fa-spinner {\n\tfont-size: 18em;\n\tcolor: #3366ff;\n}\n\n.labels {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-flex-wrap: wrap;\n\t    -ms-flex-wrap: wrap;\n\t        flex-wrap: wrap;\n}\n\n.labels label {\n\t-webkit-box-flex: 1;\n\t-webkit-flex: 1;\n\t    -ms-flex: 1;\n\t        flex: 1;\n\t-webkit-flex-basis: 25%;\n\t    -ms-flex-preferred-size: 25%;\n\t        flex-basis: 25%;\n}\n\n@media screen and (max-width: 480) {\n\t.labels label {\n\t\t-webkit-flex-basis: 100%;\n\t\t    -ms-flex-preferred-size: 100%;\n\t\t        flex-basis: 100%;\n\t}\n}\n\n")
+},{"_process":3}],29:[function(require,module,exports){
 'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-				value: true
-});
-exports.default = {
-
-				name: 'ContactForm',
-
-				props: {
-								state: {
-												type: String,
-												required: true
-								},
-								contacts: {
-												type: Array,
-												required: false,
-												twoWay: true
-								},
-								show: {
-												type: Boolean,
-												required: true,
-												twoWay: true
-								},
-								labels: {
-												type: Array,
-												required: false,
-												twoWay: true
-								}
-				},
-
-				data: function data() {
-								return {
-												sending: false,
-
-												Contact: {
-																index: '',
-																id: '',
-																name: '',
-																phone: '',
-																email: '',
-																birthday: '',
-																labels: []
-												}
-								};
-				},
-
-				methods: {
-								create: function create() {
-												this.sending = true;
-												this.$http.post('contact', {
-																user_id: this.$parent.user.id,
-																name: this.Contact.name,
-																phone: this.Contact.phone,
-																email: this.Contact.email,
-																birthday: this.Contact.birthday,
-																_method: 'POST'
-												}).then(function (response) {
-																this.$parent.contacts.push(response.data);
-																this.close();
-												}.bind(this));
-								},
-
-								close: function close() {
-												this.$dispatch('clear-checked-contacts');
-												this.show = false;
-												this.clear();
-								},
-
-								edit: function edit() {
-												this.sending = true;
-												this.$http.post('contact/' + this.Contact.id, {
-																name: this.Contact.name,
-																phone: this.Contact.phone,
-																email: this.Contact.email,
-																birthday: this.Contact.birthday,
-																_method: 'PATCH'
-												}).then(function (response) {
-																this.$parent.contacts[this.Contact.index].name = response.data.name;
-																this.$parent.contacts[this.Contact.index].phone = response.data.phone;
-																this.$parent.contacts[this.Contact.index].email = response.data.email;
-																this.$parent.contacts[this.Contact.index].birthday = response.data.birthday;
-																this.close();
-																this.$dispatch('check-contact', this.Contact.id);
-												}.bind(this));
-								},
-
-								clear: function clear() {
-												this.Contact.index = '';
-												this.Contact.id = '';
-												this.Contact.name = '';
-												this.Contact.phone = '';
-												this.Contact.email = '';
-												this.Contact.birthday = '';
-												this.Contact.labels = [];
-												this.sending = false;
-								}
-				},
-
-				events: {
-
-								'set-edit-contact': function setEditContact(contact, index) {
-												if (this.state == 'edit') {
-																this.Contact.index = index;
-																this.Contact.id = contact.id;
-																this.Contact.name = contact.name;
-																this.Contact.phone = contact.phone;
-																this.Contact.email = contact.email;
-																this.Contact.birthday = contact.birthday;
-																this.Contact.labels = [];
-																var i;
-																for (i in contact.labels) {
-																				this.Contact.labels.push(contact.labels[i].id.toString());
-																}
-												}
-								},
-
-								'clear-contact': function clearContact() {
-												this.clear();
-								}
-				}
-};
-if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-cloak=\"\" transition=\"slideInLeft\" class=\"contact-form\" aria-hidden=\"true\" aria-labelledby=\"addContactForm\" role=\"dialog\" tabindex=\"-1\">\n\t<form>\n\t\t<div class=\"dialog\">\n\t\t\t<div class=\"content\" :class=\"sending ? 'light' : ''\">\n\t\t\t\t<div class=\"header\">\n\t\t\t\t\t<button @click=\"close\" class=\"close\">×</button>\n\t\t\t\t\t<h4 class=\"title\">{{ state == 'new' ? 'Create New Contact' : 'Edit Contact' }}</h4>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"body\">\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<input v-model=\"Contact.name\" type=\"text\" class=\"form-control\" placeholder=\"Name\" required=\"\">\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<input v-model=\"Contact.email\" type=\"email\" class=\"form-control\" placeholder=\"Email\" required=\"\">\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<input v-model=\"Contact.phone\" type=\"text\" class=\"form-control\" placeholder=\"Phone\">\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<input v-model=\"Contact.birthday\" type=\"date\" class=\"form-control\" placeholder=\"Birthday\">\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"labels\">\n\t\t\t\t\t\t<label v-for=\"label in labels\"><input id=\"label_{{label.id}}\" v-model=\"Contact.labels\" value=\"{{label.id}}\" type=\"checkbox\">{{label.name}}</label>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"footer\">\n\t\t\t\t\t<div class=\"pull-right\">\n\t\t\t\t\t\t<button v-on:click.stop.prevent=\"state == 'new' ? create() : edit() \" class=\"btn btn-primary\" type=\"submit\">Send</button>\n\t\t\t\t\t\t<a class=\"btn btn-sm btn-white\" @click=\"close()\">Cancel</a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div v-show=\"sending\" class=\"busy-spinner\">\n\t\t\t\t<span><i class=\"fa fa-spinner fa-pulse\"></i></span>\n\t\t\t</div>\n\t\t</div>\n\t</form>\n</div>\n"
-if (module.hot) {(function () {  module.hot.accept()
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  var id = "/Users/michaelbustamante/Sites/contact-app/resources/assets/js/components/ContactForm.vue"
-  module.hot.dispose(function () {
-    require("vueify-insert-css").cache["\n\n.busy-spinner {\n\tposition: absolute;\n    top: 5px;\n    width: 100%;\n    text-align: center;\n}\n\n.dialog {\n\tposition: relative;\n}\n\n.light {\n\topacity: 0.5;\n}\n\n.contact-form .fa-spinner {\n\tfont-size: 18em;\n\tcolor: #3366ff;\n}\n\n.labels {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-flex-wrap: wrap;\n\t    -ms-flex-wrap: wrap;\n\t        flex-wrap: wrap;\n}\n\n.labels label {\n\t-webkit-box-flex: 1;\n\t-webkit-flex: 1;\n\t    -ms-flex: 1;\n\t        flex: 1;\n\t-webkit-flex-basis: 25%;\n\t    -ms-flex-preferred-size: 25%;\n\t        flex-basis: 25%;\n}\n\n@media screen and (max-width: 480) {\n\t.labels label {\n\t\t-webkit-flex-basis: 100%;\n\t\t    -ms-flex-preferred-size: 100%;\n\t\t        flex-basis: 100%;\n\t}\n}\n\n"] = false
-    document.head.removeChild(__vueify_style__)
-  })
-  if (!module.hot.data) {
-    hotAPI.createRecord(id, module.exports)
-  } else {
-    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
-  }
-})()}
-},{"vue":30,"vue-hot-reload-api":5,"vueify-insert-css":31}],33:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-				value: true
-});
-
-var _vueFocus = require('vue-focus');
-
-exports.default = {
-
-				name: 'EditableList',
-
-				directives: { focusModel: _vueFocus.focusModel },
-
-				props: {
-								content: {},
-								model: ''
-				},
-
-				data: function data() {
-								return {
-												item: '',
-												newItem: false,
-												oldInput: ''
-								};
-				},
-
-				methods: {
-
-								create: function create(item) {
-												this.$http.post(this.model, { name: item, user_id: this.$parent.user.id, _method: 'POST' }).then(function (response) {
-																this.content.push(response.data);
-																this.newItem = false;
-																this.item = '';
-												}.bind(this));
-								},
-
-								edit: function edit(i) {
-												var labels = this.content;
-												this.setOldInput(labels[i].name);
-												labels.forEach(function (label) {
-																labels.editing = false;
-																labels[i].editing = true;
-												});
-
-												labels.forEach(function (label) {
-																label.remove = false;
-												});
-								},
-
-								cancel: function cancel(i) {
-												this.content[i].name = this.oldInput;
-												this.oldInput = '';
-												this.content[i].editing = false;
-								},
-
-								removeConfirm: function removeConfirm(i) {
-												var labels = this.content;
-												labels.forEach(function (label) {
-																label.remove = false;
-																labels[i].remove = true;
-												});
-								},
-
-								remove: function remove(i) {
-												var label = this.content[i];
-												label.updating = true;
-												this.$http.post(this.model + '/' + label.id, { name: label.name, _method: 'DELETE' }).then(function (response) {
-																label.updating = false;
-																this.content.splice(i, 1);
-												}.bind(this));
-								},
-
-								update: function update(i) {
-												var label = this.content[i];
-												label.updating = true;
-												this.$http.post(this.model + '/' + label.id, { name: label.name, _method: 'PATCH' }).then(function (response) {
-																label.updating = false;
-																label.editing = false;
-												}.bind(this));
-								},
-
-								setOldInput: function setOldInput(old) {
-												this.oldInput = old;
-								}
-				}
-};
-if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"list-group list-group-full editable\">\n\t<div v-for=\"item in content\" :class=\"'list-group-item item-' + $index\">\n\t\t<div v-show=\"!item.editing\" class=\"list-content\">\n\t\t\t<span class=\"list-text\">{{ item.name }}</span>\n\t\t\t<span class=\"pull-right badge\">{{ item.contacts | count }}</span>\n\t\t\t<div class=\"item-actions pull-right\">\n\t\t\t\t<a @click.stop.prevent=\"edit($index)\" class=\"btn-icon\">\n\t\t\t\t\t<i class=\"fa fa-edit\" aria-hidden=\"true\"></i>\n\t\t\t\t</a>\n\t\t\t\t<a @click.stop.prevent=\"removeConfirm($index)\" class=\"btn-icon trash\">\n\t\t\t\t\t<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>\n\t\t\t\t</a>\n\t\t\t</div>\n\t\t</div>\n\t\t\n\t\t<div v-show=\"item.remove\" class=\"confirm\">\n\t\t\t<div class=\"col-md-6\">\n\t\t\t\t<p>Are you sure?</p>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6 removeOptions\">\n\t\t\t\t<div class=\"pull-right\">\n\t\t\t\t\t<button @click=\"remove($index)\" class=\"btn btn-sm btn-primary\">YES</button>\n\t\t\t\t\t<button @click=\"item.remove = false\" class=\"btn btn-sm btn-danger\">NO</button>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t\n\t\t<div v-show=\"item.editing\" class=\"list-editable\">\n\t\t\t<div class=\"form-group material-input\">\n\t\t\t\t<input onfocus=\"this.select()\" v-focus-model=\"item.editing\" v-model=\"content[$index].name\" type=\"text\" class=\"form-control\" name=\"name\" @keyup.enter=\"update($index)\">\n\t\t\t\t<div class=\"edit-options pull-right\">\n\t\t\t\t\t<span @click=\"cancel($index)\" v-show=\"!item.updating\" class=\"btn-icon\">\n\t\t\t\t\t\t<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span v-show=\"item.updating\" class=\"btn-icon\">\n\t\t\t\t\t\t<i class=\"fa fa-spinner fa-pulse\" aria-hidden=\"true\"></i>\n\t\t\t\t\t</span>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div v-show=\"newItem\" class=\"list-group-item\">\n\t\t<input v-focus-model=\"newItem\" v-model=\"item\" class=\"form-control\" name=\"name\" @keyup.enter=\"create(item)\">\n\t</div>\n\t<a class=\"list-group-item\" @click.stop.prevent=\"newItem = true\">\n\t\t<span>\n\t\t\t<i class=\"fa fa-plus\" aria-hidden=\"true\"></i> Add New Label\n\t\t</span>\n\t</a>\n</div>\n"
-if (module.hot) {(function () {  module.hot.accept()
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  var id = "/Users/michaelbustamante/Sites/contact-app/resources/assets/js/components/EditableList.vue"
-  if (!module.hot.data) {
-    hotAPI.createRecord(id, module.exports)
-  } else {
-    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
-  }
-})()}
-},{"vue":30,"vue-focus":4,"vue-hot-reload-api":5}],34:[function(require,module,exports){
-var __vueify_style__ = require("vueify-insert-css").insert("\n.table-no-margin {\n\tmargin: 0;\n}\n\n.table .checkbox-col {\n\twidth: 60px;\n\tpadding: 0;\n}\n\n/* .squaredOne */\n.squaredOne {\n  width: 28px;\n  height: 28px;\n  position: relative;\n  margin: 20px auto;\n  background: #fcfff4;\n  background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);\n  background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);\n  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);\n}\n.squaredOne label {\n  width: 20px;\n  height: 20px;\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  cursor: pointer;\n  background: -webkit-linear-gradient(top, #222 0%, #45484d 100%);\n  background: linear-gradient(top, #222 0%, #45484d 100%);\n  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px white;\n}\n.squaredOne label:after {\n  content: '';\n  width: 16px;\n  height: 16px;\n  position: absolute;\n  top: 2px;\n  left: 2px;\n  background: #3366ff;\n  background: -webkit-linear-gradient(top, #3366ff 0%, #0033cc 100%);\n  background: linear-gradient(top, #3366ff 0%, #0033cc 100%);\n  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);\n  opacity: 0;\n}\n.squaredOne label:hover::after {\n  opacity: 0.3;\n}\n.squaredOne input[type=checkbox] {\n  visibility: hidden;\n}\n.squaredOne input[type=checkbox]:checked + label:after {\n  opacity: 1;\n}\n\n/* end .squaredOne */\n\n\n\n")
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-		value: true
-});
-exports.default = {
-
-		name: 'SortableTable',
-
-		props: {
-				data: {
-						type: Array,
-						required: true,
-						twoWay: true
-				},
-				columns: [],
-				filterKey: ''
-		},
-
-		data: function data() {
-				var sortOrders = {};
-				this.columns.forEach(function (key) {
-						sortOrders[key] = 1;
-				});
-				return {
-						sortKey: '',
-						sortOrders: sortOrders,
-						checked: [],
-						all: false
-				};
-		},
-
-		methods: {
-				sortBy: function sortBy(key) {
-						this.sortKey = key;
-						this.sortOrders[key] = this.sortOrders[key] * -1;
-				},
-
-				selectAll: function selectAll() {
-						var index = '';
-						this.checked = [];
-						for (index in this.data) {
-								if (this.all === false) {
-										this.checked.push(this.data[index].id.toString());
-								}
-						}
-				},
-
-				ifInArray: function ifInArray(id, array) {
-						var key;
-						for (key in array) {
-								if (array[key] == id) {
-										return true;
-								}
-						}
-
-						return false;
-				},
-				editContact: function editContact(contact, index) {
-						this.$dispatch('edit-contact', contact, index);
-						this.checked = [];
-						this.checked.push(contact.id.toString());
-				}
-		},
-		events: {
-				'reset-checked-contacts': function resetCheckedContacts() {
-						this.checked = [];
-				},
-
-				'check-contact': function checkContact(id) {
-						this.checked.push(id.toString());
-				}
-		}
-};
-if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n\t<table class=\"table table-no-margin\">\n\t    <thead>\n\t      \t<tr class=\"sortable\">\n\t        \t<th class=\"checkbox-col\">\n\t          \t\t<section>\n\t\t\t\t\t    <div class=\"squaredOne\">\n\t\t\t\t\t      <input type=\"checkbox\" v-model=\"all\" id=\"all\" name=\"check\" v-on:click=\"selectAll()\">\n\t\t\t\t\t      <label for=\"all\"></label>\n\t\t\t\t\t    </div>\n\t\t\t\t\t</section>\n\t        \t</th>\n\t        \t<th v-for=\"column in columns\" v-on:click=\"sortBy(column)\" :class=\"{active: sortKey == column}\">\n\t          \t\t{{ column | capitalize}}\n\t          \t\t<span class=\"arrow\" :class=\"sortOrders[column] > 0 ? 'asc' : 'dsc'\"></span>\n\t        \t</th>\n\t      \t</tr>\n\t    </thead>\n\t</table>\n\t<div class=\"table-body\">\n\t\t<table class=\"table\">\n\t\t  \t<tbody>\n\t\t    \t<tr v-for=\"contact in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]\" v-bind:class=\"ifInArray(contact.id, checked) ? 'checked' : ''\" class=\"contact-row\">\n\t\t      \t\t<td class=\"responsive-hide checkbox-col\">\n\t\t        \t\t<section>\n\t\t\t\t\t\t    <div class=\"squaredOne\">\n\t\t\t\t\t\t      <input v-model=\"checked\" type=\"checkbox\" value=\"{{ contact.id }}\" id=\"contacts_{{ contact.id }}\">\n\t\t\t\t\t\t      <label for=\"contacts_{{ contact.id }}\"></label>\n\t\t\t\t\t\t    </div>\n\t\t\t\t\t\t</section>\n\n\t\t      \t\t</td>\n\t\t      \t\t<td>\n\t\t        \t\t<a class=\"avatar pull-left\" href=\"javascript:void(0)\">\n\t\t          \t\t\t<img class=\"img-responsive\" :src=\"'http://www.gravatar.com/avatar/' + contact.gravatar\" alt=\"...\">\n\t\t        \t\t</a>\n\t\t        \t\t<div class=\"name pull-left\"><a v-on:click.stop.prevent=\"editContact(contact, $index)\">{{ contact.name }}</a></div>\n\t\t      \t\t</td>\n\t\t      \t\t<td>{{ contact.email }}</td>\n\t\t      \t\t<td>{{ contact.phone }}</td>\n\t\t    \t</tr>\n\t\t  \t</tbody>\n\t\t</table>\n\t</div>\n</div>\n"
-if (module.hot) {(function () {  module.hot.accept()
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  var id = "/Users/michaelbustamante/Sites/contact-app/resources/assets/js/components/SortableTable.vue"
-  module.hot.dispose(function () {
-    require("vueify-insert-css").cache["\n.table-no-margin {\n\tmargin: 0;\n}\n\n.table .checkbox-col {\n\twidth: 60px;\n\tpadding: 0;\n}\n\n/* .squaredOne */\n.squaredOne {\n  width: 28px;\n  height: 28px;\n  position: relative;\n  margin: 20px auto;\n  background: #fcfff4;\n  background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);\n  background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);\n  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);\n}\n.squaredOne label {\n  width: 20px;\n  height: 20px;\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  cursor: pointer;\n  background: -webkit-linear-gradient(top, #222 0%, #45484d 100%);\n  background: linear-gradient(top, #222 0%, #45484d 100%);\n  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px white;\n}\n.squaredOne label:after {\n  content: '';\n  width: 16px;\n  height: 16px;\n  position: absolute;\n  top: 2px;\n  left: 2px;\n  background: #3366ff;\n  background: -webkit-linear-gradient(top, #3366ff 0%, #0033cc 100%);\n  background: linear-gradient(top, #3366ff 0%, #0033cc 100%);\n  box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);\n  opacity: 0;\n}\n.squaredOne label:hover::after {\n  opacity: 0.3;\n}\n.squaredOne input[type=checkbox] {\n  visibility: hidden;\n}\n.squaredOne input[type=checkbox]:checked + label:after {\n  opacity: 1;\n}\n\n/* end .squaredOne */\n\n\n\n"] = false
-    document.head.removeChild(__vueify_style__)
-  })
-  if (!module.hot.data) {
-    hotAPI.createRecord(id, module.exports)
-  } else {
-    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
-  }
-})()}
-},{"vue":30,"vue-hot-reload-api":5,"vueify-insert-css":31}],35:[function(require,module,exports){
-'use strict';
-
-var _vueFocus = require('vue-focus');
 
 var Vue = require('vue');
 window.$ = window.jQuery = require('jquery');
@@ -24209,100 +23422,52 @@ var VueResource = require('vue-resource');
 
 Vue.use(VueResource);
 
-Vue.filter('count', function (list) {
-  "use strict";
-
-  return list.length;
-});
-
-Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value');
-
-Vue.config.debug = true;
-
 new Vue({
 
-  name: 'Contact',
+	name: 'Home',
 
-  components: {
-    ContactForm: require('./components/ContactForm.vue'),
-    EditableList: require('./components/EditableList.vue'),
-    SortableTable: require('./components/SortableTable.vue')
-  },
+	el: '#home',
 
-  directives: { focusModel: _vueFocus.focusModel },
+	data: {
+		name: [{ letter: 'C', show: false }, { letter: 'l', show: false }, { letter: 'a', show: false }, { letter: 'y', show: false }, { letter: ' ', show: false }, { letter: 'M', show: false }, { letter: 'a', show: false }, { letter: 'l', show: false }, { letter: 'v', show: false }, { letter: 'e', show: false }, { letter: 'n', show: false }]
 
-  el: '#app-contacts',
+	},
 
-  data: {
-    user: Auth.user,
-    contacts: [],
-    labels: [],
-    searchQuery: '',
-    search: false,
-    columns: ['name', 'email', 'phone'],
-    sortOrders: { 'name': 1, 'phone': 1, 'email': 1 },
-    sideBar: true,
+	created: function created() {
+		setTimeout(function () {
+			this.setName();
+		}.bind(this), 3000);
+	},
 
-    newContact: false,
-    editContact: false
-  },
+	methods: {
+		setName: function setName() {
 
-  created: function created() {
-    this.getContacts();
-    this.getLabels();
-  },
+			for (var i = 0; i <= this.name.length; i++) {
+				setTimeout(function (x) {
+					return function () {
+						this.name[x].show = true;
+						console.log(x);
+					};
+				}(i).bind(this), 600 * i);
+				// 1 2 3 4 5
+			}
 
-  methods: {
+			// var i;
+			// for(i in this.name) {
 
-    openNewContact: function openNewContact() {
-      this.editContact = false;
-      this.newContact = true;
-      this.$broadcast('clear-contact');
-    },
+			// 	(function(i) {
+			// 	        setTimeout(function(){
+			// 	            console.log(i);
+			// 	            this.name[i].show = true;
+			// 	        }, 1000);
+			// 	    }(i));
+			// }
+		}
 
-    getContacts: function getContacts() {
-      var resource = this.$resource('user/' + this.user.id + '/contacts');
-      resource.get({}).then(function (response) {
-        this.contacts = response.data;
-      }.bind(this));
-    },
-
-    getLabels: function getLabels() {
-      var resource = this.$resource('user/' + this.user.id + '/labels');
-      resource.get({}).then(function (response) {
-        this.labels = response.data;
-      }.bind(this));
-    },
-
-    deleteContacts: function deleteContacts() {
-      alert(this.checkedContacts);
-    },
-
-    addLabelToChecked: function addLabelToChecked(id) {
-      console.log(id);
-      console.log(this.$children);
-    }
-  },
-
-  events: {
-
-    'edit-contact': function editContact(contact, index) {
-      this.newContact = false;
-      this.editContact = true;
-      this.$broadcast('set-edit-contact', contact, index);
-    },
-
-    'clear-checked-contacts': function clearCheckedContacts() {
-      this.$broadcast('reset-checked-contacts');
-    },
-
-    'set-check-contact': function setCheckContact(id) {
-      this.$broadcast('check-contact', id);
-    }
-  }
+	}
 
 });
 
-},{"./components/ContactForm.vue":32,"./components/EditableList.vue":33,"./components/SortableTable.vue":34,"bootstrap/dist/js/bootstrap":1,"jquery":2,"vue":30,"vue-focus":4,"vue-resource":19}]},{},[35]);
+},{"bootstrap/dist/js/bootstrap":1,"jquery":2,"vue":28,"vue-resource":17}]},{},[29]);
 
-//# sourceMappingURL=contact.js.map
+//# sourceMappingURL=home.js.map

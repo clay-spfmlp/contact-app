@@ -21,11 +21,11 @@
 		<div class="table-body">
 			<table class="table" >
 			  	<tbody>
-			    	<tr v-for="contact in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]" v-bind:class="ifInArray(contact.id, checkedContacts) ? 'checked' : ''" class="contact-row" >
+			    	<tr v-for="contact in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]" v-bind:class="ifInArray(contact.id, checked) ? 'checked' : ''" class="contact-row" >
 			      		<td class="responsive-hide checkbox-col">
 			        		<section>
 							    <div class="squaredOne">
-							      <input v-model="checkedContacts" type="checkbox" value="{{ contact.id }}" id="contacts_{{ contact.id }}" >
+							      <input v-model="checked" type="checkbox" value="{{ contact.id }}" id="contacts_{{ contact.id }}" >
 							      <label for="contacts_{{ contact.id }}"></label>
 							    </div>
 							</section>
@@ -70,7 +70,7 @@
 		    return {
 		      sortKey: '',
 		      sortOrders: sortOrders,
-		      checkedContacts: [],
+		      checked: [],
 		      all: false,
 		    }
         },
@@ -83,10 +83,10 @@
 
 		    selectAll: function () {
 		    	var index = ''
-		    	this.checkedContacts = []
+		    	this.checked = []
 		    	for(index in this.data){
 		    		if(this.all === false){
-		    			this.checkedContacts.push(this.data[index].id.toString())
+		    			this.checked.push(this.data[index].id.toString())
 		    		}
 		    		
 		    	}
@@ -104,17 +104,17 @@
     		},
     		editContact: function (contact, index) {
     			this.$dispatch('edit-contact', contact, index)
-    			this.checkedContacts = []
-    			this.checkedContacts.push(contact.id.toString())
+    			this.checked = []
+    			this.checked.push(contact.id.toString())
 		    },
         },
         events: {
         	'reset-checked-contacts': function () {
-        		this.checkedContacts = []
+        		this.checked = []
         	},
 
         	'check-contact': function (id) {
-        		this.checkedContacts.push(id.toString())
+        		this.checked.push(id.toString())
         	}
         }
     }

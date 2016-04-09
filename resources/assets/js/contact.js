@@ -75,6 +75,11 @@ new Vue({
 
     deleteContacts: function () {
       alert(this.checkedContacts);
+    },
+
+    addLabelToChecked: function (id) {
+      console.log(id);
+      console.log(this.$children);
     }
   },
 
