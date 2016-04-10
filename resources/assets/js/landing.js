@@ -49,10 +49,10 @@ new Vue({
 
   	created: function () {
   		setTimeout(function(){ this.setName(200); }.bind(this), 3000);
-  		setTimeout(function(){ this.highlight(16); }.bind(this), 10000);
-  		setTimeout(function(){ this.setMessage(); }.bind(this), 12000);
-  		setTimeout(function(){ this.highlight(16);}.bind(this), 16000);
-  		setTimeout(function(){ this.setMessage2();}.bind(this), 18000);
+  		setTimeout(function(){ this.highlight(16); }.bind(this), 12000);
+  		setTimeout(function(){ this.setMessage(); }.bind(this), 12500);
+  		setTimeout(function(){ this.highlight(16);}.bind(this), 17000);
+  		setTimeout(function(){ this.setMessage2();}.bind(this), 18500);
   	},
 
 	methods: {
