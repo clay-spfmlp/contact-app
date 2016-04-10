@@ -8,7 +8,7 @@
 <div class="container">
     <div class="row">
         <div class="panel-login">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel--no-border">
                 <div class="panel-heading">Login</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">

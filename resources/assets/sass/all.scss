@@ -58,10 +58,21 @@ body {
     margin-right: 6px;
 }
 
+.btn-primary {
+    color: $light;
+    background-color: $second-color;
+    border-color: $third-color;
+}
+
 .panel-default > .panel-heading {
     color: $first-color;
     background-color: $third-color;
-    border-bottom: 2px solid $first-color;
+    border-bottom: 3px solid $first-color;
+}
+
+.panel--no-border {
+	border: none;
+	border-color: transparent;
 }
 
 .blinking-cursor {

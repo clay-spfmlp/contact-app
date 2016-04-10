@@ -5,6 +5,7 @@
     <meta id="token" name="token" value="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Hello, My name is Clay Malven. I am a developer and this site is used to showcase some of my work as well as a place to just test new applications that I am working on.">
 
     <title>Clay Malven</title>
 
