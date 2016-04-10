@@ -8,11 +8,11 @@ Route::group(['middleware' => 'web'], function () {
 
 		//dd(md5(strtolower(trim("claycpi@gmail.com"))));
 
-		return view('landing'); 
+		return view('landing.index'); 
 
 	});
 
-	Route::get('movie-app', function () { return view('movie-app.index'); });
+	Route::get('movies', function () { return view('movie.index'); });
 
 	Route::get('theater/{zipCode?}', ['as' => 'theater', 'uses' => 'TheaterController@getTheaters']);
 

@@ -3,10 +3,43 @@
 @import "node_modules/hover.css/scss/hover";
 @import "node_modules/animate.scss/animate.scss";
 
+$first-color: #90AFC5;
+$second-color: #336b87;
+$third-color: #2A3132;
+$fourth-color: #763626;
+$light: #eee;
+
+
 body {
 	font-family: 'Lato';
-	background: #ddd;
+	background: $first-color;
 	padding-top: 75px;
+	color: $third-color;
+}
+
+.navbar-default {
+    background-color: $third-color;
+    border-color: $fourth-color;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: $first-color;
+    transition: all ease 0.3s;
+}
+
+.navbar-default .navbar-nav > li > a:hover, 
+.navbar-default .navbar-nav > li > a:focus {
+    color: $second-color;
+}
+
+.navbar-default .navbar-brand {
+    color: $light;
+    transition: all ease 0.3s;
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #aaa;
 }
 
 .page {
@@ -15,4 +48,77 @@ body {
 
 *[v-cloak] {
 	display: none;
+}
+
+:focus { 
+	outline: none !important;
+}
+
+.fa-btn {
+    margin-right: 6px;
+}
+
+.panel-default > .panel-heading {
+    color: $first-color;
+    background-color: $third-color;
+    border-bottom: 2px solid $first-color;
+}
+
+.blinking-cursor {
+	font-weight: 100;
+	font-size: 22px;
+	color: $light;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	-webkit-animation: 1s blink step-end infinite;
+	-moz-animation: 1s blink step-end infinite;
+	-ms-animation: 1s blink step-end infinite;
+	-o-animation: 1s blink step-end infinite;
+	animation: 1s blink step-end infinite;
+}
+
+@keyframes "blink" {
+	from, to {
+	color: transparent;
+	}
+	50% {
+	color: $light;
+	}
+}
+
+@-moz-keyframes blink {
+	from, to {
+	color: transparent;
+	}
+	50% {
+	color: $light;
+	}
+}
+
+@-webkit-keyframes "blink" {
+	from, to {
+	color: transparent;
+	}
+	50% {
+	color: $light;
+	}
+}
+
+@-ms-keyframes "blink" {
+	from, to {
+	color: transparent;
+	}
+	50% {
+	color: $light;
+	}
+}
+
+@-o-keyframes "blink" {
+	from, to {
+	color: transparent;
+	}
+	50% {
+	color: $light;
+	}
 }

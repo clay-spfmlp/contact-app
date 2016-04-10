@@ -7,9 +7,9 @@ Vue.use(VueResource);
 
 new Vue({
 
-	name: 'Home',
+	name: 'Landing',
 
-	el: '#home',
+	el: '#landing',
 
 	data: {
 		name: [
@@ -50,7 +50,7 @@ new Vue({
   	created: function () {
   		setTimeout(function(){ this.setName(200); }.bind(this), 3000);
   		setTimeout(function(){ this.highlight(16); }.bind(this), 12000);
-  		setTimeout(function(){ this.setMessage(); }.bind(this), 12500);
+  		setTimeout(function(){ this.setMessage(); }.bind(this), 13500);
   		setTimeout(function(){ this.highlight(16);}.bind(this), 17000);
   		setTimeout(function(){ this.setMessage2();}.bind(this), 18500);
   	},
@@ -66,7 +66,12 @@ new Vue({
 
 		setMessage: function () {
 			this.name = [
-				{letter: 'Clay.Malven&nbsp;=&nbsp;', show: true, highlight: false},
+				{letter: 'Clay', show: true, highlight: false},
+				{letter: '.', show: true, highlight: false},
+				{letter: 'Malven', show: true, highlight: false},
+				{letter: '&nbsp;', show: true, highlight: false},
+				{letter: '=', show: true, highlight: false},
+				{letter: '&nbsp;', show: true, highlight: false},						
 				{letter: '\"', show: false, highlight: false},
 				{letter: 'P', show: false, highlight: false},
 				{letter: 'H', show: false, highlight: false},
@@ -90,7 +95,12 @@ new Vue({
 
 		setMessage2: function () {
 			this.name = [
-				{letter: 'Clay.Malven&nbsp;=&nbsp;', show: true, highlight: false},
+				{letter: 'Clay', show: true, highlight: false},
+				{letter: '.', show: true, highlight: false},
+				{letter: 'Malven', show: true, highlight: false},
+				{letter: '&nbsp;', show: true, highlight: false},
+				{letter: '=', show: true, highlight: false},
+				{letter: '&nbsp;', show: true, highlight: false},
 				{letter: '\*', show: false, highlight: false},
 				{letter: '&nbsp;.&nbsp;', show: false, highlight: false},
 				{letter: '\"&nbsp;', show: false, highlight: false},

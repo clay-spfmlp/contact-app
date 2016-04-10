@@ -143,3 +143,67 @@
         }
     }
 </script>
+<style>
+
+
+.list-group-item:hover .btn-icon,
+.list-group-item .trash:focus .btn-icon {
+	display: inline-block;
+}
+
+.item-actions .btn-icon {
+	display: none;
+}
+
+.list-group .fa {
+	font-size: 1.2em;
+}
+
+.list-group-item .fa:hover {
+	cursor: pointer;
+	color: #0000ff;
+}
+
+.list-group-item .fa-times-circle:hover {
+	color: #ff0000;
+}
+
+.editable .list-group-item:hover .badge {
+    display: none;
+}
+
+
+.list-editable .form-control {
+	border: none;
+    box-shadow: none;
+    padding: 0 5px;
+    border-radius: 0px;
+    height: 20px;
+}
+
+.list-editable .edit-options {
+	margin-top: -20px;
+	z-index: 999;
+	position: relative;
+}
+
+.list-editable .form-group {
+	margin-bottom: 0px;
+}
+
+.confirm {
+	position: absolute;
+    background: #fff;
+    z-index: 999;
+    padding: 5px 10px;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.confirm .btn {
+	font-size: 0.7em;
+    padding: 2px;
+    display: inline-block;
+}
+</style>

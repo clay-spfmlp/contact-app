@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('css')
-<link href="css/login.css" rel="stylesheet">
+<link href="css/home.css" rel="stylesheet">
 @endsection
 
 @section('content')
-<div class="container">
+<div id="home" class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
@@ -18,4 +18,8 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+  <script src="js/home.js"></script>
 @endsection

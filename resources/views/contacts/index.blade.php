@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('css')
 <link href="css/contact.css" rel="stylesheet">

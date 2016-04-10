@@ -1,95 +1,46 @@
 @import "resources/assets/sass/all";
 
-	body, html{
-		background: #222;
-		color: #eee;
-		height: 100%;
-		padding-top: 75px;
-	}
+body{
+	background: $third-color;
+	color: $light;
+}
 
-	.navbar-default {
-	    background-color: #222;
-	    border-color: #222;
-	}
-	
-	.navbar-default .navbar-brand {
-		display: none;
-	}
+#landing {
+	height: 500px;
+}
 
-	.title {
-	    font-size: 5em;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+.navbar-default {
+    background-color: $third-color;
+    border-color: $third-color;
+}
 
-	.name.space {
-		margin-left: 10px;
-	}
+.navbar-default .navbar-brand {
+	display: none;
+}
 
-	.name {
-	  animation-duration: .5s;
-	}
+.title {
+    font-size: 5em;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
 
-	.name.highlight {
-	  background: #444;
-	}
+.name.space {
+	margin-left: 10px;
+}
 
-	.blinking-cursor {
-		font-weight: 100;
-		font-size: 96px;
-		color: #eee;
-		position: relative;
-		top: -10px;
-		left: -10px;
-		-webkit-animation: 1s blink step-end infinite;
-		-moz-animation: 1s blink step-end infinite;
-		-ms-animation: 1s blink step-end infinite;
-		-o-animation: 1s blink step-end infinite;
-		animation: 1s blink step-end infinite;
-	}
+.name {
+  animation-duration: .5s;
+}
 
-	@keyframes "blink" {
-	  from, to {
-	    color: transparent;
-	  }
-	  50% {
-	    color: #eee;
-	  }
-	}
+.name.highlight {
+  background: #444;
+}
 
-	@-moz-keyframes blink {
-	  from, to {
-	    color: transparent;
-	  }
-	  50% {
-	    color: #eee;
-	  }
-	}
-
-	@-webkit-keyframes "blink" {
-	  from, to {
-	    color: transparent;
-	  }
-	  50% {
-	    color: #eee;
-	  }
-	}
-
-	@-ms-keyframes "blink" {
-	  from, to {
-	    color: transparent;
-	  }
-	  50% {
-	    color: #eee;
-	  }
-	}
-
-	@-o-keyframes "blink" {
-	  from, to {
-	    color: transparent;
-	  }
-	  50% {
-	    color: black;
-	  }
-	}
+.blinking-cursor {
+	font-size: 96px;
+	top: -10px;
+	left: -10px;
+}

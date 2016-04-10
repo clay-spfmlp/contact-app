@@ -1,9 +1,6 @@
 @import "resources/assets/sass/all";
 
 
-
-
-
 .hvr-bubble-bottom:before {
 	border-color: #337ab7 transparent transparent transparent;
 }
@@ -13,44 +10,7 @@
 	border-color: #204d74 transparent transparent transparent;
 }
 
-.fa-btn {
-    margin-right: 6px;
-}
 
-:focus { 
-	outline: none !important;
-}
-
-.list-group-item:hover {
-	color: #62a8ea;
-}
-
-.list-group-item:hover .btn-icon,
-.list-group-item .trash:focus .btn-icon {
-	display: inline-block;
-
-}
-
-.item-actions .btn-icon {
-	display: none;
-}
-
-.list-group .fa {
-	font-size: 1.2em;
-}
-
-.list-group-item .fa:hover {
-	cursor: pointer;
-	color: #0000ff;
-}
-
-.list-group-item .fa-times-circle:hover {
-	color: #ff0000;
-}
-
-.editable .list-group-item:hover .badge {
-    display: none;
-}
 
 .avatar img {
 	border-radius:50%;
@@ -64,40 +24,6 @@
 
 .table > tbody > tr.contact-row > td  {
 	vertical-align: middle;
-}
-
-.list-editable .form-control {
-	border: none;
-    box-shadow: none;
-    padding: 0 5px;
-    border-radius: 0px;
-    height: 20px;
-}
-
-.list-editable .edit-options {
-	margin-top: -20px;
-	z-index: 999;
-	position: relative;
-}
-
-.list-editable .form-group {
-	margin-bottom: 0px;
-}
-
-.confirm {
-	position: absolute;
-    background: #fff;
-    z-index: 999;
-    padding: 5px 10px;
-    width: 100%;
-    top: 0;
-    left: 0;
-}
-
-.confirm .btn {
-	font-size: 0.7em;
-    padding: 2px;
-    display: inline-block;
 }
 
 .table > thead > tr > th.active {
@@ -141,13 +67,13 @@ th.active .arrow.dsc {
 .arrow.asc {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid #444;
+  border-bottom: 6px solid $third-color;
 }
 
 .arrow.dsc {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-top: 6px solid #444;
+  border-top: 6px solid $third-color;
 }
 
 .input-search {
@@ -247,10 +173,6 @@ article {
     right: 20px;
 }
 
-.fade-transition {
-
-}
-
 .fade-enter {
 	@include fadeIn($duration: 1.2s);
 }
@@ -282,7 +204,7 @@ article {
 
 .name a {
 	cursor: pointer;
-	color: #000;
+	color: $third-color;
 }
 
 .light {
@@ -429,11 +351,17 @@ article {
     background: #eee;
 } 
 
-.edit-options .btn-icon .fa{
+.edit-options .btn-icon .fa {
 	z-index: 99;
 	position: relative;
 }
 
+.editable .list-group-item:hover {
+	color: $first-color;
+}
 
+.editable .badge {
+	background-color: $third-color;
+}
 
 @import "resources/assets/sass/squaredOne.scss";

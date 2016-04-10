@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('css')
 <link href="css/movie.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 		<h2 class="movie-app-title text-center">Find a Movie Near You</h2>
 		<div class="row">
 			<div class="col-md-3 col-md-offset-4">
-				<input v-model="zipCode" class="form-control" placeholder="Zip Code">
+				<input v-model="zipCode" class="form-control" placeholder="Zip Code" v-on:keyup.enter="getTheaters">
 			</div>
 			<div class="col-md-2">
 				<button v-on:click="getTheaters" class="btn btn-primary hvr-float-shadow">GO</button>
@@ -51,6 +51,6 @@
 @endsection
 
 @section('script')
-	<script src="js/movie-app.js"></script>
+	<script src="js/movie.js"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 @endsection

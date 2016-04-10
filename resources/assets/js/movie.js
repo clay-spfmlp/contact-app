@@ -1,6 +1,6 @@
 var Vue = require('vue');
-// window.$ = window.jQuery = require('jquery');
-// var bootstrap = require('bootstrap/dist/js/bootstrap');
+window.$ = window.jQuery = require('jquery');
+var bootstrap = require('bootstrap/dist/js/bootstrap');
 var VueResource = require('vue-resource');
 
 Vue.use(VueResource);
