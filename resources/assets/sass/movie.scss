@@ -1,0 +1,41 @@
+@import "resources/assets/sass/all";
+
+.movie {
+	background: #fff;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.movie-poster {
+	margin-left: -15px;
+	max-width: 135px;
+	border-radius: 5px 0px 0px 5px;
+}
+
+.movie-details {
+	padding-left: 30px;
+}
+
+.movie-time {
+	margin: 10px 10px 0px 0;
+}
+
+.loading-theathers .fa-spinner {
+	font-size: 24em;
+	color: #696969;
+}
+
+.movie-app-title {
+	font-size: 3em;
+}
+
+.theater-name {
+	background: #696969;
+	color: #eee;
+	margin-top: 15px;
+}
+
+.theater-address {
+	border: 1px solid #696969;
+	color: #ddd;
+}

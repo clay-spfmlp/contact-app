@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@import "resources/assets/sass/all";
 
-@section('css')
-	<style>
-	body {
+	body, html{
 		background: #222;
+		color: #eee;
+		height: 100%;
+		padding-top: 75px;
 	}
 
 	.navbar-default {
@@ -11,20 +12,15 @@
 	    border-color: #222;
 	}
 	
-	.navbar-default .navbar-nav > li > a,
 	.navbar-default .navbar-brand {
-		color: #eee;
+		display: none;
 	}
+
 	.title {
-		color: #eee;
-	    font-size: 96px;
-	    height: 143px;
-	    position: absolute;
-	    top:-20px;
-	    bottom: 0;
-	    left: 0;
-	    right: 0;
-	    margin: auto;
+	    font-size: 5em;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.name.space {
@@ -34,7 +30,10 @@
 	.name {
 	  animation-duration: .5s;
 	}
-	
+
+	.name.highlight {
+	  background: #444;
+	}
 
 	.blinking-cursor {
 		font-weight: 100;
@@ -42,7 +41,7 @@
 		color: #eee;
 		position: relative;
 		top: -10px;
-		left: -8px;
+		left: -10px;
 		-webkit-animation: 1s blink step-end infinite;
 		-moz-animation: 1s blink step-end infinite;
 		-ms-animation: 1s blink step-end infinite;
@@ -94,23 +93,3 @@
 	    color: black;
 	  }
 	}
-
-</style>
-@endsection
-
-@section('content')
-<div id="home" class="container">
-	<div class="content">
-	    <div class="title text-center">
-			    <span v-for="n in name" v-show="n.show" class="name">@{{ n.letter }}</span>
-			    <span class="blinking-cursor">|</span>
-	    </div>
-	</div>
-
-</div>
-@endsection
-
-@section('script')
-  <script src="js/home.js"></script>
-    {{-- <script src="{{ elixir('js/home.js') }}"></script> --}}
-@endsection

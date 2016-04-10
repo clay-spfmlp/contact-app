@@ -1,0 +1,18 @@
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/font-awesome/scss/font-awesome";
+@import "node_modules/hover.css/scss/hover";
+@import "node_modules/animate.scss/animate.scss";
+
+body {
+	font-family: 'Lato';
+	background: #ddd;
+	padding-top: 75px;
+}
+
+.page {
+	@include fadeIn($duration: 1.6s);
+}
+
+*[v-cloak] {
+	display: none;
+}

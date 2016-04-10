@@ -1,0 +1,11 @@
+@import "resources/assets/sass/all";
+
+.panel-login {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.panel-login .panel {
+	min-width: 55%;
+}

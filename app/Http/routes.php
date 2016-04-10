@@ -8,7 +8,7 @@ Route::group(['middleware' => 'web'], function () {
 
 		//dd(md5(strtolower(trim("claycpi@gmail.com"))));
 
-		return view('welcome'); 
+		return view('landing'); 
 
 	});
 

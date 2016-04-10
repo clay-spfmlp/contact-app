@@ -1,62 +1,8 @@
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-@import "node_modules/font-awesome/scss/font-awesome";
-@import "node_modules/hover.css/scss/hover";
-@import "node_modules/animate.scss/animate.scss";
+@import "resources/assets/sass/all";
 
 
-*[v-cloak] {
-	display: none;
-}
 
-.page {
-	@include fadeIn($duration: 1.6s);
-}
 
-body {
-	font-family: 'Lato';
-	background: #ddd;
-	padding-top: 75px;
-}
-
-.movie {
-	background: #fff;
-    border-radius: 5px;
-    margin-top: 15px;
-}
-
-.movie-poster {
-	margin-left: -15px;
-	max-width: 135px;
-	border-radius: 5px 0px 0px 5px;
-}
-
-.movie-details {
-	padding-left: 30px;
-}
-
-.movie-time {
-	margin: 10px 10px 0px 0;
-}
-
-.loading-theathers .fa-spinner {
-	font-size: 24em;
-	color: #696969;
-}
-
-.movie-app-title {
-	font-size: 3em;
-}
-
-.theater-name {
-	background: #696969;
-	color: #eee;
-	margin-top: 15px;
-}
-
-.theater-address {
-	border: 1px solid #696969;
-	color: #ddd;
-}
 
 .hvr-bubble-bottom:before {
 	border-color: #337ab7 transparent transparent transparent;
@@ -488,13 +434,6 @@ article {
 	position: relative;
 }
 
-.panel-login {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-.panel-login .panel {
-	min-width: 55%;
-}
+
 
 @import "resources/assets/sass/squaredOne.scss";

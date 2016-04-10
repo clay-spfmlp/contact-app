@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="css/contact.css" rel="stylesheet">
+@endsection
+
 @section('content')
 
   <div id="app-contacts" class="page">
