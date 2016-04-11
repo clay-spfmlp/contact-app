@@ -4,10 +4,10 @@
 	display: flex;
 	align-items: baseline;
 	justify-content: center;
-}
 
-#login .panel {
-	min-width: 55%;
+	.panel {
+		min-width: 55%;
+	}
 }
 
 .flip-enter {

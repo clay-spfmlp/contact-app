@@ -1,41 +1,53 @@
 @import "resources/assets/sass/all";
 
+.theater {
+	.theater__name {
+		background: $third-color;
+		color: #eee;
+		margin-top: 15px;
+	}
+
+	.theater__address {
+		border: 1px solid $third-color;
+		color: #ddd;
+	}
+}
+
 .movie {
-	background: #fff;
+	background: $light;
     border-radius: 5px;
     margin-top: 15px;
-}
 
-.movie-poster {
-	margin-left: -15px;
-	max-width: 135px;
-	border-radius: 5px 0px 0px 5px;
-}
+	.movie__poster {
+		margin-left: -15px;
+		max-width: 135px;
+		border-radius: 5px 0px 0px 5px;
+	}
 
-.movie-details {
-	padding-left: 30px;
-}
+	.movie__details {
+		padding-left: 30px;
+	}
 
-.movie-time {
-	margin: 10px 10px 0px 0;
+	.movie_times {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+
+		.movie__time {
+			margin: 10px 10px 0px 0;
+		}		
+	}
+
 }
 
 .loading-theathers .fa-spinner {
 	font-size: 24em;
-	color: #696969;
+	color: $third-color;
+	position: relative;
+	top: 30px;
 }
 
 .movie-app-title {
 	font-size: 3em;
 }
 
-.theater-name {
-	background: #696969;
-	color: #eee;
-	margin-top: 15px;
-}
-
-.theater-address {
-	border: 1px solid #696969;
-	color: #ddd;
-}

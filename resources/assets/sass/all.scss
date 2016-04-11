@@ -3,7 +3,7 @@
 @import "node_modules/hover.css/scss/hover";
 @import "node_modules/animate.scss/animate.scss";
 
-$first-color: #90AFC5;
+$first-color: #90afc5;
 $second-color: #336b87;
 $third-color: #2A3132;
 $fourth-color: #763626;
@@ -20,16 +20,26 @@ body {
 	color: $third-color;
 }
 
-.navbar-default {
+.navbar--Site {
     background-color: $third-color;
     border-bottom: 3px solid $fourth-color;
-    .navbar-nav > li > a {
-    	color: $first-color;
-    	transition: all ease 0.3s;
-		&:hover, &:focus {
-		    color: $second-color;
+
+    .navbar-nav {
+
+    	li > a {
+    		color: $first-color;
+    		transition: all ease 0.3s;
+			&:hover, &:focus {
+		    	color: $second-color;
+			}
+		}
+
+		.open, .open > a, .open > a:hover, .open > a:focus {
+			background-color: #444;
+    		color: #eee;
 		}
 	}
+
 	.navbar-brand {
 	    color: $light;
 	    transition: all ease 0.3s;
@@ -55,23 +65,32 @@ body {
     margin-right: 6px;
 }
 
-.btn-primary {
+.btn--Main {
+	transition: all 0.3s ease;
     color: $light;
     background-color: $second-color;
-    border-color: $third-color;
+    border-color: $second-color;
+    
+    &:hover, &:focus {
+    	background-color: $third-color;
+    	color: $light;
+    }
 }
 
-.panel-default > .panel-heading {
-    color: $first-color;
-    background-color: $third-color;
-    border-bottom: 3px solid $fourth-color;
-    font-size: 1.4em;
-}
-
-.panel--no-border {
+.panel--Site {
 	border: none;
 	border-color: transparent;
+
+	.panel-heading {
+	    color: $first-color;
+	    background-color: $third-color;
+	    border-bottom: 3px solid $fourth-color;
+	    font-size: 1.4em;
+	}
+
 }
+
+
 
 .btn-link-first {
 	padding: 6px 12px 6px 0px;

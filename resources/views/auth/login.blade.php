@@ -7,7 +7,8 @@
 @section('content')
 <div id='login'>
 
-    <div v-show="login" transition="flip" class="panel panel-default panel--no-border flip-enter">
+	<!-- Login Panel -->
+    <div v-show="login" transition="flip" class="panel panel-default panel--Site flip-enter">
         <div class="panel-heading"><i class="fa fa-btn fa-sign-in"></i>Login</div>
         <div class="panel-body">
             <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
@@ -53,7 +54,7 @@
 
                 <div class="form-group">
                     <div class="col-md-8 col-md-offset-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn--Main">
                             <i class="fa fa-btn fa-sign-in"></i>Login
                         </button>
                         <br>
@@ -64,8 +65,8 @@
             </form>
         </div>
     </div>
-
-	<div v-show="register" transition="flip" v-cloak class="panel panel-default panel--no-border flip-enter">
+    <!-- Register Panel -->
+	<div v-show="register" transition="flip" v-cloak class="panel panel-default panel--Site flip-enter">
         <div class="panel-heading"><i class="fa fa-btn fa-user"></i>Register</div>
         <div class="panel-body">
             <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
@@ -129,7 +130,7 @@
 
                 <div class="form-group">
                     <div class="col-md-6 col-md-offset-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn--Main">
                             <i class="fa fa-btn fa-user"></i>Register
                         </button>
                         <br>
@@ -140,15 +141,13 @@
             </form>
         </div>
     </div>
-
-	<div v-show="reset" transition="flip" v-cloak  class="panel panel-default panel--no-border flip-enter">
+    <!-- Reset Password Panel -->
+	<div v-show="reset" transition="flip" v-cloak  class="panel panel-default panel--Site flip-enter">
 	    <div class="panel-heading"><i class="fa fa-btn fa-refresh"></i>Reset Password</div>
 
 	    <div class="panel-body">
 	        <form class="form-horizontal" role="form" method="POST" action="{{ url('/password/reset') }}">
 	            {!! csrf_field() !!}
-
-	            
 
 	            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
 	                <label class="col-md-4 control-label">E-Mail Address</label>
@@ -193,7 +192,7 @@
 
 	            <div class="form-group">
 	                <div class="col-md-6 col-md-offset-4">
-	                    <button type="submit" class="btn btn-primary">
+	                    <button type="submit" class="btn btn--Main">
 	                        <i class="fa fa-btn fa-refresh"></i>Reset Password
 	                    </button>
 	                    <br>

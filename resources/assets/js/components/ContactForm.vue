@@ -159,6 +159,7 @@
 		  }
     }
 </script>
+
 <style>
 
 .busy-spinner {
@@ -182,13 +183,15 @@
 }
 
 .labels {
+	max-height: 88px;
 	display: flex;
+	flex-direction: column;
 	flex-wrap: wrap;
 }
 
 .labels label {
 	flex: 1;
-	flex-basis: 25%;
+	flex-basis: 20px;
 }
 
 @media screen and (max-width: 480) {
