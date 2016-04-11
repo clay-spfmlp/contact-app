@@ -11,11 +11,11 @@
 }
 
 .flip-enter {
-	@include rollIn($duration: 0.5s);
+	@include flipInX($duration: 0.5s);
 }
 
 .flip-leave {
-	@include rollOut($duration: 0.5s);
+	@include flipOutX($duration: 0.5s);
 }
 
 @media(max-width:767px) {

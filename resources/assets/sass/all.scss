@@ -1,5 +1,4 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-@import "resources/assets/css/grid.css";
 @import "node_modules/font-awesome/scss/font-awesome";
 @import "node_modules/hover.css/scss/hover";
 @import "node_modules/animate.scss/animate.scss";
@@ -10,6 +9,9 @@ $third-color: #2A3132;
 $fourth-color: #763626;
 $light: #eee;
 
+body, html {
+	height: 100%;
+}
 
 body {
 	font-family: 'Lato';
@@ -18,33 +20,32 @@ body {
 	color: $third-color;
 }
 
-body, html {
-	height: 100%;
-}
-
 .navbar-default {
     background-color: $third-color;
     border-bottom: 3px solid $fourth-color;
-}
+    
+    .navbar-nav > li > a {
+    	color: $first-color;
+    	transition: all ease 0.3s;
 
-.navbar-default .navbar-nav > li > a {
-    color: $first-color;
-    transition: all ease 0.3s;
-}
+		:hover, 
+		:focus {
+		    color: $second-color;
+		}
 
-.navbar-default .navbar-nav > li > a:hover, 
-.navbar-default .navbar-nav > li > a:focus {
-    color: $second-color;
-}
+	}
 
-.navbar-default .navbar-brand {
-    color: $light;
-    transition: all ease 0.3s;
-}
+	.navbar-brand {
+	    color: $light;
+	    transition: all ease 0.3s;
 
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-brand:focus {
-    color: #aaa;
+		:hover,
+		:focus {
+		    color: #aaa;
+		}
+
+	}
+
 }
 
 .page {
@@ -73,10 +74,7 @@ body, html {
     color: $first-color;
     background-color: $third-color;
     border-bottom: 3px solid $fourth-color;
-}
-
-.panel-heading {
-	font-size: 1.4em;
+    font-size: 1.4em;
 }
 
 .panel--no-border {
