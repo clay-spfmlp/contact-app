@@ -5,6 +5,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+@import url(resources/assets/css/grid.css);
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 html {
   font-family: sans-serif;
@@ -13665,9 +13666,12 @@ body {
   padding-top: 75px;
   color: #2A3132; }
 
+body, html {
+  height: 100%; }
+
 .navbar-default {
   background-color: #2A3132;
-  border-color: #763626; }
+  border-bottom: 3px solid #763626; }
 
 .navbar-default .navbar-nav > li > a {
   color: #90AFC5;
@@ -13720,11 +13724,17 @@ body {
 .panel-default > .panel-heading {
   color: #90AFC5;
   background-color: #2A3132;
-  border-bottom: 3px solid #90AFC5; }
+  border-bottom: 3px solid #763626; }
+
+.panel-heading {
+  font-size: 1.4em; }
 
 .panel--no-border {
   border: none;
   border-color: transparent; }
+
+.btn-link-first {
+  padding: 6px 12px 6px 0px; }
 
 .blinking-cursor {
   font-weight: 100;

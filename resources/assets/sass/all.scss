@@ -1,4 +1,5 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "resources/assets/css/grid.css";
 @import "node_modules/font-awesome/scss/font-awesome";
 @import "node_modules/hover.css/scss/hover";
 @import "node_modules/animate.scss/animate.scss";
@@ -17,9 +18,13 @@ body {
 	color: $third-color;
 }
 
+body, html {
+	height: 100%;
+}
+
 .navbar-default {
     background-color: $third-color;
-    border-color: $fourth-color;
+    border-bottom: 3px solid $fourth-color;
 }
 
 .navbar-default .navbar-nav > li > a {
@@ -67,12 +72,20 @@ body {
 .panel-default > .panel-heading {
     color: $first-color;
     background-color: $third-color;
-    border-bottom: 3px solid $first-color;
+    border-bottom: 3px solid $fourth-color;
+}
+
+.panel-heading {
+	font-size: 1.4em;
 }
 
 .panel--no-border {
 	border: none;
 	border-color: transparent;
+}
+
+.btn-link-first {
+	padding: 6px 12px 6px 0px;
 }
 
 .blinking-cursor {

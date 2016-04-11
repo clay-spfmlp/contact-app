@@ -1,11 +1,26 @@
 @import "resources/assets/sass/all";
 
-.panel-login {
+#login {
 	display: flex;
-	align-items: center;
+	align-items: baseline;
 	justify-content: center;
 }
 
-.panel-login .panel {
+#login .panel {
 	min-width: 55%;
+}
+
+.flip-enter {
+	@include rollIn($duration: 0.5s);
+}
+
+.flip-leave {
+	@include rollOut($duration: 0.5s);
+}
+
+@media(max-width:767px) {
+
+	#login .panel {
+		min-width: 96%;
+	}
 }

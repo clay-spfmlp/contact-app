@@ -5,6 +5,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+@import url(resources/assets/css/grid.css);
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -13664,9 +13665,12 @@ body {
   padding-top: 75px;
   color: #2A3132; }
 
+body, html {
+  height: 100%; }
+
 .navbar-default {
   background-color: #2A3132;
-  border-color: #763626; }
+  border-bottom: 3px solid #763626; }
 
 .navbar-default .navbar-nav > li > a {
   color: #90AFC5;
@@ -13719,11 +13723,17 @@ body {
 .panel-default > .panel-heading {
   color: #90AFC5;
   background-color: #2A3132;
-  border-bottom: 3px solid #90AFC5; }
+  border-bottom: 3px solid #763626; }
+
+.panel-heading {
+  font-size: 1.4em; }
 
 .panel--no-border {
   border: none;
   border-color: transparent; }
+
+.btn-link-first {
+  padding: 6px 12px 6px 0px; }
 
 .blinking-cursor {
   font-weight: 100;
@@ -13747,18 +13757,58 @@ body {
   50% {
     color: #eee; } }
 
-.panel-login {
+#login {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
+  -webkit-align-items: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center; }
 
-.panel-login .panel {
+#login .panel {
   min-width: 55%; }
+
+.flip-enter {
+  -webkit-animation-name: rollIn;
+  animation-name: rollIn;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden; }
+
+.flip-leave {
+  -webkit-animation-name: rollOut;
+  animation-name: rollOut;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden; }
+
+@media (max-width: 767px) {
+  #login .panel {
+    min-width: 96%; } }
 
 /*# sourceMappingURL=login.css.map */
