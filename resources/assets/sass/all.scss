@@ -23,29 +23,20 @@ body {
 .navbar-default {
     background-color: $third-color;
     border-bottom: 3px solid $fourth-color;
-    
     .navbar-nav > li > a {
     	color: $first-color;
     	transition: all ease 0.3s;
-
-		:hover, 
-		:focus {
+		&:hover, &:focus {
 		    color: $second-color;
 		}
-
 	}
-
 	.navbar-brand {
 	    color: $light;
 	    transition: all ease 0.3s;
-
-		:hover,
-		:focus {
+		&:hover, &:focus {
 		    color: #aaa;
 		}
-
 	}
-
 }
 
 .page {
