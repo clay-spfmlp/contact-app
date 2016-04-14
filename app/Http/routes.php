@@ -6,8 +6,6 @@ Route::group(['middleware' => 'web'], function () {
 
 	Route::get('/', function () { 
 
-		//dd(md5(strtolower(trim("claycpi@gmail.com"))));
-
 		return view('landing.index'); 
 
 	});
@@ -29,6 +27,10 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('user/{user_id}/contacts', ['as' => 'user.contacts', 'uses' => 'ContactController@userContacts']);
 
     Route::get('user/{user_id}/labels', ['as' => 'user.labels', 'uses' => 'LabelController@userLabels']);
+
+    Route::get('equilibrium', ['as' => 'equilibrium', 'uses' => 'EquilibriumController@index']);
+
+    Route::post('equilibrium', ['as' => 'equilibrium.post', 'uses' => 'EquilibriumController@equilibrium']);
 
 });
 

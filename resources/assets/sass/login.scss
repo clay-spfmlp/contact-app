@@ -5,7 +5,7 @@
 	align-items: baseline;
 	justify-content: center;
 
-	.panel {
+	.panel--Site {
 		min-width: 55%;
 	}
 }
@@ -18,9 +18,24 @@
 	@include flipOutX($duration: 0.5s);
 }
 
+.form-horizontal--Flex {
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+
+	.form-group {
+		flex: 1 1 auto;
+		padding: 0;
+	}
+
+	.form-group--H100 {
+		flex: 3 1 3em;
+	}
+}
+
 @media(max-width:767px) {
 
-	#login .panel {
+	#login .panel--Site {
 		min-width: 96%;
 	}
 }

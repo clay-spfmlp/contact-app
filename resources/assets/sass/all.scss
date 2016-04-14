@@ -80,12 +80,14 @@ body {
 .panel--Site {
 	border: none;
 	border-color: transparent;
+	min-height: 350px;
 
 	.panel-heading {
 	    color: $first-color;
 	    background-color: $third-color;
 	    border-bottom: 3px solid $fourth-color;
 	    font-size: 1.4em;
+	    margin-bottom: 15px;
 	}
 
 }

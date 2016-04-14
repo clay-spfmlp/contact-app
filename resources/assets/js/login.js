@@ -1,14 +1,19 @@
 var Vue = require('vue');
 window.$ = window.jQuery = require('jquery');
 var bootstrap = require('bootstrap/dist/js/bootstrap');
-//var VueResource = require('vue-resource');
+var VueResource = require('vue-resource');
+var VueValidator = require('vue-validator');
 
-//Vue.use(VueResource);
+Vue.use(VueResource);
+Vue.use(VueValidator);
 
-
+Vue.validator('email', function (val) {
+  return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
+});
 
 new Vue({
 	name: 'Login',
+
   	el: '#login',
 
   	data: {
@@ -50,6 +55,10 @@ new Vue({
   					this.reset = true;
   				}
   			}.bind(this), 500);
+  		},
+
+  		login: function () {
+
   		}
   	}
 })

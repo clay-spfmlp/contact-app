@@ -1,4 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.main')
+
+@section('css')
+<link href="css/login.css" rel="stylesheet">
+@endsection
 
 <!-- Main Content -->
 @section('content')

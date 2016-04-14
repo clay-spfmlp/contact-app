@@ -9,10 +9,11 @@ elixir(function(mix) {
     .browserify('home.js')
     .browserify('movie.js')
     .browserify('contact.js')
-	//.sass('landing.scss')
-	//.sass('login.scss')
-    //.sass('home.scss')
-    //.sass('movie.scss')
+    .browserify('equilibrium.js')
+	.sass('landing.scss')
+	.sass('login.scss')
+    .sass('home.scss')
+    .sass('movie.scss')
     .sass('contact.scss')
     ;
 });
