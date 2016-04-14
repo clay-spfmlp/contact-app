@@ -23,6 +23,7 @@
                 <li><a href="{{ url('/home') }}">Home</a></li>
                 <li><a href="{{ url('/movies') }}">Movies</a></li>
                 <li><a href="{{ url('/contacts') }}">Contacts</a></li>
+                <li><a href="{{ url('/equilibrium-indexs') }}">Equilibrium Indexes</a></li>
             </ul>
             @endif 
             <!-- Right Side Of Navbar -->
