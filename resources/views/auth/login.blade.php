@@ -19,7 +19,7 @@
                     <label class="col-md-4 control-label">E-Mail Address</label>
 
                     <div class="col-md-6">
-                        <input type="email" class="form-control" v-model="Login.email" v-validate:email="['required', 'email']">
+                        <input type="email" class="form-control" v-model="Login.email" name="email" v-validate:email="['required', 'email']">
 
                         @if ($errors->has('email'))
                             <span class="help-block">
@@ -33,7 +33,7 @@
                     <label class="col-md-4 control-label">Password</label>
 
                     <div class="col-md-6">
-                        <input type="password" class="form-control" v-model="Login.password" v-validate:password="['required', 'minlength:6']">
+                        <input type="password" name="password" class="form-control" v-model="Login.password" v-validate:password="['required', 'minlength:6']">
 
                         @if ($errors->has('password'))
                             <span class="help-block">
