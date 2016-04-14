@@ -35,12 +35,9 @@ new Vue({
 
   	methods: {
   		addToArray: function (num) {
-  			if(this.equilibriumInput){
-  				this.equilibriums.push({number: num});
-  			}
+  			if(this.equilibriumInput) this.equilibriums.push({number: num});
   			this.equilibriumInput = '';
   			this.equilibriumParse();
-  			
   		},
 
   		remove: function (index) {
@@ -52,7 +49,6 @@ new Vue({
   			this.equilibriumParse();
   			this.$http.post('equilibrium-indexs', {equilibrium: this.equilibriumArray})
   			.then(function(response){
-  				console.log(response.data);
 				this.equilibriumResult = response.data;
 			}.bind(this));
   		},
