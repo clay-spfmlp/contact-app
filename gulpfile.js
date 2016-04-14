@@ -15,5 +15,6 @@ elixir(function(mix) {
     .sass('home.scss')
     .sass('movie.scss')
     .sass('contact.scss')
+    .sass('equilibrium.scss')
     ;
 });

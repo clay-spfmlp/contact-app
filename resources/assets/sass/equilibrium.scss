@@ -1,0 +1,80 @@
+@import "resources/assets/sass/all";
+
+	.equilibrium {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		margin-bottom: 15px;
+	}
+
+	.equilibrium__item {
+		font-size: 2em;
+		padding: 0 10px;
+		min-width: 50px;
+		position: relative;
+	}
+
+	.equilibrium__item:hover .remove {
+		display: block;
+	}
+
+/*	.equilibrium__item:hover .number {
+		display: none;
+	}*/
+
+	.equilibrium__item .remove {
+		display: none;
+		cursor: pointer;
+	    font-size: 0.6em;
+	    position: absolute;
+	    color: #763626;
+	    right: 0;
+	    top: 0;
+	}
+
+	.equilibrium__input {
+
+	}
+
+	.equilibrium__input .form-control {
+		font-size: 32px;
+		padding: 0 7px;
+		height: 45px;
+		text-align: center;
+	}
+
+	.results {
+		font-size: 2em;
+	}
+
+	.result {
+		margin-bottom: 15px;
+		display: flex;
+		justify-content: space-between;
+	}
+	.results .error {
+		color: #763626;
+	}
+
+	.results .sucess {
+		color: #589234;
+	}
+
+	.result {
+		margin-bottom: 15px;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.result .index {
+		flex: 0.5;
+	}
+
+	.result .string-1 {
+		flex: 5;
+	}
+
+	.result .string-2 {
+		flex: 1;
+		text-align: right;
+	}

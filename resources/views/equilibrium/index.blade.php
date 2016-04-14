@@ -1,71 +1,21 @@
 @extends('layouts.main')
 
 @section('css')
-<link href="css/login.css" rel="stylesheet">
-<style type="text/css">
+<link href="css/equilibrium.css" rel="stylesheet">
 
-	.equilibrium {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-	}
-
-	.equilibrium__item {
-		font-size: 2em;
-		padding: 0 10px;
-	}
-
-	.equilibrium__item:hover .remove {
-		display: block;
-	}
-
-	.equilibrium__item:hover .number {
-		display: none;
-	}
-
-	.equilibrium__item .remove {
-		display: none;
-		cursor: pointer;
-	}
-
-	.equilibrium__input {
-
-	}
-
-	.equilibrium__input .form-control {
-		font-size: 32px;
-		padding: 0 7px;
-		height: 45px;
-		text-align: center;
-	}
-
-	.results {
-		font-size: 2em;
-	}
-
-	.results .error {
-		color: #763626;
-	}
-
-	.results .sucess {
-		color: #589234;
-	}
-
-</style>
 @endsection
 
 @section('content')
 <div id='equilibrium'>
 	<div class="col-md-8 col-md-offset-2">
 		<div class="form-group equilibrium__item equilibrium__input">
-				<input type="number" class="form-control" v-model="equilibriumInput" v-on:keyUp.enter="addToArray(equilibriumInput)">
+			<input type="number" class="form-control" v-model="equilibriumInput" maxlength="3" v-on:keyUp.enter="addToArray(equilibriumInput)">
 		</div>
 		<div class="equilibrium">
 			<div class="equilibrium__item" v-for="equilibrium in equilibriums">
 				<div v-on:click="remove($index)" class="remove"><i class="fa fa-times-circle"></i></div>
-			<div class="number">@{{equilibrium.number}},</div>
+				<div class="number">@{{equilibrium.number}},</div>
 			</div>
-
 		</div>
 		
 	</div>
@@ -75,15 +25,14 @@
 	<input type="hidden" v-for="equilibrium in equilibriumArray" value="@{{equilibrium}}" name="equilibrium[]" > -->
 		<div class="form-group">
 			<button v-on:click="getEquilibriumIndex()" class="btn btn--Main form-control">
-			Returns Equilibrium Indices
+			Return Equilibrium Indices
 			</button>
 		</div>
 	<!-- </form> -->
 	</div>
 	<div class="results col-md-8 col-md-offset-2">
-		<div v-for="results in equilibriumResult">
-			<div v-bind:class="results.class">[@{{ $index }}] @{{ results.string1 }}<span class="pull-right">@{{ results.string2 }}</span></div>
-
+		<div class="result" v-for="results in equilibriumResult" v-bind:class="results.class">
+			<div class="index">[@{{ $index }}]</div><div class="string-1">@{{{ results.string1 }}}</div><div class="string-2">@{{{ results.string2 }}}</div>
 		</div>
 	</div>
 </div>
