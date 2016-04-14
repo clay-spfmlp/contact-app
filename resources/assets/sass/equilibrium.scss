@@ -12,69 +12,57 @@
 		padding: 0 10px;
 		min-width: 50px;
 		position: relative;
-	}
 
-	.equilibrium__item:hover .remove {
-		display: block;
-	}
+		&:hover .remove {
+			display: block;
+		}
 
-/*	.equilibrium__item:hover .number {
-		display: none;
-	}*/
+		.remove {
+			display: none;
+			cursor: pointer;
+		    font-size: 0.6em;
+		    position: absolute;
+		    color: $fourth-color;
+		    right: 0;
+		    top: 0;
+		}
 
-	.equilibrium__item .remove {
-		display: none;
-		cursor: pointer;
-	    font-size: 0.6em;
-	    position: absolute;
-	    color: #763626;
-	    right: 0;
-	    top: 0;
-	}
-
-	.equilibrium__input {
-
-	}
-
-	.equilibrium__input .form-control {
-		font-size: 32px;
-		padding: 0 7px;
-		height: 45px;
-		text-align: center;
+		.form-control {
+			font-size: 32px;
+			padding: 0 7px;
+			height: 45px;
+			text-align: center;
+		}
 	}
 
 	.results {
 		font-size: 2em;
+
+		.error {
+			color: $fourth-color;
+		}
+
+		.sucess {
+			color: #589234;
+		}
 	}
 
 	.result {
 		margin-bottom: 15px;
 		display: flex;
 		justify-content: space-between;
-	}
-	.results .error {
-		color: #763626;
+
+		.index {
+			flex: 0.5;
+		}
+
+		.string-1 {
+			flex: 5;
+		}
+
+		.string-2 {
+			flex: 1;
+			text-align: right;
+		}
 	}
 
-	.results .sucess {
-		color: #589234;
-	}
-
-	.result {
-		margin-bottom: 15px;
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.result .index {
-		flex: 0.5;
-	}
-
-	.result .string-1 {
-		flex: 5;
-	}
-
-	.result .string-2 {
-		flex: 1;
-		text-align: right;
-	}

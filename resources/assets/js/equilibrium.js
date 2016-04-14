@@ -50,7 +50,7 @@ new Vue({
 
   		getEquilibriumIndex: function () {
   			this.equilibriumParse();
-  			this.$http.post('equilibrium', {equilibrium: this.equilibriumArray})
+  			this.$http.post('equilibrium-indexs', {equilibrium: this.equilibriumArray})
   			.then(function(response){
   				console.log(response.data);
 				this.equilibriumResult = response.data;

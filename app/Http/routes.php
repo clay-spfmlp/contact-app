@@ -28,9 +28,9 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::get('user/{user_id}/labels', ['as' => 'user.labels', 'uses' => 'LabelController@userLabels']);
 
-    Route::get('equilibrium', ['as' => 'equilibrium', 'uses' => 'EquilibriumController@index']);
+    Route::get('equilibrium-indexs', ['as' => 'equilibrium', 'uses' => 'EquilibriumController@index']);
 
-    Route::post('equilibrium', ['as' => 'equilibrium.post', 'uses' => 'EquilibriumController@equilibrium']);
+    Route::post('equilibrium-indexs', ['as' => 'equilibrium.post', 'uses' => 'EquilibriumController@equilibrium']);
 
 });
 
