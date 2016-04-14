@@ -25,7 +25,11 @@ class Equilibrium
 
 			// I left this in to show a visual representation of the process. 
 			// uncomment below to view.
-			$output[$i]['string'] = ($left ? implode(' + ', $left) : '0 ') . ' = ' . ($right ? implode(' + ', $right) : ' 0');
+			$output[$i]['string1'] = 
+			($left ? implode(' + ', $left) : '0 ')
+			 . ' = ' . 
+			($right ? implode(' + ', $right) : ' 0');
+			$output[$i]['string2'] = '(' . $leftSum . ' = ' . $rightSum . ')';
 			$output[$i]['class'] = ($leftSum === $rightSum ? 'sucess' : 'error');
 			//$output[$i]['right'] = implode(', ', $right);
 			//$output[$i]['rightSum'] = $rightSum;

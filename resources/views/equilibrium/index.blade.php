@@ -39,12 +39,16 @@
 		text-align: center;
 	}
 
+	.results {
+		font-size: 2em;
+	}
+
 	.results .error {
-		color: red;
+		color: #763626;
 	}
 
 	.results .sucess {
-		color: green;
+		color: #589234;
 	}
 
 </style>
@@ -78,7 +82,7 @@
 	</div>
 	<div class="results col-md-8 col-md-offset-2">
 		<div v-for="results in equilibriumResult">
-			<div v-bind:class="results.class">@{{ results.string }}</div>
+			<div v-bind:class="results.class">[@{{ $index }}] @{{ results.string1 }}<span class="pull-right">@{{ results.string2 }}</span></div>
 
 		</div>
 	</div>
