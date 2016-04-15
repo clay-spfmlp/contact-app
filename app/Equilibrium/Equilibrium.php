@@ -12,7 +12,7 @@ class Equilibrium
 	 * @return Array $output
 	 */
 	public function getEquilibriumsSteps(Array $arr) {
-		$output = array();
+		$output = [];
 
 		for($i = 0; $i < count($arr); $i++) { 
 
@@ -21,14 +21,17 @@ class Equilibrium
 			$leftSum = array_sum($left); 
 			$right = array_slice($arr, $i+1);
 			$rightSum = array_sum($right);
+
 			$output[$i]['string1'] = 
 			($left ? implode(' + ', $left) : '0 ')
-			. ' &#61; ' .
+			. ($leftSum === $rightSum ? ' &#61; ' : ' &#8800; ') .
 			($right ? implode(' + ', $right) : ' 0');
-			$output[$i]['string2'] = '(' . $leftSum . ' &#61; ' . $rightSum . ')';
+			$output[$i]['string2'] = '(' . $leftSum . 
+			($leftSum === $rightSum ? ' &#61; ' : ' &#8800; ')
+			. $rightSum . ')';
 			$output[$i]['class'] = ($leftSum === $rightSum ? 'sucess' : 'error');
-
 		}
+
 		return $output; 
 	}
 

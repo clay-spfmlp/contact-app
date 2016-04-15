@@ -9,6 +9,8 @@ Vue.use(VueResource);
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value');
 
+import { focusModel } from 'vue-focus';
+
 new Vue({
 	name: 'Equilibrium',
 
@@ -16,6 +18,7 @@ new Vue({
 
   	data: {
   		equilibriumInput: '',
+  		equilibriumFocus: true,
     	equilibriums: [
     		{number: -7}, 
     		{number: 1}, 
@@ -29,6 +32,8 @@ new Vue({
     	equilibriumResult: [],
   	},
 
+  	directives: { focusModel: focusModel },
+
   	created: function () {
   		this.equilibriumParse();
   	},
@@ -38,11 +43,13 @@ new Vue({
   			if(this.equilibriumInput) this.equilibriums.push({number: num});
   			this.equilibriumInput = '';
   			this.equilibriumParse();
+  			this.equilibriumFocus = true;
   		},
 
   		remove: function (index) {
   			this.equilibriums.splice(index, 1);
   			this.equilibriumParse();
+  			this.equilibriumFocus = true;
   		},
 
   		getEquilibriumIndex: function () {
@@ -51,6 +58,7 @@ new Vue({
   			.then(function(response){
 				this.equilibriumResult = response.data;
 			}.bind(this));
+			this.equilibriumFocus = true;
   		},
 
   		equilibriumParse: function () {

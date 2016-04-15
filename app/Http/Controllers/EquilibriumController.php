@@ -20,9 +20,7 @@ class EquilibriumController extends Controller
     }
 
     public function equilibrium(Request $request) {
-    	//return $request->get('equilibrium');
-    	$indexes = $this->equilibrium->getEquilibriumsSteps($request->get('equilibrium'));
-
-    	return $indexes;
+    	return $this->equilibrium->getEquilibriumsSteps($request->get('equilibrium'));
     }
+
 }

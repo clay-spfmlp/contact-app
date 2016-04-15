@@ -1,4 +1,5 @@
 @import "resources/assets/sass/all";
+@import "resources/assets/sass/inputAddOn";
 
 	.equilibrium {
 		display: flex;
@@ -8,7 +9,7 @@
 	}
 
 	.equilibrium__item {
-		font-size: 2em;
+		font-size: 1.5em;
 		padding: 0 10px;
 		min-width: 50px;
 		position: relative;
@@ -35,8 +36,16 @@
 		}
 	}
 
+	.equilibrium__input {
+
+		.InputAddOn-field {
+			text-align: center;
+		}
+	}
+
 	.results {
-		font-size: 2em;
+		font-size: 1.5em;
+		padding: 0 25px;
 
 		.error {
 			color: $fourth-color;

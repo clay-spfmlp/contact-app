@@ -8,8 +8,9 @@
 @section('content')
 <div id='equilibrium'>
 	<div class="col-md-8 col-md-offset-2">
-		<div class="form-group equilibrium__item equilibrium__input">
-			<input type="number" class="form-control" v-model="equilibriumInput" maxlength="3" v-on:keyUp.enter="addToArray(equilibriumInput)">
+		<div class="InputAddOn equilibrium__item equilibrium__input">
+			<input v-focus-model="equilibriumFocus" type="number" class="InputAddOn-field" v-model="equilibriumInput" maxlength="3" v-on:keyUp.enter="addToArray(equilibriumInput)">
+			<button class="InputAddOn-item" v-on:click="addToArray(equilibriumInput)">Add</button>
 		</div>
 		<div class="equilibrium">
 			<div class="equilibrium__item" v-for="equilibrium in equilibriums">
@@ -20,15 +21,11 @@
 		
 	</div>
 	<div class="col-md-8 col-md-offset-2">
-	<!-- <form method="POST">
-	{!! csrf_field() !!}
-	<input type="hidden" v-for="equilibrium in equilibriumArray" value="@{{equilibrium}}" name="equilibrium[]" > -->
-		<div class="form-group">
-			<button v-on:click="getEquilibriumIndex()" class="btn btn--Main form-control">
+		<div class="InputAddOn InputAddOn--Reverse equilibrium__item">
+			<button v-on:click="getEquilibriumIndex()" class="InputAddOn-item InputAddOn-item--W100">
 			Return Equilibrium Indices
 			</button>
 		</div>
-	<!-- </form> -->
 	</div>
 	<div class="results col-md-8 col-md-offset-2">
 		<div class="result" v-for="results in equilibriumResult" v-bind:class="results.class">
