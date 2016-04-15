@@ -17,5 +17,11 @@ class UserTableSeeder extends Seeder
         	'email' => 'claycpi@gmail.com',
         	'password' => \Hash::make('K6b18y63'),
         ]);
+
+        User::create([
+        	'name' => 'Demo',
+        	'email' => 'demo@gmail.com',
+        	'password' => \Hash::make('demo'),
+        ]);
     }
 }

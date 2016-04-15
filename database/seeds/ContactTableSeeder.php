@@ -27,7 +27,7 @@ class ContactTableSeeder extends Seeder
 	        ]);
 	        DB::table('label_user')->insert([
             	'label_id' => $key,
-            	'user_id' => 1,
+            	'user_id' => 2,
         	]);
         }
 
@@ -35,7 +35,7 @@ class ContactTableSeeder extends Seeder
 
         DB::table('contact_user')->insert([
             'contact_id' => 1,
-            'user_id' => 1,
+            'user_id' => 2,
         ]);
 
         DB::table('contact_label')->insert([
@@ -46,7 +46,7 @@ class ContactTableSeeder extends Seeder
 	    factory(Contact::class, 20)->create()->each(function($contact) {
 	        DB::table('contact_user')->insert([
             	'contact_id' => $contact->id,
-            	'user_id' => 1,
+            	'user_id' => 2,
         	]);
 
             DB::table('contact_label')->insert([

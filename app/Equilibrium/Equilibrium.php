@@ -23,12 +23,13 @@ class Equilibrium
 			$rightSum = array_sum($right);
 
 			$output[$i]['string1'] = 
-			($left ? implode(' + ', $left) : '0 ')
+			($left ? implode(' &plus; ', $left) : '0 ')
 			. ($leftSum === $rightSum ? ' &#61; ' : ' &#8800; ') .
-			($right ? implode(' + ', $right) : ' 0');
+			($right ? implode(' &plus; ', $right) : ' 0');
 			$output[$i]['string2'] = '(' . $leftSum . 
 			($leftSum === $rightSum ? ' &#61; ' : ' &#8800; ')
 			. $rightSum . ')';
+			$output[$i]['class'] = ($leftSum === $rightSum ? 'sucess' : 'error');
 			$output[$i]['class'] = ($leftSum === $rightSum ? 'sucess' : 'error');
 		}
 

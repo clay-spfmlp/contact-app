@@ -36,20 +36,25 @@ new Vue({
 
   	created: function () {
   		this.equilibriumParse();
+  		this.getEquilibriumIndex();
   	},
 
   	methods: {
   		addToArray: function (num) {
-  			if(this.equilibriumInput) this.equilibriums.push({number: num});
-  			this.equilibriumInput = '';
-  			this.equilibriumParse();
+  			if(this.equilibriumInput) {
+  				this.equilibriumResult = [];
+  				this.equilibriums.push({number: num});
+  				this.equilibriumInput = '';
+  				this.getEquilibriumIndex();
+  			}
   			this.equilibriumFocus = true;
   		},
 
   		remove: function (index) {
   			this.equilibriums.splice(index, 1);
-  			this.equilibriumParse();
+  			this.equilibriumResult = [];
   			this.equilibriumFocus = true;
+  			this.getEquilibriumIndex();
   		},
 
   		getEquilibriumIndex: function () {
@@ -66,6 +71,13 @@ new Vue({
   			for (var i in this.equilibriums) {
   				this.equilibriumArray.push(parseInt(this.equilibriums[i].number));
   			}
+  		},
+
+  		clearAll: function () {
+  			this.equilibriums = [];
+  			this.equilibriumResult = [];
+  			this.equilibriumInput = '';
+  			this.equilibriumFocus = true;
   		}
   	}
 })
