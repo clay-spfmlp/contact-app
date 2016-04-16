@@ -10,8 +10,6 @@
 	border-color: #204d74 transparent transparent transparent;
 }
 
-
-
 .avatar img {
 	border-radius:50%;
 	max-width: 42px;
@@ -34,21 +32,6 @@
 	cursor: pointer;
 }
 
-th.active {
-  	color: #eee;
-}
-
-th.active .arrow {
-  	opacity: 1;
-}
-
-th.active .arrow.asc {
-  	border-bottom: 6px solid #eee;
-}
-
-th.active .arrow.dsc {
-	border-top: 6px solid #eee;
-}
 
 .table-body {
 	max-height: 420px;
@@ -337,7 +320,12 @@ article {
         position: relative;
         margin-right: 0;
     }
+
+
+
 }
+
+
 
 .page-content-table {
 	border: 1px solid #ddd;
@@ -363,5 +351,17 @@ article {
 .editable .badge {
 	background-color: $third-color;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 @import "resources/assets/sass/squaredOne.scss";
