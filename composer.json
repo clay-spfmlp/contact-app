@@ -52,11 +52,5 @@
     },
     "config": {
         "preferred-install": "dist"
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://packages.shanedaniels.io"
-        }
-    ]
+    }
 }
