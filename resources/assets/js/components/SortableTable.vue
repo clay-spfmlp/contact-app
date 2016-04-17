@@ -24,7 +24,7 @@
 	    	<div v-for="contact in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]" v-bind:class="ifInArray(contact.id, checked) ? 'checked' : ''" class="Table--Row" >
 	      		<div class="Table--Row__item responsive-hide checkbox-col">
 				    <div class="squaredOne">
-				      <input v-model="checked" type="checkbox" value="{{ contact.id }}" id="contacts_{{ contact.id }}" >
+				      <input v-model="checked" @click="$dispatch('send-checked')" type="checkbox" value="{{ contact.id }}" id="contacts_{{ contact.id }}" >
 				      <label for="contacts_{{ contact.id }}"></label>
 				    </div>
 	      		</div>
@@ -91,6 +91,7 @@
 		    		}
 		    		
 		    	}
+		    	this.$dispatch('send-checked');
 		    },
 
 		    ifInArray: function (id, array) {
@@ -111,17 +112,23 @@
         },
         events: {
         	'reset-checked-contacts': function () {
+        		console.log('reset-checked-contacts');
         		this.checked = [];
         	},
 
         	'check-contact': function (id) {
+        		console.log('check-contact');
         		this.checked.push(id.toString());
+        	},
+        	'send-checked': function () {
+        		console.log('send-checked');
+        		this.$dispatch('set-check-id', this.checked);
         	}
         }
     }
 </script>
 
-<style type="text/css">
+<style>
 
 .table-no-margin {
 	margin: 0;
@@ -139,10 +146,12 @@
 	display: flex;
 	border-bottom: 1px solid #2A3132;
     padding: 5px 0;
+    align-items: center;
 }
 
 .Table--Row__item {
 	flex: 1;
+	align-items: center;
 }
 
 .Table--Row__item.checkbox-col {
@@ -166,6 +175,10 @@
     	width: 80%;
     }
 
+    .Table--Row__item {
+		align-items: flex-start;
+	}
+
     .table-body .Table--Column {
 
     	flex-direction: column;
@@ -179,6 +192,10 @@
 		padding: 0;
 	}
 
+	.input-search .form-control:focus {
+		width: 300px;
+	}
+
 }
 
 @media(max-width:412px) {
@@ -186,7 +203,12 @@
     	width: 100%;
     	border-radius: 0;
     }
-}
 
+    .site-action-btn {
+    	top: 55px;
+    }
+
+    
+}
 
 </style>

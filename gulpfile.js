@@ -9,12 +9,12 @@ elixir(function(mix) {
     // .browserify('home.js')
     // .browserify('movie.js')
      .browserify('contact.js')
-     .browserify('equilibrium.js')
+    // .browserify('equilibrium.js')
     // .sass('landing.scss')
     // .sass('login.scss')
     // .sass('home.scss')
     // .sass('movie.scss')
      .sass('contact.scss')
-     .sass('equilibrium.scss')
+    // .sass('equilibrium.scss')
     ;
 });

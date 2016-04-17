@@ -2,12 +2,21 @@
 @import "node_modules/font-awesome/scss/font-awesome";
 @import "node_modules/hover.css/scss/hover";
 @import "node_modules/animate.scss/animate.scss";
+@import "node_modules/vue-msgbox/lib/vue-msgbox";
+
+
 
 $first-color: #90afc5;
 $second-color: rgba(51, 107, 135, 1);
 $third-color: #2A3132;
 $fourth-color: #763626;
 $light: #eee;
+
+
+// Message Box
+.msgbox {
+	width: 30%;
+}
 
 body, html {
 	height: 100%;
@@ -63,6 +72,35 @@ body {
 
 .fa-btn {
     margin-right: 6px;
+}
+
+.msgbox-btn {
+	transition: all 0.3s ease;
+    color: $light;
+    opacity: 0.7;
+
+    &.msgbox-cancel {
+    	background-color: $fourth-color;
+    	border-color: $fourth-color;
+    }
+
+    &.msgbox-confirm {
+    	background-color: $second-color;
+    	border-color: $second-color;
+    }
+
+    &:hover, &:focus {
+    	opacity: 1;
+    }	
+}
+
+.msgbox-header {
+	background-color: $third-color;
+	border-bottom: 3px solid $fourth-color;
+
+	.msgbox-title{
+		color: $first-color;
+	}
 }
 
 .btn--Main {

@@ -18,86 +18,118 @@ Vue.config.debug = true;
 
 import { focusModel } from 'vue-focus';
 
+import MessageBox from 'vue-msgbox';
+
 new Vue({
 
-  name: 'Contact',
+  	name: 'Contact',
 
-  components: {
-    ContactForm: require('./components/ContactForm.vue'),
-    EditableList: require('./components/EditableList.vue'),
-    SortableTable: require('./components/SortableTable.vue')
-  },
+  	components: {
+    	ContactForm: require('./components/ContactForm.vue'),
+    	EditableList: require('./components/EditableList.vue'),
+    	SortableTable: require('./components/SortableTable.vue')
+  	},
 
-  directives: { focusModel: focusModel },
+  	directives: { focusModel: focusModel },
 
-  el: '#app-contacts',
+  	el: '#app-contacts',
 
-  data: {
-    user: Auth.user,
-    contacts: [],
-    labels: [],
-    searchQuery: '',
-    search: false,
-    columns: ['name', 'email', 'phone'],
-    sortOrders: {'name':1, 'phone':1, 'email':1},
-    sideBar: true,
+  	data: {
+    	user: Auth.user,
+    	contacts: [],
+    	labels: [],
+    	searchQuery: '',
+    	search: false,
+    	columns: ['name', 'email', 'phone'],
+    	sortOrders: {'name':1, 'phone':1, 'email':1},
+    	sideBar: true,
+    	checkIds: [],
 
-    newContact: false,
-    editContact: false,
-  },
+    	newContact: false,
+    	editContact: false,
+  	},
 
-  created: function () {
-    this.getContacts();
-    this.getLabels();
-  },
+	created: function () {
+    	this.getContacts();
+    	this.getLabels();
+  	},
 
-  methods: {
+  	methods: {
 
-    openNewContact: function () {
-      this.editContact = false;
-      this.newContact = true;
-      this.$broadcast('clear-contact');
-    },
+	    openNewContact: function () {
+	      	this.editContact = false;
+	      	this.newContact = true;
+	      	this.$broadcast('clear-contact');
+	    },
 
-    getContacts: function () {
-      var resource = this.$resource('user/'+this.user.id+'/contacts')
-      resource.get({}).then(function(response){
-        this.contacts = response.data
-      }.bind(this))
-    },
+	    getContacts: function () {
+	      	var resource = this.$resource('user/'+this.user.id+'/contacts');
+	      	resource.get({}).then(function(response){
+	        	this.contacts = response.data;
+	      	}.bind(this));
+	    },
 
-    getLabels: function () {
-      var resource = this.$resource('user/'+this.user.id+'/labels');
-      resource.get({}).then(function(response){
-        this.labels = response.data;
-      }.bind(this))
-    },
+	    getLabels: function () {
+	      	var resource = this.$resource('user/'+this.user.id+'/labels');
+	      	resource.get({}).then(function(response){
+	        	this.labels = response.data;
+	      	}.bind(this));
+	    },
 
-    deleteContacts: function () {
-      alert(this.checkedContacts);
-    },
+	    deleteContacts: function () {
+	    	//this.$dispatch('request-checked');
 
-    addLabelToChecked: function (id) {
-      console.log(id);
-      console.log(this.$children);
-    }
-  },
+	    	MessageBox.confirm('Are you sure?', 'Delete Contacts',{
+	    		confirmButtonText: 'Confirm',
+	    		cancelButtonText: 'Cancel'
+	    	}).then(function(action) {
+	    		
+	    		for(var i in this.checkIds){
+		    		//var resource = this.$resource('contact/'+ this.checkIds[i]);
+			      	this.$http.post('contact/'+ this.checkIds[i], {_method: 'DELETE'}).then(function(response){
+			        	//this.contacts = response.data;
+			        	console.log(response.data);
+			      	}.bind(this));
+	    		}
 
-  events: {
+	    		this.getContacts();
+	    		this.getLabels();
+	    		this.checkIds = [];
 
-    'edit-contact': function (contact, index) {
-        this.newContact = false;
-        this.editContact = true;
-        this.$broadcast('set-edit-contact', contact, index);
-    },
+				console.log(this.checkIds);
+			}.bind(this));
+	    	
+	    },
 
-    'clear-checked-contacts': function () {
-      this.$broadcast('reset-checked-contacts');
-    },
+	    addLabelToChecked: function (id) {
+	      	console.log(id);
+	      	console.log(this.$children);
+	    }
+  	},
 
-    'set-check-contact': function (id) {
-      this.$broadcast('check-contact', id);
-    }
-  }
+  	events: {
+
+    	'edit-contact': function (contact, index) {
+        	this.newContact = false;
+        	this.editContact = true;
+        	this.$broadcast('set-edit-contact', contact, index);
+    	},
+
+	    'clear-checked-contacts': function () {
+	      	this.$broadcast('reset-checked-contacts');
+	    },
+
+	    'set-check-contact': function (id) {
+	      	this.$broadcast('check-contact', id);
+	    },
+	    'request-checked': function () {
+	    	console.log('request-checked');
+	    	this.$broadcast('send-checked');
+	    },
+	    'set-check-id': function (ids) {
+	    	console.log('set-check-id');
+	    	this.checkIds = ids;
+	    }
+  	}
 
 })
