@@ -41,6 +41,8 @@
 
 <script>
 
+	import MessageBox from 'vue-msgbox';
+
     export default {
 
     	name: 'ContactForm',
@@ -92,6 +94,7 @@
 		        	phone: this.Contact.phone,
 		        	email: this.Contact.email,
 		        	birthday: this.Contact.birthday,
+		        	labels: labels,
 		        	_method: 'POST'
 		      	}).then(function(response){
 		        	this.$parent.contacts.push(response.data)
@@ -112,14 +115,19 @@
 		        	phone: this.Contact.phone,
 		        	email: this.Contact.email,
 		        	birthday: this.Contact.birthday,
+		        	labels: this.Contact.labels,
 		        	_method: 'PATCH'
 		      	}).then(function(response){
-		        	this.$parent.contacts[this.Contact.index].name = response.data.name
-		        	this.$parent.contacts[this.Contact.index].phone = response.data.phone
-		        	this.$parent.contacts[this.Contact.index].email = response.data.email
-		        	this.$parent.contacts[this.Contact.index].birthday = response.data.birthday
 		        	this.close()
+		        	this.$dispatch('sync-contacts');
 		        	this.$dispatch('check-contact', this.Contact.id)
+		      	}, function (response) {
+		      		MessageBox.alert('There is an error!', {
+		      			title: 'Error',
+		    			confirmButtonText: 'Ok',
+		    		}).then(function(action) {
+		    			return;
+		    		}.bind(this));
 		      	}.bind(this))
 		    },
 

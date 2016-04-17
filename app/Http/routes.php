@@ -20,6 +20,10 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::get('contacts', ['middleware' => 'auth', 'as' => 'contact', 'uses' => 'ContactController@contacts']);
 
+    Route::post('contacts/delete', ['middleware' => 'auth', 'as' => 'contacts.delete.check', 'uses' => 'ContactController@deleteCheck']);
+
+    Route::post('contacts/label', ['middleware' => 'auth', 'as' => 'contacts.add.label', 'uses' => 'ContactController@addLabel']);
+
     Route::resource('contact', 'ContactController');
 
     Route::resource('label', 'LabelController');

@@ -72,38 +72,65 @@ new Vue({
 	    getLabels: function () {
 	      	var resource = this.$resource('user/'+this.user.id+'/labels');
 	      	resource.get({}).then(function(response){
+	      		console.log(response.data);
 	        	this.labels = response.data;
 	      	}.bind(this));
 	    },
 
 	    deleteContacts: function () {
-	    	//this.$dispatch('request-checked');
 
-	    	MessageBox.confirm('Are you sure?', 'Delete Contacts',{
-	    		confirmButtonText: 'Confirm',
-	    		cancelButtonText: 'Cancel'
-	    	}).then(function(action) {
-	    		
-	    		for(var i in this.checkIds){
-		    		//var resource = this.$resource('contact/'+ this.checkIds[i]);
-			      	this.$http.post('contact/'+ this.checkIds[i], {_method: 'DELETE'}).then(function(response){
-			        	//this.contacts = response.data;
-			        	console.log(response.data);
-			      	}.bind(this));
-	    		}
+	    	if(this.checkIds.length > 0){	    	
 
-	    		this.getContacts();
-	    		this.getLabels();
-	    		this.checkIds = [];
+		    	MessageBox.confirm('Are you sure?', 'Delete Contacts',{
+		    		confirmButtonText: 'Confirm',
+		    		cancelButtonText: 'Cancel'
+		    	}).then(function(action) {
+			      	this.$http.post('contacts/delete', {
+			      		ids: this.checkIds,
+			      	}).then(function(response){
+			        	this.getContacts();
+		    			this.getLabels();
+		    			this.checkIds = [];
+		      		}.bind(this));
+				}.bind(this));
 
-				console.log(this.checkIds);
-			}.bind(this));
-	    	
+				return;
+	    	}
+    		
+    		MessageBox.alert('Please select at least one row!', {
+    			confirmButtonText: 'Ok',
+    		}).then(function(action) {
+    			return;
+    		});
 	    },
 
-	    addLabelToChecked: function (id) {
-	      	console.log(id);
-	      	console.log(this.$children);
+	    addLabelToChecked: function (labelId) {
+
+	    	if(this.checkIds.length > 0){	    	
+
+		    	MessageBox.confirm('Are you sure?', 'Add label to Contacts',{
+		    		confirmButtonText: 'Confirm',
+		    		cancelButtonText: 'Cancel'
+		    	}).then(function(action) {
+			      	this.$http.post('contacts/label', {
+			      		ids: this.checkIds,
+			      		labelId: labelId,
+			      	}).then(function(response){
+			        	this.getContacts();
+		    			this.getLabels();
+		    			this.$broadcast('reset-checked-contacts');
+		    			this.checkIds = [];
+		      		}.bind(this));
+				}.bind(this));
+
+				return;
+	    	}
+
+	      	MessageBox.alert('Please select at least one row!', {
+    			confirmButtonText: 'Ok',
+    		}).then(function(action) {
+    			return;
+    		});
 	    }
   	},
 
@@ -129,6 +156,10 @@ new Vue({
 	    'set-check-id': function (ids) {
 	    	console.log('set-check-id');
 	    	this.checkIds = ids;
+	    },
+	    'sync-contacts': function () {
+	    	this.getContacts();
+    		this.getLabels();
 	    }
   	}
 

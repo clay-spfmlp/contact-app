@@ -32,6 +32,8 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
 
     /**
      * The roles that belong to the user.
+     * 
+     * @return App\Models\Role
      */
     public function roles()
     {

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use JavaScript;
 use App\Models\Contact;
 use App\Models\User;
+use App\Models\Label;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -16,11 +17,14 @@ class ContactController extends Controller
     protected $contact;
 
     protected $user;
+    
+    protected $label;
 
-    public function __construct(Contact $contact, User $user)
+    public function __construct(Contact $contact, User $user, Label $label)
     {
         $this->contact = $contact;
         $this->user = $user;
+        $this->label = $label;
     }
 
     public function contacts()
@@ -73,6 +77,7 @@ class ContactController extends Controller
 
     	$contact = $this->contact->create($request->all());
         $contact->user()->attach($request->get('user_id'));
+        $contact->labels->sync($request->get('labels'));
         
         return $this->contact->find($contact->id);
     }
@@ -114,7 +119,8 @@ class ContactController extends Controller
     {
         $contact = $this->contact->find($id);
         $contact->update($request->all());
-
+        $contact->labels()->sync($request->get('labels'));
+        
         return $contact;
     }
 
@@ -128,4 +134,31 @@ class ContactController extends Controller
     {
         $this->contact->destroy($id);
     }
+
+    /**
+     * @param  Request
+     * @return \Illuminate\Http\Response
+     */
+	public function deleteCheck(Request $request)
+	{
+		foreach ($request->get('ids') as $id) {
+			$this->contact->destroy($id);
+		}
+	}
+
+	public function addLabel(Request $request)
+	{
+		foreach ($request->get('ids') as $id) {
+			//$label = $this->label->find($request->get('labelId'));
+			$contact = $this->contact->find($id);
+
+			if (!$contact->labels->contains($request->get('labelId'))) {
+			    $contact->labels()->attach($request->get('labelId'));
+			}
+
+
+			//$contact->labels()->sync([$request->get('labelId')]);
+		}
+	}
+
 }

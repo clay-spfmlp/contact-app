@@ -114,6 +114,7 @@
         	'reset-checked-contacts': function () {
         		console.log('reset-checked-contacts');
         		this.checked = [];
+        		this.all = false;
         	},
 
         	'check-contact': function (id) {

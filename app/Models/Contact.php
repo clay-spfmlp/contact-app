@@ -14,7 +14,7 @@ class Contact extends Model
 		'name',
 		'email',
 		'phone',
-		'birthday',
+		'birthday'
 	];
 
 	protected $appends = array('gravatar', 'checked');

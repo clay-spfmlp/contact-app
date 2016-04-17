@@ -27,10 +27,20 @@ class ContactTableSeeder extends Seeder
 	        ]);
 	        DB::table('label_user')->insert([
             	'label_id' => $key,
-            	'user_id' => 2,
+            	'user_id' => 1,
         	]);
         }
 
+        $labels = [5 => 'Family', 6 => 'Friend', 7 => 'Work', 8 => 'Private'];
+        foreach ($labels as $key => $label) {
+	        Label::create([
+	        	'name' => $label,
+	        ]);
+	        DB::table('label_user')->insert([
+            	'label_id' => $key,
+            	'user_id' => 2,
+        	]);
+        }
 
 
         DB::table('contact_user')->insert([
@@ -43,7 +53,19 @@ class ContactTableSeeder extends Seeder
             'label_id' => 1,
         ]);
 
-	    factory(Contact::class, 20)->create()->each(function($contact) {
+	    factory(Contact::class, 30)->create()->each(function($contact) {
+	        DB::table('contact_user')->insert([
+            	'contact_id' => $contact->id,
+            	'user_id' => 1,
+        	]);
+
+            DB::table('contact_label')->insert([
+            	'contact_id' => $contact->id,
+            	'label_id' => rand(1, 4),
+        	]);
+	    });
+
+	    factory(Contact::class, 30)->create()->each(function($contact) {
 	        DB::table('contact_user')->insert([
             	'contact_id' => $contact->id,
             	'user_id' => 2,
@@ -51,7 +73,7 @@ class ContactTableSeeder extends Seeder
 
             DB::table('contact_label')->insert([
             	'contact_id' => $contact->id,
-            	'label_id' => rand(1, 4),
+            	'label_id' => rand(5, 8),
         	]);
 	    });
 
