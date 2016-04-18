@@ -1,49 +1,48 @@
 <template>
 	<div class="table">
-		<div class="table-no-margin">
-		    
-		      	<div class="Table--Row sortable">
-		        	<div class="Table--Row__item checkbox-col">
-					    <div class="squaredOne">
-					      <input type="checkbox" v-model="all" id="all" name="check" v-on:click="selectAll()">
-					      <label for="all"></label>
-					    </div>
-		        	</div>
-		        	<div class="Table--Row__item avatar no__avatar"></div>
-		        	<div class="Table--Column Table--Row__item">
-			        	<div v-for="column in columns" @click="sortBy(column)" class="Table--Row__item" :class="{active: sortKey == column}">
-			          		{{ column | capitalize}}
-			          		<span class="arrow" :class="sortOrders[column] > 0 ? 'asc' : 'dsc'"></span>
-			        	</div>
-		        	</div>
-		      	</div>
-		    
-		</div>
-		<div class="table-body">
-		  	
-	    	<div v-for="contact in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]" v-bind:class="ifInArray(contact.id, checked) ? 'checked' : ''" class="Table--Row" >
-	      		<div class="Table--Row__item responsive-hide checkbox-col">
+		<div class="table__header">
+	      	<div class="table__row sortable">
+	        	<div class="table__cell checkbox-col">
 				    <div class="squaredOne">
-				      <input v-model="checked" @click="$dispatch('send-checked')" type="checkbox" value="{{ contact.id }}" id="contacts_{{ contact.id }}" >
-				      <label for="contacts_{{ contact.id }}"></label>
+				      	<input type="checkbox" v-model="all" id="all" name="check" @click="selectAll()">
+				      	<label for="all"></label>
+				    </div>
+	        	</div>
+	        	<div class="table__cell avatar no__avatar"></div>
+	        	<div class="table__cell table__column">
+		        	<div v-for="column in columns" @click="sortBy(column)" class="table__cell" 
+		        		 :class="{active: sortKey == column}">
+		          		{{ column | capitalize}}
+		          		<span class="arrow" :class="sortOrders[column] > 0 ? 'asc' : 'dsc'"></span>
+		        	</div>
+	        	</div>
+	      	</div>
+		</div>
+		<div class="table__body">
+	    	<div v-for="contact in data | filterBy filterKey | orderBy sortKey sortOrders[sortKey]" 
+	    		 :class="ifInArray(contact.id, checked) ? 'checked' : ''" class="table__row" >
+	      		<div class="table__cell checkbox-col">
+				    <div class="squaredOne">
+				      	<input v-model="checked" @click="$dispatch('send-checked')" type="checkbox" 
+				      		   value="{{ contact.id }}" id="contacts_{{ contact.id }}" >
+				      	<label for="contacts_{{ contact.id }}"></label>
 				    </div>
 	      		</div>
-	      		<div class="Table--Row__item avatar">
-	        		<a v-on:click.stop.prevent="editContact(contact, $index)">
-	          			<img class="img-responsive" :src="'http://www.gravatar.com/avatar/' + contact.gravatar" alt="...">
+	      		<div class="table__cell avatar">
+	        		<a @click.stop.prevent="editContact(contact, $index)">
+	          			<img :src="'http://www.gravatar.com/avatar/' + contact.gravatar" 
+	          				  class="img-responsive" alt="...">
 	        		</a>
 	        	</div>
-	        	<div class="Table--Column Table--Row__item">
-	      			<div class="Table--Row__item name">
-	        			<a v-on:click.stop.prevent="editContact(contact, $index)" >{{ contact.name }}</a>
+	        	<div class="table__cell table__column">
+	      			<div class="table__cell name">
+	        			<a @click.stop.prevent="editContact(contact, $index)" >{{ contact.name }}</a>
 	      			</div>
-	      			<div class="Table--Row__item email">{{ contact.email }}</div>
-	      			<div class="Table--Row__item phone">{{ contact.phone }}</div>
+	      			<div class="table__cell email">{{ contact.email }}</div>
+	      			<div class="table__cell phone">{{ contact.phone }}</div>
 	      		</div>
 	    	</div>
-		  	
 		</div>
-		
 	</div>
 </template>
 
@@ -59,7 +58,10 @@
 		    	required: true,
     			twoWay: true,
 		    },
-		    columns: [],
+		    columns:{
+		    	type: Array,
+		    	required: true,
+		    },
 		    filterKey: ''
     	},
 
@@ -85,6 +87,7 @@
 		    selectAll: function () {
 		    	var index = '';
 		    	this.checked = [];
+
 		    	for(index in this.data){
 		    		if(this.all === false){
 		    			this.checked.push(this.data[index].id.toString());
@@ -129,46 +132,85 @@
     }
 </script>
 
-<style>
+<style lang="sass">
 
-.table-no-margin {
-	margin: 0;
+.avatar img {
+	border-radius:50%;
+	max-width: 42px;
+	transition: all 0.3s ease;
+}
+
+.contact-row .name {
+    margin-top: 12px;
+    margin-left: 8px;
+}
+
+.table {
+
+	.table__body {
+		max-height: 420px;
+		overflow-y: auto;
+	}
+
+	.table__header {
+		margin: 0;
+	}
+
+	.table__column{
+		display: flex;
+	}
+
+	.table__row {
+		display: flex;
+		border-bottom: 1px solid #2A3132;
+	    padding: 5px 0;
+	    align-items: center;
+	}
+
+	.table__cell {
+		flex: 1;
+		align-items: center;
+		&.checkbox-col {
+			width: 60px;
+			padding: 0 15px;
+			flex: 0;
+		}
+		&.avatar {
+			flex: 0;
+			padding: 0 15px;
+			&.no__avatar{
+				padding: 0 35px;
+			}
+		}
+	}
+
+}
+
+.arrow {
+  	display: inline-block;
+  	vertical-align: middle;
+  	width: 0;
+  	height: 0;
+  	margin-left: 5px;
+  	opacity: 0.66;
+
+  	.asc {
+	  	border-left: 6px solid transparent;
+	  	border-right: 6px solid transparent;
+	  	border-bottom: 6px solid #2A3132;
+	}
+	.dsc {
+	  	border-left: 6px solid transparent;
+	  	border-right: 6px solid transparent;
+	  	border-top: 6px solid #2A3132;
+	}
 }
 
 .active .arrow {
   	opacity: 1;
 }
 
-.Table--Column{
-	display: flex;
-}
 
-.Table--Row {
-	display: flex;
-	border-bottom: 1px solid #2A3132;
-    padding: 5px 0;
-    align-items: center;
-}
-
-.Table--Row__item {
-	flex: 1;
-	align-items: center;
-}
-
-.Table--Row__item.checkbox-col {
-	width: 60px;
-	padding: 0 15px;
-	flex: 0;
-}
-
-.Table--Row__item.avatar {
-	flex: 0;
-	padding: 0 15px;
-}
-
-.Table--Row__item.avatar.no__avatar{
-	padding: 0 35px;
-}
 
 @media(max-width:768px) {
 
@@ -176,22 +218,25 @@
     	width: 80%;
     }
 
-    .Table--Row__item {
-		align-items: flex-start;
-	}
+    .table {
+	    
+	    .table__cell {
+			align-items: flex-start;
+			
+			&.avatar {
+		    	padding: 0 15px 0 0;
+		    	
+		    	&.no__avatar{
+					padding: 0;
+				}
+		    }
+		}
 
-    .table-body .Table--Column {
+	    .table__body .table__column {
 
-    	flex-direction: column;
+	    	flex-direction: column;
+	    }  	
     }
-
-    .Table--Row__item.avatar {
-    	padding: 0 15px 0 0;
-    }
-
-    .Table--Row__item.avatar.no__avatar{
-		padding: 0;
-	}
 
 	.input-search .form-control:focus {
 		width: 300px;
@@ -209,7 +254,6 @@
     	top: 55px;
     }
 
-    
 }
 
 </style>

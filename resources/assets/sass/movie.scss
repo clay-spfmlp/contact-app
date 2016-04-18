@@ -1,7 +1,16 @@
 @import "resources/assets/sass/all";
 
 .theater {
-	.theater__name {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items:center;
+
+	.theater__row {
+		width: 80%;
+	}
+
+	.theater__info {
 		background: $third-color;
 		color: #eee;
 		margin-top: 15px;
@@ -32,6 +41,7 @@
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
+		flex-wrap: wrap;
 
 		.movie__time {
 			margin: 10px 10px 0px 0;
