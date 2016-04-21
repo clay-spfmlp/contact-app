@@ -9,17 +9,19 @@
 
 	<!-- Login Panel -->
     <div v-show="login" transition="flip" class="panel panel-default panel--Site">
-        <div class="panel-heading"><i class="fa fa-btn fa-sign-in"></i>Login</div>
+        <div class="panel-heading"><i class="fa fa-btn fa-sign-in" aria-hidden="true"></i>Login</div>
         <div class="panel-body">
         <validator name="login">
-            <form class="form-horizontal form-horizontal--Flex" role="form" method="POST" action="{{ url('/login') }}">
+            <form class="form-horizontal form-horizontal--Flex" role="form" method="POST" 
+            	  action="{{ url('/login') }}">
                 {!! csrf_field() !!}
 
                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                     <label class="col-md-4 control-label">E-Mail Address</label>
 
                     <div class="col-md-6">
-                        <input type="email" class="form-control" v-model="Login.email" name="email" v-validate:email="['required', 'email']">
+                        <input type="email" class="form-control" v-model="Login.email" id="loginEmail" 
+                        	   name="email" v-validate:email="['required', 'email']">
 
                         @if ($errors->has('email'))
                             <span class="help-block">
@@ -33,7 +35,8 @@
                     <label class="col-md-4 control-label">Password</label>
 
                     <div class="col-md-6">
-                        <input type="password" name="password" class="form-control" v-model="Login.password" v-validate:password="['required', 'minlength:6']">
+                        <input type="password" id="loginPassword" name="password" class="form-control" 
+                        	   v-model="Login.password" v-validate:password="['required', 'minlength:6']">
 
                         @if ($errors->has('password'))
                             <span class="help-block">
@@ -63,8 +66,12 @@
 
                 <div class="form-group form-group--End">
                     <div class="col-md-8 col-md-offset-4">
-                        <a class="btn btn-link btn-link-first" v-on:click.prevent="flip('reset')">Forgot Your Password?</a>
-                        <a class="btn btn-link" v-on:click.prevent="flip('register')" >Need an Account?</a>
+                        <button class="btn btn-link btn-link-first" v-on:click.prevent="flip('reset')">
+                        	Forgot Your Password?
+                        </button>
+                        <button class="btn btn-link" v-on:click.prevent="flip('register')" >
+                        	Need an Account?
+                        </button>
                     </div>
                 </div>
             </form>
@@ -75,14 +82,15 @@
 	<div v-show="register" transition="flip" v-cloak class="panel panel-default panel--Site">
         <div class="panel-heading"><i class="fa fa-btn fa-user"></i>Register</div>
         <div class="panel-body">
-            <form novalidate class="form-horizontal form-horizontal--Flex" role="form" method="POST" action="{{ url('/register') }}">
+            <form novalidate class="form-horizontal form-horizontal--Flex" role="form" 
+            	  method="POST" action="{{ url('/register') }}">
                 {!! csrf_field() !!}
 
                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <label class="col-md-4 control-label">Name:</label>
 
                     <div class="col-md-6">
-                        <input type="text" class="form-control" name="name" value="{{ old('name') }}">
+                        <input type="text" class="form-control" id="name" name="name">
 
                         @if ($errors->has('name'))
                             <span class="help-block">
@@ -96,7 +104,7 @@
                     <label class="col-md-4 control-label">E-Mail Address</label>
 
                     <div class="col-md-6">
-                        <input type="email" class="form-control" name="email" value="{{ old('email') }}">
+                        <input type="email" class="form-control" id="email" name="email">
 
                         @if ($errors->has('email'))
                             <span class="help-block">
@@ -110,7 +118,7 @@
                     <label class="col-md-4 control-label">Password</label>
 
                     <div class="col-md-6">
-                        <input type="password" class="form-control" name="password">
+                        <input type="password" class="form-control" id="password" name="password">
 
                         @if ($errors->has('password'))
                             <span class="help-block">
@@ -124,7 +132,8 @@
                     <label class="col-md-4 control-label">Confirm Password</label>
 
                     <div class="col-md-6">
-                        <input type="password" class="form-control" name="password_confirmation">
+                        <input type="password" class="form-control" id="password_confirmation" 
+                        	    name="password_confirmation">
 
                         @if ($errors->has('password_confirmation'))
                             <span class="help-block">
@@ -144,8 +153,12 @@
 
                 <div class="form-group form-group--End">
                 	<div class="col-md-6 col-md-offset-4">
-                    	<a class="btn btn-link btn-link-first" v-on:click.prevent="flip('login')" >Login</a>
-                    	<a class="btn btn-link" v-on:click.prevent="flip('reset')">Forgot Your Password?</a>
+                    	<button class="btn btn-link btn-link-first" v-on:click.prevent="flip('login')" >
+                    		Login
+                    	</button>
+                    	<button class="btn btn-link" v-on:click.prevent="flip('reset')">
+                    		Forgot Your Password?
+                    	</button>
                 	</div>
                 </div>
             </form>
@@ -156,14 +169,16 @@
 	    <div class="panel-heading"><i class="fa fa-btn fa-refresh"></i>Reset Password</div>
 
 	    <div class="panel-body">
-	        <form class="form-horizontal form-horizontal-Flex" role="form" method="POST" action="{{ url('/password/email') }}">
+	        <form class="form-horizontal form-horizontal-Flex" role="form" method="POST" 
+	        	  action="{{ url('/password/email') }}">
 	            {!! csrf_field() !!}
 
 	            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
 	                <label class="col-md-4 control-label">E-Mail Address</label>
 
 	                <div class="col-md-6">
-	                    <input type="email" class="form-control" name="email" value="{{ $email or old('email') }}">
+	                    <input type="email" class="form-control" name="email" id="resetEmail" 
+	                    	   value="{{ $email or old('email') }}">
 
 	                    @if ($errors->has('email'))
 	                        <span class="help-block">
@@ -183,8 +198,12 @@
 
 	            <div class="form-group form-group--End">
 	                <div class="col-md-6 col-md-offset-4">
-	                    <a class="btn btn-link btn-link-first" v-on:click.prevent="flip('login')">Login</a>
-                        <a class="btn btn-link" v-on:click.prevent="flip('register')" >Need an Account?</a>
+	                    <button class="btn btn-link btn-link-first" v-on:click.prevent="flip('login')">
+	                    	Login
+	                    </button>
+                        <button class="btn btn-link" v-on:click.prevent="flip('register')" >
+                        	Need an Account?
+                        </button>
 	                </div>
 	            </div>
 	        </form>

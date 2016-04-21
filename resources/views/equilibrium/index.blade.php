@@ -16,12 +16,12 @@
 		<div class="Equilibrium">
 			<div class="Equilibrium__Item" v-for="equilibrium in equilibriums">
 				<div v-on:click="remove($index)" class="remove"><i class="fa fa-times-circle"></i></div>
-				<div class="number">@{{equilibrium.number}}</div>
+				<div v-cloak class="number">@{{equilibrium.number}}</div>
 			</div>
 		</div>
 	</div>
-	<div v-if="equilibriumResult" class="results col-md-8 col-md-offset-2">
-		<div class="result" v-for="results in equilibriumResult" v-bind:class="results.class">
+	<div v-cloak v-if="equilibriumResult" class="results col-md-8 col-md-offset-2">
+		<div v-cloak class="result" v-for="results in equilibriumResult" v-bind:class="results.class">
 			<div class="index">[@{{ $index }}]</div><div class="string-1">@{{{ results.string1 }}}</div><div class="string-2">@{{{ results.string2 }}}</div>
 		</div>
 	</div>

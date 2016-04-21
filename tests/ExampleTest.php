@@ -10,10 +10,14 @@ class ExampleTest extends TestCase
      * A basic functional test example.
      *
      * @return void
+     * @test
      */
-    public function testBasicExample()
+    public function i_can_login_to_my_site()
     {
         $this->visit('/')
-             ->see('Laravel 5');
+        	->click('Login')
+        	->seePageIs('/login')
+        	->see('Login');
+        	
     }
 }

@@ -22,16 +22,19 @@ class CreateLabelsTable extends Migration
         Schema::create('contact_label', function (Blueprint $table) {
             $table->char('contact_id', 11);
             $table->char('label_id', 11);
+            $table->primary(['contact_id', 'label_id']);
             $table->timestamps();
         });
         Schema::create('contact_user', function (Blueprint $table) {
             $table->char('contact_id', 11);
             $table->char('user_id', 11);
+            $table->primary(['contact_id', 'user_id']);
             $table->timestamps();
         });
         Schema::create('label_user', function (Blueprint $table) {
             $table->char('label_id', 11);
             $table->char('user_id', 11);
+            $table->primary(['label_id', 'user_id']);
             $table->timestamps();
         });
     }

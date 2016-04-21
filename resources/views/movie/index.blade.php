@@ -10,7 +10,9 @@
 	<h2 class="movie-app-title text-center">Find a Movie Near You</h2>
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4 InputAddOn">
-			<input type="number" v-model="zipCode" name="zip" class="form-control InputAddOn-field" placeholder="Zip Code" v-on:keyup.enter="getTheaters">
+			<input type="number" v-model="zipCode" name="zip" 
+				   class="form-control InputAddOn-field" 
+				   placeholder="Zip Code" v-on:keyup.enter="getTheaters">
 			<button v-on:click="getTheaters" class="btn btn--Main InputAddOn-item">GO</button>
 		</div>
 	</div>
@@ -25,17 +27,19 @@
 			<div class="theater__address col-md-12">@{{ theater.address }}</div>
 		</div>
 		
-		<div class="theater__row" v-if="theater.nomovies">CURRENTLY, THERE ARE NO MOVIES AND SHOWTIMES FOR THIS THEATER ON THIS DATE.</div>
+		<div class="theater__row" v-if="theater.nomovies">
+			CURRENTLY, THERE ARE NO MOVIES AND SHOWTIMES FOR THIS THEATER ON THIS DATE.
+		</div>
 
 		<div v-for="movie in theater.movies" class="movie theater__row">
-			<div class="col-md-2">
-				<img class="movie__poster" src="@{{ movie.poster }}">
+			<div class="movie__item movie__poster">
+				<img src="@{{ movie.poster }}">
 			</div>
-			<div class="col-md-10 movie__details">
+			<div class="movie__item movie__details">
 				<h4 class="movie__title">@{{ movie.title }}</h4>
 				<div class="movie__runtime">@{{ movie.runtime }}</div>
 				<div class="movie__genre">@{{ movie.genre }}</div>
-				<div class="movie_times">
+				<div class="movie__times">
 				<button class="btn btn-small btn--Main movie__time" v-for="time in movie.times">
 					@{{ time.time }}
 				</button>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Auth;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -68,5 +70,28 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(RegisterRequest $request)
+    {
+        // $validator = $this->validator($request->all());
+
+        // if ($validator->fails()) {
+
+        // 	return redirect($this->redirectPath().'#register')->with('errors', $validator->messages());
+        //     // $this->throwValidationException(
+        //     //     $request, $validator
+        //     // );
+        // }
+
+        Auth::guard($this->getGuard())->login($this->create($request->all()));
+
+        return redirect($this->redirectPath());
     }
 }

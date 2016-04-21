@@ -7,7 +7,7 @@
 	align-items:center;
 
 	.theater__row {
-		width: 80%;
+		width: 70%;
 	}
 
 	.theater__info {
@@ -26,22 +26,33 @@
 	background: $light;
     border-radius: 5px;
     margin-top: 15px;
+    display: flex;
+    flex-direction: row;
 
-	.movie__poster {
-		margin-left: -15px;
-		max-width: 135px;
-		border-radius: 5px 0px 0px 5px;
+	.movie__item {
+		flex: 1;
+		
+		&.movie__details{
+			margin-left: 20px;
+		}
+
+		&.movie__poster {
+			flex: 0;
+		
+			img {
+				width: 135px;
+				border-radius: 5px 0px 0px 5px;
+			}
+		}
+		
 	}
 
-	.movie__details {
-		padding-left: 30px;
-	}
-
-	.movie_times {
+	.movie__times {
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
 		flex-wrap: wrap;
+		margin-bottom: 10px;
 
 		.movie__time {
 			margin: 10px 10px 0px 0;
@@ -59,5 +70,36 @@
 
 .movie-app-title {
 	font-size: 3em;
+}
+
+@media(max-width:412px) {
+
+	.theater {
+
+		.theater__row {
+			width: 98%;
+		}
+
+	}
+
+	.movie {
+	    flex-direction: column;
+
+    	.movie__item {
+
+			&.movie__poster {
+			
+				img {
+					width: 100%;
+					border-radius: 5px 5px 0px 0px;
+				}
+			}
+			
+		}
+	}
+
+	.loading-theathers .fa-spinner {
+		font-size: 20em;
+	}
 }
 

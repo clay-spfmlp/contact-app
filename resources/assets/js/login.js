@@ -46,12 +46,15 @@ new Vue({
   			this.reset = false;
   			setTimeout(function(){
   				if(open === 'login'){
+  					window.location.hash = '';
   					this.login = true;
   				}
   				if(open === 'register'){
+  					window.location.hash = 'register';
   					this.register = true;
   				}
   				if(open === 'reset'){
+  					window.location.hash = 'reset';
   					this.reset = true;
   				}
   			}.bind(this), 500);
