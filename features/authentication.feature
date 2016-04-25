@@ -6,6 +6,8 @@ Feature: Authentication
 
 	@javascript
 	Scenario: Successfully creating a new user
+		When I go to the login page
+		And press "Need an Account?"
 		When I register for an account
 		Then I should be logged in
 

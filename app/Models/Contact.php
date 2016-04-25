@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\VueHelper;
 
 class Contact extends Model
 {
 
-	use SoftDeletes;
+	use SoftDeletes, VueHelper;
 
 	protected $fillable = [
 		'name',
@@ -18,16 +19,6 @@ class Contact extends Model
 	];
 
 	protected $appends = array('gravatar', 'checked');
-
-	public function getGravatarAttribute()
-    {
-        return $this->gravatar = md5(strtolower(trim($this->email)));
-    }
-
-    public function getCheckedAttribute()
-    {
-        return $this->checked = false;
-    }
 
     /**
      * The contacts that belong to the user.

@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\VueHelper;
 
 class Label extends Model
 {
 
-	use SoftDeletes;
+	use SoftDeletes, VueHelper;
 
     /**
      * The attributes that are mass assignable.
@@ -18,21 +19,6 @@ class Label extends Model
     protected $fillable = ['name'];
 
 	protected $appends = array('updating', 'editing', 'remove');
-
-	public function getUpdatingAttribute()
-    {
-        return $this->updating = false;
-    }
-
-	public function getEditingAttribute()
-    {
-        return $this->editing = false;
-    }
-
-    public function getRemoveAttribute()
-    {
-        return $this->remove = false;
-    }
 
     /**
      * The contacts that belong to the label.

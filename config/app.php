@@ -41,6 +41,9 @@ return [
 
     'url' => 'http://localhost',
 
+    'modelpath' => app_path() . '/Models',
+    'modelnamespace' => 'App\\Models\\',
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

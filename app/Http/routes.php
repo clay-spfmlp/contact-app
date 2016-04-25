@@ -10,6 +10,41 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::resource('label', 'LabelController');
 
+    Route::group(['middleware' => 'role:admin'], function () {
+
+    	Route::get('admin', [
+    		'as' => 'admin',
+    		'uses' => 'AdminController@index'
+    	]);
+
+	    Route::resource('role', 'RoleController');
+
+	    Route::resource('permission', 'PermissionController');
+
+	    Route::get('permissions', [
+	    	'as' => 'permissions', 
+	    	'uses' => 'PermissionController@permissions'
+	    ]);
+
+	    Route::get('roles', [
+	    	'as' => 'roles', 
+	    	'uses' => 'PermissionController@roles'
+	    ]);
+
+	    Route::get('model-details', [
+	    	'as' => 'model.details',
+	    	'uses' => 'AdminController@modelDetails'
+	    ]);
+
+	    Route::post('update-role',[
+	    	'as' => 'update.role',
+	    	'uses' => 'PermissionController@updateRole'
+	    ]);
+
+    });
+
+
+
 	Route::get('/', function () { 
 		return view('landing.index'); 
 	});

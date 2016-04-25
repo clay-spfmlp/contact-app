@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Bican\Roles\Exceptions\RoleDeniedException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -51,6 +52,11 @@ class Handler extends ExceptionHandler
             return redirect()->back()->withInput()
             		->with('error', 'Your session has expired');
         }
+        
+    	if ($e instanceof RoleDeniedException){
+            return redirect('home')->withInput()
+            		->with('error', 'You do not have permission!');
+        }        
 
         return parent::render($request, $e);
     }

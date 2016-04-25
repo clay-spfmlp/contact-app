@@ -21,6 +21,9 @@
             @if (Auth::user())
             <ul class="nav navbar-nav">
                 <li><a href="{{ url('/home') }}">Home</a></li>
+                @role('admin')
+                <li><a href="{{ url('/admin') }}">Admin</a></li>
+                @endrole
                 <li><a href="{{ url('/movies') }}">Movies</a></li>
                 <li><a href="{{ url('/contacts') }}">Contacts</a></li>
                 <li><a href="{{ url('/equilibrium-indexs') }}">Equilibrium Indexes</a></li>

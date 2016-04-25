@@ -29,17 +29,6 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
         'password', 'remember_token',
     ];
 
-
-    /**
-     * The roles that belong to the user.
-     * 
-     * @return App\Models\Role
-     */
-    public function roles()
-    {
-        return $this->belongsToMany('App\Models\Role');
-    }
-
     /**
      * The contacts that belong to the user.
      */

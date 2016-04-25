@@ -9,7 +9,7 @@
         "laravel/framework": "5.2.*",
         "fabpot/goutte": "^3.1",
         "guzzlehttp/guzzle": "^6.1",
-        "bican/roles": "2.1.*",
+        "bican/roles": "^2.1",
         "laracasts/utilities": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*"
@@ -35,7 +35,8 @@
     },
     "autoload-dev": {
         "classmap": [
-            "tests/TestCase.php"
+            "tests/TestCase.php",
+            "features/Traits"
         ]
     },
     "scripts": {
